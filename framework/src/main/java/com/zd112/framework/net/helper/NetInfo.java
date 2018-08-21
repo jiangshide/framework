@@ -1,5 +1,6 @@
 package com.zd112.framework.net.helper;
 
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -10,6 +11,8 @@ import com.zd112.framework.net.annotation.RequestType;
 import com.zd112.framework.net.bean.DownloadFileInfo;
 import com.zd112.framework.net.bean.UploadFileInfo;
 import com.zd112.framework.net.callback.ProgressCallback;
+import com.zd112.framework.utils.LogUtils;
+import com.zd112.framework.utils.ToastUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -136,7 +139,7 @@ public class NetInfo {
             return this;
         }
 
-        public Builder setStatus(int status) {
+        public Builder setStatus(int status){
             this.status = status;
             return this;
         }
@@ -145,7 +148,7 @@ public class NetInfo {
             if (url.contains("http://") || url.contains("https://")) {
                 this.setUrl(url);
             } else {
-                this.setUrl(BuildConfig.URL + url);
+                this.setUrl(BuildConfig.BASE_URL + url);
             }
             return this;
         }
@@ -625,11 +628,11 @@ public class NetInfo {
         this._class = _class;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(int status){
         this.status = status;
     }
 
-    public int getStatus() {
+    public int getStatus(){
         return status;
     }
 

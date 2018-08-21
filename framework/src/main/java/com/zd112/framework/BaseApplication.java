@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.amap.api.location.AMapLocation;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -34,6 +36,7 @@ import com.zd112.framework.net.interfaces.interceptor.ExceptionInterceptor;
 import com.zd112.framework.net.interfaces.interceptor.ResultInterceptor;
 import com.zd112.framework.utils.DialogUtils;
 import com.zd112.framework.utils.FileUtils;
+import com.zd112.framework.utils.LocationUtils;
 import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.ShareParamUtils;
 import com.zd112.framework.utils.SystemUtils;
@@ -111,6 +114,13 @@ public abstract class BaseApplication extends Application implements Application
                 .addResultInterceptor(this).addExceptionInterceptor(this).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this)));
         install();
         initOther();
+        LocationUtils.INSTANCE.initLocation(getBaseContext()).start();
+        LocationUtils.INSTANCE.setLocationListener(new LocationUtils.AmapLocationListener() {
+            @Override
+            public void onLocation(AMapLocation aMapLocation, Location location) {
+                LogUtils.e("aMapLocation:",aMapLocation.toString());
+            }
+        });
     }
 
     private void initOther() {
@@ -248,8 +258,10 @@ public abstract class BaseApplication extends Application implements Application
         if (params == null) {
             params = new HashMap<>();
         }
-        params.put("terminalType", "3");
-        params.put("appVersion", SystemUtils.getAppVersion(this));
+        params.put("platform", "1");
+        params.put("version", SystemUtils.getAppVersion(this));
+        params.put("appName", SystemUtils.getAppName(this));
+        params.put("channel", BuildConfig.CHANNEL);
         NetInfo.Builder builder = NetInfo.Builder().setRequestType(requestType).setAction(action).addParams(params).addHeads(getHeader(ShareParamUtils.getString("token"))).setClass(_class).setStatus(status);
         netBuilder.build().doAsync(builder.build(), new Callback() {
             @Override
