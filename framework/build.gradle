@@ -1,12 +1,9 @@
 apply plugin: 'com.android.library'
 
-def HTTP = ["production": HTTPS, "preproduction": HTTP, "stage1": HTTPS, "stage2": HTTP, "stage3": HTTP]
-def URL = ["production": PRODUCTION_API, "preproduction": PREPRODUCTION_API, "stage1": STAGE1_API, "stage2": STAGE2_API, "stage3": STAGE3_API]
+def URL = ["production": PRODUCTION + API, "preproduction": PREPRODUCTION + API, "test": TEST + API]
 
 android {
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 14
@@ -15,28 +12,18 @@ android {
         versionName "1.0"
 
         buildConfigField('String', 'ENVIRONMENT', "\"${ENVIRONMENT}\"")
-        buildConfigField('String', 'HTTP', "\"${HTTP}\"")
-        buildConfigField('String', 'HTTPS', "\"${HTTPS}\"")
-        buildConfigField('String', 'ACTION', "\"${ACTION}\"")
-        buildConfigField('String', 'PRODUCTION_API', "\"${PRODUCTION_API}\"")
-        buildConfigField('String', 'PREPRODUCTION_API', "\"${PREPRODUCTION_API}\"")
-        buildConfigField('String', 'STAGE1_API', "\"${STAGE1_API}\"")
-        buildConfigField('String', 'STAGE2_API', "\"${STAGE2_API}\"")
-        buildConfigField('String', 'STAGE3_API', "\"${STAGE3_API}\"")
-        buildConfigField('String', 'BASE_URL', "\"${HTTP[ENVIRONMENT]}" + "${URL[ENVIRONMENT]}" + "${ACTION}\"")
+        buildConfigField('String', 'API', "\"${API}\"")
+        buildConfigField('String', 'URL', "\"${URL[ENVIRONMENT]}\"")
 
-
-        buildConfigField('Integer', 'HTTP_CONNECT_TIME',HTTP_CONNECT_TIME)
-        buildConfigField('Integer','HTTP_READ_TIME',HTTP_READ_TIME)
-        buildConfigField('Integer','HTTP_WRITE_TIME',HTTP_WRITE_TIME)
-        buildConfigField('Integer','HTTP_MAX_CACHE_SIZE',HTTP_MAX_CACHE_SIZE)
-        buildConfigField('Boolean','HTTP_IS_GZIP',HTTP_IS_GZIP)
-        buildConfigField('String', 'FILE_DIR', "\"${FILE_DIR}\"")
+        buildConfigField('Integer', 'HTTP_CONNECT_TIME', HTTP_CONNECT_TIME)
+        buildConfigField('Integer', 'HTTP_READ_TIME', HTTP_READ_TIME)
+        buildConfigField('Integer', 'HTTP_WRITE_TIME', HTTP_WRITE_TIME)
+        buildConfigField('Integer', 'HTTP_MAX_CACHE_SIZE', HTTP_MAX_CACHE_SIZE)
+        buildConfigField('Boolean', 'HTTP_IS_GZIP', HTTP_IS_GZIP)
         buildConfigField('String', 'HTTP_CACHE', "\"${HTTP_CACHE}\"")
         buildConfigField('String', 'HTTP_DOWNLOAD', "\"${HTTP_DOWNLOAD}\"")
         buildConfigField('String', 'HTTP_LOG_TAG', "\"${HTTP_LOG_TAG}\"")
         buildConfigField('String', 'CHANNEL', "\"${CHANNEL}\"")
-        buildConfigField('String', 'SHARE_PARAM_FILE_NAME', "\"${SHARE_PARAM_FILE_NAME}\"")
         buildConfigField('String', 'WECHAT_APPID', "\"${WECHAT_APPID}\"")
         buildConfigField('String', 'WECHAT_APPID_VEST', "\"${WECHAT_APPID_VEST}\"")
         buildConfigField('String', 'JPUSH_KEY', "\"${JPUSH_KEY}\"")
