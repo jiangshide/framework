@@ -148,7 +148,7 @@ public class NetInfo {
             if (url.contains("http://") || url.contains("https://")) {
                 this.setUrl(url);
             } else {
-                this.setUrl(BuildConfig.BASE_URL + url);
+                this.setUrl(BuildConfig.URL + url);
             }
             return this;
         }
