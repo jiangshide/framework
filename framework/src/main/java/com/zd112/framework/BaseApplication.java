@@ -1,5 +1,6 @@
 package com.zd112.framework;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
@@ -99,6 +100,7 @@ public abstract class BaseApplication extends Application implements Application
         startActivity(intent);
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -106,10 +108,11 @@ public abstract class BaseApplication extends Application implements Application
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2) {
             registerActivityLifecycleCallbacks(this);
         }
+        String appName = SystemUtils.getAppName(this);
         netBuilder = Net.Builder().setConnectTimeout(BuildConfig.HTTP_CONNECT_TIME).setWriteTimeout(BuildConfig.HTTP_READ_TIME).setReadTimeout(BuildConfig.HTTP_WRITE_TIME).setMaxCacheSize(BuildConfig.HTTP_MAX_CACHE_SIZE)
-                .setCacheType(CacheType.FORCE_NETWORK).setHttpLogTAG(BuildConfig.HTTP_LOG_TAG).setIsGzip(BuildConfig.HTTP_IS_GZIP).setShowHttpLog(BuildConfig.DEBUG)
-                .setShowLifecycleLog(true).setRetryOnConnectionFailure(false).setCachedDir(FileUtils.getCacheFile(this, BuildConfig.HTTP_CACHE))
-                .setDownloadFileDir(getExternalCacheDir() + BuildConfig.HTTP_DOWNLOAD).setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
+                .setCacheType(BuildConfig.HTTP_CACHE_TYPE).setHttpLogTAG(appName).setIsGzip(BuildConfig.HTTP_IS_GZIP).setShowHttpLog(BuildConfig.DEBUG)
+                .setShowLifecycleLog(true).setRetryOnConnectionFailure(false).setCachedDir(FileUtils.getCacheFile(this, appName+"_cache"))
+                .setDownloadFileDir(getExternalCacheDir() + appName+"_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
 //                .setHttpsCertificate("xxx.cer")//设置全局https自定义证书
                 .addResultInterceptor(this).addExceptionInterceptor(this).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this)));
         install();
