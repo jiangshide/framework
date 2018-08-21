@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+def HTTP = ["production": HTTPS, "preproduction": HTTP, "stage1": HTTPS, "stage2": HTTP, "stage3": HTTP]
+def URL = ["production": PRODUCTION_API, "preproduction": PREPRODUCTION_API, "stage1": STAGE1_API, "stage2": STAGE2_API, "stage3": STAGE3_API]
+
 android {
     compileSdkVersion 28
 
@@ -10,6 +13,35 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+
+        buildConfigField('String', 'ENVIRONMENT', "\"${ENVIRONMENT}\"")
+        buildConfigField('String', 'HTTP', "\"${HTTP}\"")
+        buildConfigField('String', 'HTTPS', "\"${HTTPS}\"")
+        buildConfigField('String', 'ACTION', "\"${ACTION}\"")
+        buildConfigField('String', 'PRODUCTION_API', "\"${PRODUCTION_API}\"")
+        buildConfigField('String', 'PREPRODUCTION_API', "\"${PREPRODUCTION_API}\"")
+        buildConfigField('String', 'STAGE1_API', "\"${STAGE1_API}\"")
+        buildConfigField('String', 'STAGE2_API', "\"${STAGE2_API}\"")
+        buildConfigField('String', 'STAGE3_API', "\"${STAGE3_API}\"")
+        buildConfigField('String', 'BASE_URL', "\"${HTTP[ENVIRONMENT]}" + "${URL[ENVIRONMENT]}" + "${ACTION}\"")
+
+
+        buildConfigField('Integer', 'HTTP_CONNECT_TIME',HTTP_CONNECT_TIME)
+        buildConfigField('Integer','HTTP_READ_TIME',HTTP_READ_TIME)
+        buildConfigField('Integer','HTTP_WRITE_TIME',HTTP_WRITE_TIME)
+        buildConfigField('Integer','HTTP_MAX_CACHE_SIZE',HTTP_MAX_CACHE_SIZE)
+        buildConfigField('Boolean','HTTP_IS_GZIP',HTTP_IS_GZIP)
+        buildConfigField('String', 'FILE_DIR', "\"${FILE_DIR}\"")
+        buildConfigField('String', 'HTTP_CACHE', "\"${HTTP_CACHE}\"")
+        buildConfigField('String', 'HTTP_DOWNLOAD', "\"${HTTP_DOWNLOAD}\"")
+        buildConfigField('String', 'HTTP_LOG_TAG', "\"${HTTP_LOG_TAG}\"")
+        buildConfigField('String', 'CHANNEL', "\"${CHANNEL}\"")
+        buildConfigField('String', 'SHARE_PARAM_FILE_NAME', "\"${SHARE_PARAM_FILE_NAME}\"")
+        buildConfigField('String', 'WECHAT_APPID', "\"${WECHAT_APPID}\"")
+        buildConfigField('String', 'WECHAT_APPID_VEST', "\"${WECHAT_APPID_VEST}\"")
+        buildConfigField('String', 'JPUSH_KEY', "\"${JPUSH_KEY}\"")
+        buildConfigField('String', 'GIO_APPID', "\"${GIO_APPID}\"")
+        buildConfigField('String', 'NO_First', "\"noFirst\"")
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -31,4 +63,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.zxing:core:3.3.1'
+    implementation 'com.android.support:recyclerview-v7:28.0.0-rc01'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    implementation 'com.tencent.bugly:crashreport:latest.release' //错误日志收集
+//    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //错误日志收集 so
+//    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
+//    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
+    implementation 'com.amap.api:location:latest.integration'//定位
 }

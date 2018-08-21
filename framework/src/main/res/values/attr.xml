@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="global_net_err">
+        <item>30001</item>
+        <item>60001</item>
+        <item>800000</item>
+        <item>800001</item>
+    </array>
+
+    <declare-styleable name="BannerLayoutStyle">
+        <attr name="selectedIndicatorColor" format="color|reference" />
+        <attr name="unSelectedIndicatorColor" format="color|reference" />
+        <attr name="indicatorShape" format="enum">
+            <enum name="rect" value="0" />
+            <enum name="oval" value="1" />
+        </attr>
+
+        <attr name="selectedIndicatorHeight" format="dimension|reference" />
+        <attr name="selectedIndicatorWidth" format="dimension|reference" />
+
+        <attr name="unSelectedIndicatorHeight" format="dimension|reference" />
+        <attr name="unSelectedIndicatorWidth" format="dimension|reference" />
+
+        <attr name="indicatorPosition" format="enum">
+            <enum name="centerBottom" value="0" />
+            <enum name="rightBottom" value="1" />
+            <enum name="leftBottom" value="2" />
+            <enum name="centerTop" value="3" />
+            <enum name="rightTop" value="4" />
+            <enum name="leftTop" value="5" />
+        </attr>
+
+        <attr name="indicatorSpace" format="dimension|reference" />
+        <attr name="indicatorMargin" format="dimension|reference" />
+        <attr name="autoPlayDuration" format="integer|reference" />
+        <attr name="scrollDuration" format="integer|reference" />
+        <attr name="isAutoPlay" format="boolean|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="NavigationTopView">
+        <attr name="bgColor" format="color|reference" />
+        <attr name="leftName" format="string" />
+        <attr name="leftTextColor" format="color" />
+        <attr name="leftTextSize" format="integer" />
+        <attr name="leftBg" format="reference|color" />
+        <attr name="leftBgDraw" format="reference" />
+        <attr name="titleName" format="string" />
+        <attr name="titleTextColor" format="color" />
+        <attr name="titleTextSize" format="integer" />
+        <attr name="rightName" format="string" />
+        <attr name="rightTextColor" format="color" />
+        <attr name="rightTextSize" format="integer" />
+        <attr name="rightBg" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="CusEditText">
+        <attr name="format" format="integer" />
+        <attr name="formatStart" format="integer" />
+        <attr name="formatEnd" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="GestureUnlockView">
+        <attr name="color_normal" format="color" />
+        <attr name="color_selected" format="color" />
+        <attr name="color_error" format="color" />
+        <attr name="point_radius" format="dimension" />
+        <attr name="stroke_width" format="dimension" />
+        <attr name="line_width" format="dimension" />
+        <attr name="radius_factor" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="ButtonStyle">
+        <attr name="corner" format="dimension" />
+        <attr name="leftCorner" format="dimension" />
+        <attr name="topCorner" format="dimension" />
+        <attr name="rightCorner" format="dimension" />
+        <attr name="bottomCorner" format="dimension" />
+        <attr name="press_color" format="reference|color" />
+        <attr name="normal_color" format="reference|color" />
+        <attr name="stroke" format="dimension" />
+        <attr name="stroke_color" format="reference|color" />
+        <attr name="type">
+            <enum name="ok" value="1" />
+            <enum name="info" value="2" />
+            <enum name="warning" value="3" />
+            <enum name="error" value="4" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CustomProgressBar">
+        <attr name="outside_color" format="color" />
+        <attr name="outside_radius" format="dimension" />
+        <attr name="inside_color" format="color" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_width" format="dimension" />
+        <attr name="max_progress" format="integer" />
+        <attr name="progress" format="float" />
+        <attr name="direction">
+            <enum name="left" value="0" />
+            <enum name="top" value="1" />
+            <enum name="right" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <!-- 定义自定义属性 -->
+    <attr name="line_color" format="color" />
+    <attr name="line_height" format="dimension" />
+    <!-- 声明自定义属性 -->
+    <declare-styleable name="edit_bg">
+        <attr name="line_color" />
+        <attr name="line_height" />
+    </declare-styleable>
+    <declare-styleable name="TagFlowLayout">
+        <attr name="auto_select_effect" format="boolean" />
+        <attr name="max_select" format="integer" />
+        <attr name="gravity">
+            <enum name="left" value="-1" />
+            <enum name="center" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="ViewPagerIndicator">
+        <attr name="columnSun" format="integer"></attr>
+        <attr name="indicatorColor" format="color"></attr>
+        <attr name="tabCheckColor" format="color"></attr>
+        <attr name="tabUnCheckColor" format="color"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="wheelView">
+        <attr name="textSize" format="integer" />
+        <attr name="lineSpace" format="float" />
+        <attr name="centerTextColor" format="integer" />
+        <attr name="outerTextColor" format="integer" />
+        <attr name="dividerTextColor" format="integer" />
+        <attr name="itemsVisibleCount" format="integer" />
+        <attr name="isLoop" format="boolean" />
+        <attr name="initialPosition" format="integer" />
+        <attr name="scaleX" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="SwitchButton">
+        <attr name="shadowRadius" format="reference|dimension" />
+        <attr name="shadowOffset" format="reference|dimension" />
+        <attr name="shadowColor" format="reference|color" />
+        <attr name="uncheckColor" format="reference|color" />
+        <attr name="checkedColor" format="reference|color" />
+
+        <attr name="bordersWidth" format="reference|dimension" />
+        <attr name="checklineColor" format="reference|color" />
+        <attr name="checklineWidth" format="reference|dimension" />
+        <attr name="uncheckcircleColor" format="reference|color" />
+        <attr name="uncheckcircleWidth" format="reference|dimension" />
+        <attr name="uncheckcircleRadius" format="reference|dimension" />
+
+        <attr name="checked" format="reference|boolean" />
+        <attr name="shadowEffect" format="reference|boolean" />
+        <attr name="effectDuration" format="reference|integer" />
+        <attr name="buttonColor" format="reference|color" />
+        <attr name="showIndicator" format="reference|boolean" />
+        <attr name="backGround" format="reference|color" />
+        <attr name="enableEffect" format="reference|boolean" />
+    </declare-styleable>
+
+    <!-- the qrcode start -->
+    <declare-styleable name="QRCodeView">
+        <!-- 扫描框距离toolbar底部的距离，默认值为90dp -->
+        <attr name="qrcv_topOffset" format="dimension|reference" />
+        <!-- 扫描框边角线的宽度，默认值为3dp -->
+        <attr name="qrcv_cornerSize" format="dimension|reference" />
+        <!-- 扫描框边角线的长度，默认值为20dp -->
+        <attr name="qrcv_cornerLength" format="dimension|reference" />
+        <!-- 扫描框边角线的颜色，默认值为@android:color/white -->
+        <attr name="qrcv_cornerColor" format="color|reference" />
+        <!-- 扫描框的宽度，默认值为200dp -->
+        <attr name="qrcv_rectWidth" format="dimension|reference" />
+        <!-- 条码扫样式描框的高度，默认值为140dp -->
+        <attr name="qrcv_barcodeRectHeight" format="dimension|reference" />
+        <!-- 除去扫描框，其余部分阴影颜色，默认值为#33FFFFFF -->
+        <attr name="qrcv_maskColor" format="color|reference" />
+        <!-- 扫描线的宽度，默认值为1dp -->
+        <attr name="qrcv_scanLineSize" format="dimension|reference" />
+        <!-- 扫描线的颜色，默认值为@android:color/white -->
+        <attr name="qrcv_scanLineColor" format="color|reference" />
+        <!-- 扫描线距离上下或者左右边框的间距，默认值为0dp -->
+        <attr name="qrcv_scanLineMargin" format="dimension|reference" />
+        <!-- 是否显示默认的图片扫描线，默认值为false -->
+        <attr name="qrcv_isShowDefaultScanLineDrawable" format="boolean" />
+        <!-- 扫描线的图片资源，默认值为null -->
+        <attr name="qrcv_customScanLineDrawable" format="reference" />
+        <!-- 扫描边框的宽度，默认值为1dp -->
+        <attr name="qrcv_borderSize" format="dimension|reference" />
+        <!-- 扫描边框的颜色，默认值为@android:color/white -->
+        <attr name="qrcv_borderColor" format="color|reference" />
+        <!-- 扫描线从顶部移动到底部的动画时间，默认值为1000 -->
+        <attr name="qrcv_animTime" format="integer" />
+        <!-- 扫描框是否垂直居中，该属性为true时会忽略qrcv_topOffset属性，默认值为false -->
+        <attr name="qrcv_isCenterVertical" format="boolean" />
+        <!-- Toolbar的高度，当有设置qrcv_isCenterVertical属性时，通过该属性来修正有Toolbar时导致扫描框垂直居中的偏差，默认值为0dp -->
+        <attr name="qrcv_toolbarHeight" format="dimension|reference" />
+        <!-- 是否是扫条形码，默认值为false -->
+        <attr name="qrcv_isBarcode" format="boolean" />
+        <!-- 扫描二维码时的提示文案，默认值为null -->
+        <attr name="qrcv_qrCodeTipText" format="string|reference" />
+        <!-- 扫描条码时的提示文案，默认值为null -->
+        <attr name="qrcv_barCodeTipText" format="string|reference" />
+        <!-- 提示文案字体大小，默认值为14sp -->
+        <attr name="qrcv_tipTextSize" format="dimension|reference" />
+        <!-- 提示文案颜色，默认值为@android:color/white -->
+        <attr name="qrcv_tipTextColor" format="color|reference" />
+        <!-- 提示文案是否在扫描框的底部，默认值为false -->
+        <attr name="qrcv_isTipTextBelowRect" format="boolean" />
+        <!-- 提示文案与扫描框之间的间距，默认值为20dp -->
+        <attr name="qrcv_tipTextMargin" format="dimension|reference" />
+        <!-- 是否把提示文案作为单行显示，默认值为false -->
+        <attr name="qrcv_isShowTipTextAsSingleLine" format="boolean" />
+        <!-- 是否显示提示文案的背景，默认值为false -->
+        <attr name="qrcv_isShowTipBackground" format="boolean" />
+        <!-- 提示文案的背景色，默认值为#22000000 -->
+        <attr name="qrcv_tipBackgroundColor" format="color|reference" />
+        <!-- 扫描线是否来回移动，默认值为true -->
+        <attr name="qrcv_isScanLineReverse" format="boolean" />
+        <!-- 是否显示默认的网格图片扫描线，默认值为false -->
+        <attr name="qrcv_isShowDefaultGridScanLineDrawable" format="boolean" />
+        <!-- 扫描线的网格图片资源，默认值为null -->
+        <attr name="qrcv_customGridScanLineDrawable" format="reference" />
+        <!-- 是否只识别扫描框区域的二维码，默认值为false -->
+        <attr name="qrcv_isOnlyDecodeScanBoxArea" format="boolean" />
+    </declare-styleable>
+    <!-- the qrcode end -->
+
+    <!-- the refresh start -->
+    <declare-styleable name="RefreshView">
+        <attr name="rfPrimaryColor" />
+        <attr name="rfAccentColor" />
+        <attr name="rfReboundDuration" format="integer" />
+        <attr name="rfHeaderHeight" format="dimension" />
+        <attr name="rfFooterHeight" format="dimension" />
+        <attr name="rfHeaderInsetStart" format="dimension" />
+        <attr name="rfFooterInsetStart" format="dimension" />
+        <attr name="rfDragRate" format="float" />
+        <attr name="rfHeaderMaxDragRate" format="float" />
+        <attr name="rfFooterMaxDragRate" format="float" />
+        <attr name="rfHeaderTriggerRate" format="float" />
+        <attr name="rfFooterTriggerRate" format="float" />
+        <attr name="rfEnableRefresh" format="boolean" />
+        <attr name="rfEnableLoadMore" format="boolean" />
+        <attr name="rfEnableHeaderTranslationContent" format="boolean" />
+        <attr name="rfEnableFooterTranslationContent" format="boolean" />
+        <attr name="rfHeaderTranslationViewId" format="reference" />
+        <attr name="rfFooterTranslationViewId" format="reference" />
+        <attr name="rfEnablePreviewInEditMode" format="boolean" />
+        <attr name="rfEnableAutoLoadMore" format="boolean" />
+        <attr name="rfEnableOverScrollBounce" format="boolean" />
+        <attr name="rfEnablePureScrollMode" format="boolean" />
+        <attr name="rfEnableNestedScrolling" format="boolean" />
+        <attr name="rfEnableScrollContentWhenLoaded" format="boolean" />
+        <attr name="rfEnableScrollContentWhenRefreshed" format="boolean" />
+        <attr name="rfEnableLoadMoreWhenContentNotFull" format="boolean" />
+        <attr name="rfEnableFooterFollowWhenLoadFinished" format="boolean" />
+        <attr name="rfEnableClipHeaderWhenFixedBehind" format="boolean" />
+        <attr name="rfEnableClipFooterWhenFixedBehind" format="boolean" />
+        <attr name="rfEnableOverScrollDrag" format="boolean" />
+        <attr name="rfDisableContentWhenRefresh" format="boolean" />
+        <attr name="rfDisableContentWhenLoading" format="boolean" />
+        <attr name="rfFixedHeaderViewId" format="reference" />
+        <attr name="rfFixedFooterViewId" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="RefreshView_Layout">
+        <attr name="layout_rfSpinnerStyle" />
+        <attr name="layout_rfBackgroundColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="ClassicsHeader">
+        <attr name="rfClassicsSpinnerStyle" />
+        <attr name="rfPrimaryColor" />
+        <attr name="rfAccentColor" />
+        <attr name="rfFinishDuration" />
+        <attr name="rfDrawableArrow" />
+        <attr name="rfDrawableProgress" />
+        <attr name="rfDrawableMarginRight" />
+        <attr name="rfDrawableSize" />
+        <attr name="rfDrawableArrowSize" />
+        <attr name="rfDrawableProgressSize" />
+        <attr name="rfTextSizeTitle" />
+        <attr name="rfTextSizeTime" />
+        <attr name="rfTextTimeMarginTop" format="dimension" />
+        <attr name="rfEnableLastTime" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ClassicsFooter">
+        <attr name="rfClassicsSpinnerStyle" />
+        <attr name="rfPrimaryColor" />
+        <attr name="rfAccentColor" />
+        <attr name="rfFinishDuration" />
+        <attr name="rfTextSizeTitle" />
+        <attr name="rfDrawableArrow" />
+        <attr name="rfDrawableProgress" />
+        <attr name="rfDrawableMarginRight" />
+        <attr name="rfDrawableSize" />
+        <attr name="rfDrawableArrowSize" />
+        <attr name="rfDrawableProgressSize" />
+    </declare-styleable>
+
+    <!-- the refresh end -->
+</resources>

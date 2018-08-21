@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#025FCC</color>
+    <color name="colorPrimaryDark">#2271E6</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="circle_normal">#D8E9FC</color>
+    <color name="red">#E94639</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="dialog_text">#181818</color>
+    <color name="dialog_divider">#d1d1d1</color>
+
+    <color name="black">#000000</color>
+    <color name="bid_devider_color">#e8e8e8</color>
+    <color name="bid_text_color">#4A4A4A</color>
+    <color name="automatic_line_color">#4A4A4A</color>
+    <color name="accountmanage_line_color">#D8D8D8</color>
+
+    <color name="app_bg">#F6F6F6</color>
+    <color name="bar_color">#F7F7F7</color>
+    <color name="font_normal">#4A4A4A</color>
+    <color name="font_grey">#9D9D9D</color>
+    <color name="font_gray">#9B9B9B</color>
+    <color name="font_bold">#3F3A39</color>
+
+    <color name="line">#ebebeb</color>
+    <color name="alpha">#00000000</color>
+
+    <drawable name="white">#FFFFFF</drawable>
+    <drawable name="alpha">#00000000</drawable>
+    <drawable name="line">#ebebeb</drawable>
+
+    <color name="inside_color">#d1cdcd</color>
+</resources>

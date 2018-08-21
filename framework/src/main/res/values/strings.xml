@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">framework</string>
+
+    <string name="ok_notifyTitle">提示</string>
+    <string name="ok_notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
+    <string name="ok_setting">设置</string>
+    <string name="ok_cancel">取消</string>
+
+    <string name="rf_header_pulling">下拉可以刷新</string>
+    <string name="rf_header_refreshing">正在刷新…</string>
+    <string name="rf_header_loading">正在加载…</string>
+    <string name="rf_header_release">释放立即刷新</string>
+    <string name="rf_header_finish">刷新完成</string>
+    <string name="rf_header_failed">刷新失败</string>
+    <string name="rf_header_update">上次更新 M-d HH:mm</string>
+    <string name="rf_header_secondary">释放进入二楼</string>
+
+    <string name="rf_footer_pulling">上拉加载更多</string>
+    <string name="rf_footer_release">释放立即加载</string>
+    <string name="rf_footer_loading">正在加载…</string>
+    <string name="rf_footer_refreshing">正在刷新…</string>
+    <string name="rf_footer_finish">加载完成</string>
+    <string name="rf_footer_failed">加载失败</string>
+    <string name="rf_footer_nothing">没有更多数据了</string>
+
+    <string name="weixin">官方微信</string>
+    <string name="weixin_init">微信没有初始化!</string>
+    <string name="weixin_install">请先安装微信!</string>
+    <string name="no_support_device">不支持该设备!</string>
+    <string name="weixin_public_num">已复制微信公众号,\n打开微信-通讯录-粘贴公众号</string>
+
+    <string name="rf_content_empty">RefreshView初始化失败!</string>
 </resources>

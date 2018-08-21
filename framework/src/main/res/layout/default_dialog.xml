@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_dialog_radius"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:text="提示"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dialogContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="您确定要退出吗?"
+            android:textColor="@color/dialog_text"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="@color/dialog_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.zd112.framework.view.CusButton
+                android:id="@+id/dialogCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="取消"
+                android:textColor="@color/dialog_text"
+                android:textSize="14sp"
+                app:bottomCorner="10dp"
+                app:leftCorner="0dp"
+                app:normal_color="@color/white"
+                app:press_color="@color/line"
+                app:rightCorner="0dp"
+                app:topCorner="0dp" />
+
+            <View
+                android:id="@+id/dialogLine"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/line" />
+
+            <com.zd112.framework.view.CusButton
+                android:id="@+id/dialogSure"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="确定"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                app:bottomCorner="0dp"
+                app:leftCorner="0dp"
+                app:normal_color="@color/white"
+                app:press_color="@color/line"
+                app:rightCorner="10dp"
+                app:topCorner="0dp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

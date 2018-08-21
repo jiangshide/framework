@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="navigation_height">43dp</dimen>
+    <dimen name="navigation_txt_size">4sp</dimen>
+    <dimen name="navigation_port">13dp</dimen>
+    <dimen name="navigation_port_size">4sp</dimen>
+    <dimen name="default_con">5dp</dimen>
+    <dimen name="default_corner">10dp</dimen>
+    <dimen name="text_size_15">15sp</dimen>
+    <dimen name="line">0.5dp</dimen>
+    <dimen name="txt_normal_size">14sp</dimen>
+</resources>
