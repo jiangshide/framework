@@ -17,6 +17,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
@@ -28,6 +30,7 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
 
 import java.io.BufferedReader;
@@ -698,5 +701,51 @@ public class SystemUtils {
         builder.setContentTitle(title).setContentText(content);
         notificationManager(context).notify(notificationId, builder.build());
         return builder;
+    }
+
+    public static String getNetType() {
+        String netType = "";
+        NetworkInfo networkInfo = ((ConnectivityManager) BaseApplication.application.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                netType = "WIFI";
+            } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                String _strSubTypeName = networkInfo.getSubtypeName();
+                // TD-SCDMA   networkType is 17
+                int networkType = networkInfo.getSubtype();
+                switch (networkType) {
+                    case TelephonyManager.NETWORK_TYPE_GPRS:
+                    case TelephonyManager.NETWORK_TYPE_EDGE:
+                    case TelephonyManager.NETWORK_TYPE_CDMA:
+                    case TelephonyManager.NETWORK_TYPE_1xRTT:
+                    case TelephonyManager.NETWORK_TYPE_IDEN: //api<8 : replace by 11
+                        netType = "2G";
+                        break;
+                    case TelephonyManager.NETWORK_TYPE_UMTS:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                    case TelephonyManager.NETWORK_TYPE_HSDPA:
+                    case TelephonyManager.NETWORK_TYPE_HSUPA:
+                    case TelephonyManager.NETWORK_TYPE_HSPA:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_B: //api<9 : replace by 14
+                    case TelephonyManager.NETWORK_TYPE_EHRPD:  //api<11 : replace by 12
+                    case TelephonyManager.NETWORK_TYPE_HSPAP:  //api<13 : replace by 15
+                        netType = "3G";
+                        break;
+                    case TelephonyManager.NETWORK_TYPE_LTE:    //api<11 : replace by 13
+                        netType = "4G";
+                        break;
+                    default:
+                        // http://baike.baidu.com/item/TD-SCDMA 中国移动 联通 电信 三种3G制式
+                        if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
+                            netType = "3G";
+                        } else {
+                            netType = _strSubTypeName;
+                        }
+                        break;
+                }
+            }
+        }
+        return netType;
     }
 }

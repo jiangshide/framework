@@ -28,7 +28,7 @@ public class UpdateService extends Service {
             String url = intent.getStringExtra("url");
             final NotificationManager notificationManager = SystemUtils.notificationManager(this);
             final NotificationCompat.Builder build = SystemUtils.notificationBuild(this, R.drawable.update, SystemUtils.getAppName(this) + "下载更新", "正在下载");
-            ((BaseApplication) getApplication()).download(url, "etd.apk", new ProgressCallback() {
+            ((BaseApplication) getApplication()).download(url, new ProgressCallback() {
                 @Override
                 public void onResponseMain(String filePath, NetInfo info) {
                     super.onResponseMain(filePath, info);

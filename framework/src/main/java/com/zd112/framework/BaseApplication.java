@@ -23,8 +23,8 @@ import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.zd112.framework.data.BaseData;
 import com.zd112.framework.net.Net;
-import com.zd112.framework.net.annotation.CacheType;
 import com.zd112.framework.net.annotation.Encoding;
 import com.zd112.framework.net.annotation.RequestStatus;
 import com.zd112.framework.net.callback.Callback;
@@ -108,11 +108,11 @@ public abstract class BaseApplication extends Application implements Application
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2) {
             registerActivityLifecycleCallbacks(this);
         }
-        String appName = SystemUtils.getAppName(this);
+        String pkgName = getPackageName();
         netBuilder = Net.Builder().setConnectTimeout(BuildConfig.HTTP_CONNECT_TIME).setWriteTimeout(BuildConfig.HTTP_READ_TIME).setReadTimeout(BuildConfig.HTTP_WRITE_TIME).setMaxCacheSize(BuildConfig.HTTP_MAX_CACHE_SIZE)
-                .setCacheType(BuildConfig.HTTP_CACHE_TYPE).setHttpLogTAG(appName).setIsGzip(BuildConfig.HTTP_IS_GZIP).setShowHttpLog(BuildConfig.DEBUG)
-                .setShowLifecycleLog(true).setRetryOnConnectionFailure(false).setCachedDir(FileUtils.getCacheFile(this, appName+"_cache"))
-                .setDownloadFileDir(getExternalCacheDir() + appName+"_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
+                .setCacheType(BuildConfig.HTTP_CACHE_TYPE).setHttpLogTAG(pkgName).setIsGzip(BuildConfig.HTTP_IS_GZIP).setShowHttpLog(BuildConfig.DEBUG)
+                .setShowLifecycleLog(true).setRetryOnConnectionFailure(false).setCachedDir(FileUtils.getCacheFile(this, pkgName+"_cache"))
+                .setDownloadFileDir(getExternalCacheDir() + pkgName+"_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
 //                .setHttpsCertificate("xxx.cer")//设置全局https自定义证书
                 .addResultInterceptor(this).addExceptionInterceptor(this).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this)));
         install();
@@ -138,8 +138,6 @@ public abstract class BaseApplication extends Application implements Application
         String pkg = getPackageName();
         if (pkg.equals("com.zd112.read")) {
             mWxApi = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APPID);
-        } else if (pkg.equals("com.zd112.read.vest")) {
-            mWxApi = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APPID_VEST);
         }
     }
 

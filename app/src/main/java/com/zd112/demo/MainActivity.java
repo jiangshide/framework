@@ -3,8 +3,8 @@ package com.zd112.demo;
 import android.os.Bundle;
 
 import com.zd112.framework.BaseActivity;
-import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.utils.LogUtils;
+import com.zd112.framework.view.UpdateView;
 
 public class MainActivity extends BaseActivity {
 
@@ -15,12 +15,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        request("update");
-    }
 
-    @Override
-    public void onSuccess(NetInfo info) {
-        super.onSuccess(info);
-        LogUtils.e("---------info:",info.getRetDetail());
     }
 }

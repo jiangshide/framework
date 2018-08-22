@@ -30,4 +30,8 @@
     <string name="weixin_public_num">已复制微信公众号,\n打开微信-通讯录-粘贴公众号</string>
 
     <string name="rf_content_empty">RefreshView初始化失败!</string>
+
+    <string name="update_title">发现新版本:</string>
+    <string name="updating">正在下载更新包:</string>
+    <string name="update_down_tips">网络下下载更新吗!</string>
 </resources>
