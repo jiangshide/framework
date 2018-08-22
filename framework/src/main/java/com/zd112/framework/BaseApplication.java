@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.amap.api.location.AMapLocation;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
@@ -111,8 +110,8 @@ public abstract class BaseApplication extends Application implements Application
         String pkgName = getPackageName();
         netBuilder = Net.Builder().setConnectTimeout(BuildConfig.HTTP_CONNECT_TIME).setWriteTimeout(BuildConfig.HTTP_READ_TIME).setReadTimeout(BuildConfig.HTTP_WRITE_TIME).setMaxCacheSize(BuildConfig.HTTP_MAX_CACHE_SIZE)
                 .setCacheType(BuildConfig.HTTP_CACHE_TYPE).setHttpLogTAG(pkgName).setIsGzip(BuildConfig.HTTP_IS_GZIP).setShowHttpLog(BuildConfig.DEBUG)
-                .setShowLifecycleLog(true).setRetryOnConnectionFailure(false).setCachedDir(FileUtils.getCacheFile(this, pkgName+"_cache"))
-                .setDownloadFileDir(getExternalCacheDir() + pkgName+"_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
+                .setShowLifecycleLog(true).setRetryOnConnectionFailure(false).setCachedDir(FileUtils.getCacheFile(this, pkgName + "_cache"))
+                .setDownloadFileDir(getExternalCacheDir() + pkgName + "_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
 //                .setHttpsCertificate("xxx.cer")//设置全局https自定义证书
                 .addResultInterceptor(this).addExceptionInterceptor(this).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this)));
         install();
@@ -121,17 +120,12 @@ public abstract class BaseApplication extends Application implements Application
         LocationUtils.INSTANCE.setLocationListener(new LocationUtils.AmapLocationListener() {
             @Override
             public void onLocation(AMapLocation aMapLocation, Location location) {
-                LogUtils.e("aMapLocation:",aMapLocation.toString());
+                LogUtils.e("aMapLocation:", aMapLocation.toString());
             }
         });
     }
 
     private void initOther() {
-        /**
-         * the bugly
-         */
-        CrashReport.initCrashReport(getApplicationContext());
-
         /**
          * 微信注册
          */
