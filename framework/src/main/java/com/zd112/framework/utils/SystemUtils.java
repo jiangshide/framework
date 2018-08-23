@@ -12,9 +12,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -27,11 +27,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
+import com.zd112.framework.net.status.NetInfo;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,20 +54,26 @@ import java.util.Map;
 public class SystemUtils {
 
     public static final int notificationId = 0x123456;
+    private static String appName;
 
     /**
      * 获取当前应用程序名称
      */
     public static String getAppName(Context context) {
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            int labelRes = packageInfo.applicationInfo.labelRes;
-            return context.getResources().getString(labelRes);
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
+        if (TextUtils.isEmpty(appName)) {
+            PackageManager pm = context.getPackageManager();
+            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            List<ResolveInfo> resolveInfos = pm.queryIntentActivities(mainIntent, 0);
+            String currPkg = context.getPackageName();
+            for (ResolveInfo resolveInfo : resolveInfos) {
+                String pkg = resolveInfo.activityInfo.packageName;
+                if (pkg.equals(currPkg)) {
+                    appName = (String) resolveInfo.loadLabel(pm);
+                }
+            }
         }
-        return null;
+        return appName;
     }
 
 
@@ -117,52 +124,6 @@ public class SystemUtils {
         }
         return false;
     }
-
-
-    /**
-     * 获取应用程序的签名
-     *
-     * @param context
-     * @param pkgName
-     */
-    public static String getSign(Context context, String pkgName) {
-        try {
-            PackageInfo pis = context.getPackageManager().getPackageInfo(pkgName, PackageManager.GET_SIGNATURES);
-            return hexdigest(pis.signatures[0].toByteArray());
-        } catch (NameNotFoundException e) {
-            throw new RuntimeException(SystemUtils.class.getName() + "the "
-                    + pkgName + "'s application not found");
-        }
-    }
-
-
-    /**
-     * 将签名字符串转换成需要的32位签名
-     *
-     * @param paramArrayOfByte
-     * @return
-     */
-    private static String hexdigest(byte[] paramArrayOfByte) {
-        final char[] hexDigits =
-                {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102};
-        try {
-            MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
-            localMessageDigest.update(paramArrayOfByte);
-            byte[] arrayOfByte = localMessageDigest.digest();
-            char[] arrayOfChar = new char[32];
-            for (int i = 0, j = 0; ; i++, j++) {
-                if (i >= 16) {
-                    return new String(arrayOfChar);
-                }
-                int k = arrayOfByte[i];
-                arrayOfChar[j] = hexDigits[(0xF & k >>> 4)];
-                arrayOfChar[++j] = hexDigits[(k & 0xF)];
-            }
-        } catch (Exception e) {
-        }
-        return "";
-    }
-
 
     //手机系统相关
 
@@ -341,24 +302,6 @@ public class SystemUtils {
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
         // 发送广播。OK
         cxt.sendBroadcast(shortcutIntent);
-    }
-
-
-    /**
-     * 安装apk
-     *
-     * @param context
-     * @param file
-     */
-    public static void installApk(Context context, File file) {
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        intent.addCategory("android.intent.category.DEFAULT");
-        intent.setType("application/vnd.android.package-archive");
-        intent.setData(Uri.fromFile(file));
-        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 
     /**
@@ -747,5 +690,103 @@ public class SystemUtils {
             }
         }
         return netType;
+    }
+
+    /**
+     * 网络是否可用
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        if (context != null) {
+            ConnectivityManager cm = (ConnectivityManager)
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo network = cm.getActiveNetworkInfo();
+            if (network != null && network.getState() == NetworkInfo.State.CONNECTED) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否有网络连接
+     */
+    public static boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo network = mConnectivityManager
+                    .getActiveNetworkInfo();
+            if (network != null) {
+                return network.isAvailable();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断WIFI网络是否可用
+     */
+    public static boolean isWifiConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo wifi = mConnectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (wifi != null) {
+                return wifi.isAvailable();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断MOBILE网络是否可用
+     */
+    public static boolean isMobileConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mobile = mConnectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (mobile != null) {
+                return mobile.isAvailable();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取当前网络连接的类型信息
+     */
+    public static int getNetworkTypeConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo network = mConnectivityManager
+                    .getActiveNetworkInfo();
+            if (network != null && network.isAvailable()) {
+                return network.getType();
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 获取当前的网络状态
+     */
+    public static String getNetworkType(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo network = cm.getActiveNetworkInfo();
+        if (network == null) {
+            return NetInfo.NONE_NET;
+        }
+        if (network.getType() == ConnectivityManager.TYPE_MOBILE) {
+            return network.getExtraInfo().equalsIgnoreCase("cmnet") ? NetInfo.CM_NET : NetInfo.CM_WAP;
+        } else if (network.getType() == ConnectivityManager.TYPE_WIFI) {
+            return NetInfo.WIFI;
+        }
+        return NetInfo.NONE_NET;
+
     }
 }

@@ -1,5 +1,8 @@
 package com.zd112.framework.utils;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -400,6 +403,49 @@ public class EncryptUtils {
                 }
             }
             return ret;
+        }
+    }
+
+    /**
+     * 将签名字符串转换成需要的32位签名
+     *
+     * @param paramArrayOfByte
+     * @return
+     */
+    private static String hexdigest(byte[] paramArrayOfByte) {
+        final char[] hexDigits =
+                {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102};
+        try {
+            MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+            localMessageDigest.update(paramArrayOfByte);
+            byte[] arrayOfByte = localMessageDigest.digest();
+            char[] arrayOfChar = new char[32];
+            for (int i = 0, j = 0; ; i++, j++) {
+                if (i >= 16) {
+                    return new String(arrayOfChar);
+                }
+                int k = arrayOfByte[i];
+                arrayOfChar[j] = hexDigits[(0xF & k >>> 4)];
+                arrayOfChar[++j] = hexDigits[(k & 0xF)];
+            }
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    /**
+     * 获取应用程序的签名
+     *
+     * @param context
+     * @param pkgName
+     */
+    public static String getSign(Context context, String pkgName) {
+        try {
+            PackageInfo pis = context.getPackageManager().getPackageInfo(pkgName, PackageManager.GET_SIGNATURES);
+            return hexdigest(pis.signatures[0].toByteArray());
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(SystemUtils.class.getName() + "the "
+                    + pkgName + "'s application not found");
         }
     }
 }

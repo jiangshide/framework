@@ -3,7 +3,6 @@ package com.zd112.framework;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
@@ -34,6 +32,8 @@ import com.zd112.framework.net.cookie.persistence.SharedPrefsCookiePersistor;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.net.interfaces.interceptor.ExceptionInterceptor;
 import com.zd112.framework.net.interfaces.interceptor.ResultInterceptor;
+import com.zd112.framework.net.status.NetworkStateListener;
+import com.zd112.framework.net.status.NetworkStateReceiver;
 import com.zd112.framework.utils.DialogUtils;
 import com.zd112.framework.utils.FileUtils;
 import com.zd112.framework.utils.LocationUtils;
@@ -104,6 +104,7 @@ public abstract class BaseApplication extends Application implements Application
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         application = this;
+        install();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2) {
             registerActivityLifecycleCallbacks(this);
         }
@@ -114,7 +115,6 @@ public abstract class BaseApplication extends Application implements Application
                 .setDownloadFileDir(getExternalCacheDir() + pkgName + "_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
 //                .setHttpsCertificate("xxx.cer")//设置全局https自定义证书
                 .addResultInterceptor(this).addExceptionInterceptor(this).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this)));
-        install();
         initOther();
         LocationUtils.INSTANCE.initLocation(getBaseContext()).start();
         LocationUtils.INSTANCE.setLocationListener(new LocationUtils.AmapLocationListener() {
@@ -123,6 +123,32 @@ public abstract class BaseApplication extends Application implements Application
                 LogUtils.e("aMapLocation:", aMapLocation.toString());
             }
         });
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initNetworkStateListener();
+    }
+
+    /**
+     * 网络状态监听器
+     **/
+    private NetworkStateListener networkStateListener;
+
+    /**
+     * 初始化网络状态监听器
+     */
+    private void initNetworkStateListener() {
+        NetworkStateReceiver.registerNetworkStateReceiver(this);
+        networkStateListener = new NetworkStateListener() {
+            @Override
+            public void onNetworkState(boolean isNetworkAvailable, com.zd112.framework.net.status.NetInfo netInfo) {
+                LogUtils.e("isNetworkAvailable:", isNetworkAvailable, " | netInfo:", netInfo);
+            }
+        };
+        //添加网络状态监听
+        NetworkStateReceiver.addNetworkStateListener(networkStateListener);
     }
 
     private void initOther() {
@@ -173,8 +199,13 @@ public abstract class BaseApplication extends Application implements Application
 
     @Override
     public void onTerminate() {
-        super.onTerminate();
+        //移除网络状态监听
+        if (null != networkStateListener) {
+            NetworkStateReceiver.removeNetworkStateListener(networkStateListener);
+            NetworkStateReceiver.unRegisterNetworkStateReceiver(this);
+        }
         uninstall();
+        super.onTerminate();
     }
 
     public synchronized void install() {
@@ -344,33 +375,6 @@ public abstract class BaseApplication extends Application implements Application
             mDialogUtils.cancelLoading();
             mDialogUtils = null;
         }
-    }
-
-    public void downloadApk(String url, int icon) {
-        final NotificationManager notificationManager = SystemUtils.notificationManager(this);
-        final NotificationCompat.Builder build = SystemUtils.notificationBuild(this, icon, SystemUtils.getAppName(this) + "下载更新", "正在下载");
-        download(url, "etd.apk", new ProgressCallback() {
-            @Override
-            public void onResponseMain(String filePath, NetInfo info) {
-                super.onResponseMain(filePath, info);
-                String apkPath = info.getRetDetail();
-                if (!TextUtils.isEmpty(apkPath) && apkPath.contains(".apk")) {
-                    build.setProgress(0, 0, false).setContentText("已经下载完成,正在安装...");
-                    notificationManager.notify(SystemUtils.notificationId, build.build());
-                    notificationManager.cancel(SystemUtils.notificationId);
-                    SystemUtils.installApkFile(getApplicationContext(), apkPath);
-                } else {
-                    LogUtils.e("err:", info);
-                }
-            }
-
-            @Override
-            public void onProgressMain(int percent, long bytesWritten, long contentLength, boolean done) {
-                super.onProgressMain(percent, bytesWritten, contentLength, done);
-                build.setProgress(100, percent, false);
-                notificationManager.notify(SystemUtils.notificationId, build.build());
-            }
-        }, this);
     }
 
     /**

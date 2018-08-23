@@ -1,19 +1,110 @@
 apply plugin: 'com.android.application'
-
+def APP_ICON = "@mipmap/ic_launcher"
+def APP_ICON_ROUND = "@mipmap/ic_launcher_round"
 android {
+
+    signingConfigs {
+        demo {
+            keyAlias 'jsd'
+            keyPassword 'jsddemo'
+            storeFile file('/Users/glzc/developer/client/android/workspace/demo/app/demo')
+            storePassword 'jsddemo'
+        }
+    }
+
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.zd112.demo"
+        resConfigs "zh"
+        // multiDexEnabled true
+        applicationId APPLICATION_ID
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode APP_VERSION_CODE.toInteger()
+        versionName = APP_VERSION_NAME
+
+        if ("".equals(APP_NAME)) {
+            APP_NAME = "demo"
+        }
+
+        manifestPlaceholders = [
+                version_code       : APP_VERSION_CODE,
+                version_name       : APP_VERSION_NAME,
+                app_name           : APP_NAME,
+                app_icon           : APP_ICON,
+                app_icon_round     : APP_ICON_ROUND,
+                FRIEND_ID_VALUE    : FRINED_ID,
+                ENVIRONMENT_VALUE  : ENVIRONMENT,
+                BUGLY_APPID        : BUGLY_APPID,
+                MODE               : ENVIRONMENT.equals("production") ? false : true,
+                UMENG_APPKEY       : UMENG_APPKEY,
+                UMENG_CHANNEL_VALUE: CHANNEL,
+                JPUSH_PKGNAME      : applicationId,
+                JPUSH_KEY       : JPUSH_KEY,
+                JPUSH_CHANNEL      : "developer-default", //暂时填写默认值即可.
+        ]
+
+//        ndk {
+//            // 设置支持的SO库架构
+//            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+//        }
+
+        splits {
+            abi {
+                enable true
+                reset()
+                include 'x86', 'armeabi-v7a','x86_64'
+                universalApk true
+            }
+        }
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled enableProguard.equals('true') ? true : false
+            zipAlignEnabled enableProguard.equals('true') ? true : false
+            shrinkResources enableProguard.equals('true') ? true : false
+//            pseudoLocalesEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.demo
+        }
+    }
+
+    def sourceFile
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def fileName
+            if ("".equals(DATE)) {
+                DATE = System.currentTimeSeconds()
+            }
+            if (variant.buildType.name.equals('debug')) {
+                fileName = "etongdai-android-v${APP_VERSION_NAME}-${APP_VERSION_CODE}-debug.apk"
+            } else {
+                fileName = "etongdai-${LABLE}-android-${CHANNEL}-v${APP_VERSION_NAME}-${APP_VERSION_CODE}-${DATE}-${ENVIRONMENT}-${variant.buildType.name}.apk"
+            }
+            outputFileName = fileName
+            if ("true".equals(project.IS_REMOTE)) {
+                if ("".equals(OUTPUT_FILE)) {
+                    OUTPUT_FILE = fileName
+                }
+                sourceFile = outputFile.parentFile.absolutePath + java.io.File.separator + outputFileName
+            }
+        }
+    }
+
+    build {
+        doLast() {
+            removeFile(sourceFile, OUTPUT_FILE)
+        }
+    }
+}
+
+def removeFile(sourceFile) {
+    if (!"".equals(sourceFile)) {
+        copy {
+            from sourceFile
+            into OUTPUT_FILE
+            rename("${android.defaultConfig.versionName}_${android.defaultConfig.versionCode}_", "")
         }
     }
 }
