@@ -22,14 +22,18 @@
     <string name="rf_footer_finish">加载完成</string>
     <string name="rf_footer_failed">加载失败</string>
     <string name="rf_footer_nothing">没有更多数据了</string>
+    <string name="rf_content_empty">RefreshView初始化失败!</string>
 
     <string name="weixin">官方微信</string>
     <string name="weixin_init">微信没有初始化!</string>
     <string name="weixin_install">请先安装微信!</string>
     <string name="no_support_device">不支持该设备!</string>
     <string name="weixin_public_num">已复制微信公众号,\n打开微信-通讯录-粘贴公众号</string>
-
-    <string name="rf_content_empty">RefreshView初始化失败!</string>
+    <string name="share_success">分享成功</string>
+    <string name="share_null">分享内容为空!</string>
+    <string name="cancel">取消</string>
+    <string name="weixin_false">微信拒绝</string>
+    <string name="back">返回</string>
 
     <string name="update_title">发现新版本:</string>
     <string name="updating">正在下载更新包:</string>

@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,10 +12,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
-import com.amap.api.location.AMapLocation;
-import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.zd112.framework.data.BaseData;
@@ -36,7 +30,6 @@ import com.zd112.framework.net.status.NetworkStateListener;
 import com.zd112.framework.net.status.NetworkStateReceiver;
 import com.zd112.framework.utils.DialogUtils;
 import com.zd112.framework.utils.FileUtils;
-import com.zd112.framework.utils.LocationUtils;
 import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.ShareParamUtils;
 import com.zd112.framework.utils.SystemUtils;
@@ -57,12 +50,12 @@ public abstract class BaseApplication extends Application implements Application
     private Thread.UncaughtExceptionHandler mUncaughtExceptionHandler;
     private boolean mInstalled = false;
 
-    public static IWXAPI mWxApi;
     public static String word;
     protected DialogUtils mDialogUtils;
     public Net.Builder netBuilder;
 
     private Context context;
+    public IWXAPI mWxApi;
     private int requestType;
     private String action;
     private HashMap<String, String> params;
@@ -115,20 +108,16 @@ public abstract class BaseApplication extends Application implements Application
                 .setDownloadFileDir(getExternalCacheDir() + pkgName + "_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
 //                .setHttpsCertificate("xxx.cer")//设置全局https自定义证书
                 .addResultInterceptor(this).addExceptionInterceptor(this).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this)));
-        initOther();
-        LocationUtils.INSTANCE.initLocation(getBaseContext()).start();
-        LocationUtils.INSTANCE.setLocationListener(new LocationUtils.AmapLocationListener() {
-            @Override
-            public void onLocation(AMapLocation aMapLocation, Location location) {
-                LogUtils.e("aMapLocation:", aMapLocation.toString());
-            }
-        });
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         initNetworkStateListener();
+        /**
+         * 微信注册
+         */
+        mWxApi = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APPID);
     }
 
     /**
@@ -149,47 +138,6 @@ public abstract class BaseApplication extends Application implements Application
         };
         //添加网络状态监听
         NetworkStateReceiver.addNetworkStateListener(networkStateListener);
-    }
-
-    private void initOther() {
-        /**
-         * 微信注册
-         */
-        String pkg = getPackageName();
-        if (pkg.equals("com.zd112.read")) {
-            mWxApi = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APPID);
-        }
-    }
-
-    public void wxScene(int scene, String url, String title, String description, Bitmap bitmap) {
-        WXWebpageObject webpage = new WXWebpageObject();
-        webpage.webpageUrl = url;
-        WXMediaMessage msg = new WXMediaMessage(webpage);
-        msg.title = title;
-        msg.description = description;
-        msg.setThumbImage(bitmap);
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = String.valueOf(System.currentTimeMillis());
-        req.message = msg;
-        req.scene = scene;
-        application.mWxApi.sendReq(req);
-    }
-
-    public boolean isWeiXin(Context context) {
-        if (mWxApi == null) {
-            loading(context, getResources().getString(R.string.weixin_init)).setOnlySure();
-            return false;
-        }
-        if (!mWxApi.isWXAppInstalled()) {
-            loading(context, getResources().getString(R.string.weixin_install)).setOnlySure();
-            return false;
-        } else if (!mWxApi.isWXAppSupportAPI()) {
-            loading(context, getResources().getString(R.string.no_support_device)).setOnlySure();
-            return false;
-        } else {
-//            etdApplication.mWxApi.openWXApp();
-        }
-        return true;
     }
 
     @Override
@@ -505,8 +453,7 @@ public abstract class BaseApplication extends Application implements Application
         if (!showLifecycleLog) {
             return;
         }
-        String callDetail = isCancel ? "取消请求" : "增加请求";
-        LogUtils.d(callDetail + ": " + tag);
+        LogUtils.d(isCancel ? "cancel request!" : "add request!" + ": " + tag);
     }
 
     public void setShowLifecycleLog(boolean showLifecycle) {
