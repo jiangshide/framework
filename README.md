@@ -1,7 +1,7 @@
-# framework
+# Android framework,欢迎start与fork
 this for android with framework
 ## 项目描述
-此开源项目由本人主导持续开发(更希望有更多人的人参与进来),项目主要包括移动客户端([android](https://github.com/jiangshide/framework),[ios](https://github.com/jiangshide/ios),)与服务端([后台管理](https://github.com/jiangshide/backstage),[API](https://github.com/jiangshide/zd112_api)),以及基础数据分析(基于spark输出)
+此开源项目由本人主导持续开发(更希望有更多人的人参与进来),项目主要包括移动客户端([android](https://github.com/jiangshide/framework),[ios](https://github.com/jiangshide/ios),)与服务端([后台管理](https://github.com/jiangshide/backstage),[API](https://github.com/jiangshide/zd112_api)),以及基础数据分析(基于[spark](https://github.com/jiangshide/spark)输出)
 当前项目分支为android开发提供基础框架,其基础框架主要包括基础UI模块(通用导航栏,通用加载刷新,通用对话实现,二维码相关,以及基础用到的view展示,更多请在view中查询),网络模块,消息模块,事件分发模块,安全控制与认证,数据适配模块,升级模块(热更新,普通更新),错误日志模块,HTML5交互模块,分享模块等,更多可看源码,或者我会给出相应的案例在demo中一一展示
 ## 项目目的
 打造最简单与最全的客户端移动基础框架,兼容所有原生接口(本身是基于原生开发:同步原生接口兼容实现),让开发者使用最少的代码去最大化的实现项目需求,应变各种紧急项目快速输出
