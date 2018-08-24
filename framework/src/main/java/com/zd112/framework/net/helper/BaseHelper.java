@@ -395,7 +395,7 @@ abstract class BaseHelper {
      */
     private void dealInterceptor(NetInfo info) {
         try {
-            if (BaseApplication.application.isActivityDestroyed(requestTag))
+            if (BaseApplication.mApplication.isActivityDestroyed(requestTag))
                 return;
             if (info.isSuccessful() && null != resultInterceptors) { //请求结果拦截器
                 for (ResultInterceptor interceptor : resultInterceptors) {

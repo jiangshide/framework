@@ -84,7 +84,7 @@ class HttpHelper extends BaseHelper {
         } finally {
             //普通网络请求结束时自动取消请求，文件下载或上传需要在异步返回时取消，避免因提前取消请求导致无法回调的问题
             if (helper.getBusinessType() == BusinessType.HttpOrHttps) {
-                BaseApplication.application.cancel(requestTag, call);
+                BaseApplication.mApplication.cancel(requestTag, call);
             }
         }
     }

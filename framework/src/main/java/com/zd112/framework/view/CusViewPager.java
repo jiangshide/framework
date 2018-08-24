@@ -23,8 +23,8 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class CusViewPager extends ViewPager {
 
-    public CurrPagerAdapter currPagerAdapter;
-    private boolean isCanScroll = true;
+    public CurrPagerAdapter mCurrPagerAdapter;
+    private boolean mIsCanScroll = true;
 
     public CusViewPager(@NonNull Context context) {
         super(context);
@@ -35,17 +35,17 @@ public class CusViewPager extends ViewPager {
     }
 
     public void setScanScroll(boolean isCanScroll) {
-        this.isCanScroll = isCanScroll;
+        this.mIsCanScroll = isCanScroll;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return isCanScroll && super.onInterceptTouchEvent(ev);
+        return mIsCanScroll && super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return isCanScroll && super.onTouchEvent(ev);
+        return mIsCanScroll && super.onTouchEvent(ev);
     }
 
     public void setResImg(int... resImgs) {
@@ -60,7 +60,7 @@ public class CusViewPager extends ViewPager {
     }
 
     public void setViews(List<View> views) {
-        this.setAdapter(currPagerAdapter = new CurrPagerAdapter(views));
+        this.setAdapter(mCurrPagerAdapter = new CurrPagerAdapter(views));
     }
 
     public void setAdapter(FragmentManager fragmentManager, Fragment... fragment) {

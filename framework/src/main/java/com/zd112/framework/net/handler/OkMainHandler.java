@@ -65,7 +65,7 @@ public class OkMainHandler extends Handler {
                     if (null != callMsg.callback) {
                         //开始回调
                         requestTag = callMsg.requestTag;
-                        if (!BaseApplication.application.isActivityDestroyed(callMsg.requestTag)) {
+                        if (!BaseApplication.mApplication.isActivityDestroyed(callMsg.requestTag)) {
                             BaseCallback callback = callMsg.callback;
                             NetInfo info = callMsg.info;
                             if (info.isSuccessful()) {
@@ -87,14 +87,14 @@ public class OkMainHandler extends Handler {
                         if (!call.isCanceled()) {
                             call.cancel();
                         }
-                        BaseApplication.application.cancel(requestTag, call);
+                        BaseApplication.mApplication.cancel(requestTag, call);
                     }
                     break;
                 case PROGRESS_CALLBACK://进度回调
                     ProgressMessage proMsg = (ProgressMessage) msg.obj;
                     if (null != proMsg.progressCallback) {
                         requestTag = proMsg.requestTag;
-                        if (!BaseApplication.application.isActivityDestroyed(proMsg.requestTag)) {
+                        if (!BaseApplication.mApplication.isActivityDestroyed(proMsg.requestTag)) {
                             proMsg.progressCallback.onProgressMain(proMsg.percent, proMsg.bytesWritten, proMsg.contentLength, proMsg.done);
                         }
                     }
@@ -103,9 +103,9 @@ public class OkMainHandler extends Handler {
                     UploadMessage uploadMsg = (UploadMessage) msg.obj;
                     if (null != uploadMsg.progressCallback) {
                         requestTag = uploadMsg.requestTag;
-                        if (!BaseApplication.application.isActivityDestroyed(requestTag)) {
+                        if (!BaseApplication.mApplication.isActivityDestroyed(requestTag)) {
                             uploadMsg.progressCallback.onResponseMain(uploadMsg.filePath, uploadMsg.info);
-                            BaseApplication.application.cancel(requestTag);
+                            BaseApplication.mApplication.cancel(requestTag);
                         }
                     }
                     break;
@@ -113,9 +113,9 @@ public class OkMainHandler extends Handler {
                     DownloadMessage downloadMsg = (DownloadMessage) msg.obj;
                     if (null != downloadMsg) {
                         requestTag = downloadMsg.requestTag;
-                        if (!BaseApplication.application.isActivityDestroyed(requestTag)) {
+                        if (!BaseApplication.mApplication.isActivityDestroyed(requestTag)) {
                             downloadMsg.progressCallback.onResponseMain(downloadMsg.filePath, downloadMsg.info);
-                            BaseApplication.application.cancel(requestTag);
+                            BaseApplication.mApplication.cancel(requestTag);
                         }
                     }
                     break;
@@ -124,7 +124,7 @@ public class OkMainHandler extends Handler {
                     break;
             }
         } catch (Exception e) {
-            BaseApplication.application.cancel(requestTag);
+            BaseApplication.mApplication.cancel(requestTag);
         }
     }
 }

@@ -36,7 +36,7 @@ public class ViewPagerIndicator extends LinearLayout {
     private Paint mPaint;//Indicator的画笔
     private int mChildCount;//XML中的tab个数
     private int mLeft; // 指示符的left
-    private HashMap<Boolean, TextView> viewMap = new HashMap<Boolean, TextView>();
+    private HashMap<Boolean, TextView> mViewMap = new HashMap<Boolean, TextView>();
     private ViewPager mViewPager;
     private int DEFAULT_PADDING = 30;
 
@@ -120,14 +120,14 @@ public class ViewPagerIndicator extends LinearLayout {
     }
 
     private void initText(int position) {
-        TextView textView = viewMap.get(true);
+        TextView textView = mViewMap.get(true);
         if (textView != null) {
             textView.setTextColor(mTabUnCheckColor);
 
         }
         TextView textView1 = (TextView) getChildAt(position);
         textView1.setTextColor(mTabCheckColor);
-        viewMap.put(true, textView1);
+        mViewMap.put(true, textView1);
         if (null != mIndicatorListener) {
             mIndicatorListener.onPageSelected(position);
 
@@ -151,7 +151,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
     public void setCurrent(int currentPage) {
         mViewPager.setCurrentItem(currentPage);
-        viewMap.put(true, (TextView) getChildAt(currentPage));
+        mViewMap.put(true, (TextView) getChildAt(currentPage));
     }
 
     /**

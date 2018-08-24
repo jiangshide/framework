@@ -36,38 +36,38 @@ import java.util.List;
  */
 
 public class BannerView extends RelativeLayout {
-    private ViewPager pager;
+    private ViewPager mPager;
     //指示器容器
-    private LinearLayout indicatorContainer;
+    private LinearLayout mIndicatorContainer;
 
-    private Drawable unSelectedDrawable;
-    private Drawable selectedDrawable;
+    private Drawable mUnSelectedDrawable;
+    private Drawable mSelectedDrawable;
 
-    private int WHAT_AUTO_PLAY = 1000;
+    private final int WHAT_AUTO_PLAY = 1000;
 
-    private boolean isAutoPlay = true;
+    private boolean mIsAutoPlay = true;
 
-    private int itemCount;
+    private int mItemCount;
 
-    private int selectedIndicatorColor = 0xffff0000;
-    private int unSelectedIndicatorColor = 0x88888888;
+    private int mSelectedIndicatorColor = 0xffff0000;
+    private int mUnSelectedIndicatorColor = 0x88888888;
 
-    private Shape indicatorShape = Shape.oval;
-    private int selectedIndicatorHeight = 6;
-    private int selectedIndicatorWidth = 6;
-    private int unSelectedIndicatorHeight = 6;
-    private int unSelectedIndicatorWidth = 6;
+    private Shape mIndicatorShape = Shape.oval;
+    private int mSelectedIndicatorHeight = 6;
+    private int mSelectedIndicatorWidth = 6;
+    private int mUnSelectedIndicatorHeight = 6;
+    private int mUnSelectedIndicatorWidth = 6;
 
-    private Position indicatorPosition = Position.centerBottom;
-    private int autoPlayDuration = 4000;
-    private int scrollDuration = 900;
+    private Position mIndicatorPosition = Position.centerBottom;
+    private int mAutoPlayDuration = 4000;
+    private int mScrollDuration = 900;
 
-    private int indicatorSpace = 3;
-    private int indicatorMargin = 10;
+    private int mIndicatorSpace = 3;
+    private int mIndicatorMargin = 10;
 
-    private int currentPosition;
+    private int mCurrentPosition;
 
-    private MyAppGlideModule.ImageLoader imageLoader;
+    private MyAppGlideModule.ImageLoader mImageLoader;
 
     private enum Shape {
         rect, oval
@@ -100,9 +100,9 @@ public class BannerView extends RelativeLayout {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == WHAT_AUTO_PLAY) {
-                if (pager != null && isAutoPlay) {
-                    pager.setCurrentItem(pager.getCurrentItem() + 1, true);
-                    handler.sendEmptyMessageDelayed(WHAT_AUTO_PLAY, autoPlayDuration);
+                if (mPager != null && mIsAutoPlay) {
+                    mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+                    handler.sendEmptyMessageDelayed(WHAT_AUTO_PLAY, mAutoPlayDuration);
                 }
             }
             return false;
@@ -125,32 +125,32 @@ public class BannerView extends RelativeLayout {
     private void init(AttributeSet attrs, int defStyle) {
 
         TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.BannerLayoutStyle, defStyle, 0);
-        selectedIndicatorColor = array.getColor(R.styleable.BannerLayoutStyle_selectedIndicatorColor, selectedIndicatorColor);
-        unSelectedIndicatorColor = array.getColor(R.styleable.BannerLayoutStyle_unSelectedIndicatorColor, unSelectedIndicatorColor);
+        mSelectedIndicatorColor = array.getColor(R.styleable.BannerLayoutStyle_selectedIndicatorColor, mSelectedIndicatorColor);
+        mUnSelectedIndicatorColor = array.getColor(R.styleable.BannerLayoutStyle_unSelectedIndicatorColor, mUnSelectedIndicatorColor);
 
         int shape = array.getInt(R.styleable.BannerLayoutStyle_indicatorShape, Shape.oval.ordinal());
         for (Shape shape1 : Shape.values()) {
             if (shape1.ordinal() == shape) {
-                indicatorShape = shape1;
+                mIndicatorShape = shape1;
                 break;
             }
         }
-        selectedIndicatorHeight = (int) array.getDimension(R.styleable.BannerLayoutStyle_selectedIndicatorHeight, selectedIndicatorHeight);
-        selectedIndicatorWidth = (int) array.getDimension(R.styleable.BannerLayoutStyle_selectedIndicatorWidth, selectedIndicatorWidth);
-        unSelectedIndicatorHeight = (int) array.getDimension(R.styleable.BannerLayoutStyle_unSelectedIndicatorHeight, unSelectedIndicatorHeight);
-        unSelectedIndicatorWidth = (int) array.getDimension(R.styleable.BannerLayoutStyle_unSelectedIndicatorWidth, unSelectedIndicatorWidth);
+        mSelectedIndicatorHeight = (int) array.getDimension(R.styleable.BannerLayoutStyle_selectedIndicatorHeight, mSelectedIndicatorHeight);
+        mSelectedIndicatorWidth = (int) array.getDimension(R.styleable.BannerLayoutStyle_selectedIndicatorWidth, mSelectedIndicatorWidth);
+        mUnSelectedIndicatorHeight = (int) array.getDimension(R.styleable.BannerLayoutStyle_unSelectedIndicatorHeight, mUnSelectedIndicatorHeight);
+        mUnSelectedIndicatorWidth = (int) array.getDimension(R.styleable.BannerLayoutStyle_unSelectedIndicatorWidth, mUnSelectedIndicatorWidth);
 
         int position = array.getInt(R.styleable.BannerLayoutStyle_indicatorPosition, Position.centerBottom.ordinal());
         for (Position position1 : Position.values()) {
             if (position == position1.ordinal()) {
-                indicatorPosition = position1;
+                mIndicatorPosition = position1;
             }
         }
-        indicatorSpace = (int) array.getDimension(R.styleable.BannerLayoutStyle_indicatorSpace, indicatorSpace);
-        indicatorMargin = (int) array.getDimension(R.styleable.BannerLayoutStyle_indicatorMargin, indicatorMargin);
-        autoPlayDuration = array.getInt(R.styleable.BannerLayoutStyle_autoPlayDuration, autoPlayDuration);
-        scrollDuration = array.getInt(R.styleable.BannerLayoutStyle_scrollDuration, scrollDuration);
-        isAutoPlay = array.getBoolean(R.styleable.BannerLayoutStyle_isAutoPlay, isAutoPlay);
+        mIndicatorSpace = (int) array.getDimension(R.styleable.BannerLayoutStyle_indicatorSpace, mIndicatorSpace);
+        mIndicatorMargin = (int) array.getDimension(R.styleable.BannerLayoutStyle_indicatorMargin, mIndicatorMargin);
+        mAutoPlayDuration = array.getInt(R.styleable.BannerLayoutStyle_autoPlayDuration, mAutoPlayDuration);
+        mScrollDuration = array.getInt(R.styleable.BannerLayoutStyle_scrollDuration, mScrollDuration);
+        mIsAutoPlay = array.getBoolean(R.styleable.BannerLayoutStyle_isAutoPlay, mIsAutoPlay);
         array.recycle();
 
         //绘制未选中状态图形
@@ -162,7 +162,7 @@ public class BannerView extends RelativeLayout {
         //绘制选中状态图形
         GradientDrawable selectedGradientDrawable;
         selectedGradientDrawable = new GradientDrawable();
-        switch (indicatorShape) {
+        switch (mIndicatorShape) {
             case rect:
                 unSelectedGradientDrawable.setShape(GradientDrawable.RECTANGLE);
                 selectedGradientDrawable.setShape(GradientDrawable.RECTANGLE);
@@ -172,16 +172,15 @@ public class BannerView extends RelativeLayout {
                 selectedGradientDrawable.setShape(GradientDrawable.OVAL);
                 break;
         }
-        unSelectedGradientDrawable.setColor(unSelectedIndicatorColor);
-        unSelectedGradientDrawable.setSize(unSelectedIndicatorWidth, unSelectedIndicatorHeight);
+        unSelectedGradientDrawable.setColor(mUnSelectedIndicatorColor);
+        unSelectedGradientDrawable.setSize(mUnSelectedIndicatorWidth, mUnSelectedIndicatorHeight);
         unSelectedLayerDrawable = new LayerDrawable(new Drawable[]{unSelectedGradientDrawable});
-        unSelectedDrawable = unSelectedLayerDrawable;
+        mUnSelectedDrawable = unSelectedLayerDrawable;
 
-        selectedGradientDrawable.setColor(selectedIndicatorColor);
-        selectedGradientDrawable.setSize(selectedIndicatorWidth, selectedIndicatorHeight);
+        selectedGradientDrawable.setColor(mSelectedIndicatorColor);
+        selectedGradientDrawable.setSize(mSelectedIndicatorWidth, mSelectedIndicatorHeight);
         selectedLayerDrawable = new LayerDrawable(new Drawable[]{selectedGradientDrawable});
-        selectedDrawable = selectedLayerDrawable;
-
+        mSelectedDrawable = selectedLayerDrawable;
     }
 
 
@@ -189,15 +188,15 @@ public class BannerView extends RelativeLayout {
     public void setViewUrls(List<String> urls) {
         setImageLoader(new GlideImageLoader());
         List<View> views = new ArrayList<>();
-        itemCount = urls.size();
+        mItemCount = urls.size();
         //主要是解决当item为小于3个的时候滑动有问题，这里将其拼凑成3个以上
-        if (itemCount < 1) {//当item个数0
+        if (mItemCount < 1) {//当item个数0
             throw new IllegalStateException("item count not equal zero");
-        } else if (itemCount < 2) { //当item个数为1
+        } else if (mItemCount < 2) { //当item个数为1
             views.add(getImageView(urls.get(0), 0));
             views.add(getImageView(urls.get(0), 0));
             views.add(getImageView(urls.get(0), 0));
-        } else if (itemCount < 3) {//当item个数为2
+        } else if (mItemCount < 3) {//当item个数为2
             views.add(getImageView(urls.get(0), 0));
             views.add(getImageView(urls.get(1), 1));
             views.add(getImageView(urls.get(0), 0));
@@ -236,35 +235,32 @@ public class BannerView extends RelativeLayout {
             }
         });
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageLoader.displayImage(getContext(), url, imageView);
+        mImageLoader.displayImage(getContext(), url, imageView);
         return imageView;
     }
 
 
     public void setImageLoader(MyAppGlideModule.ImageLoader imageLoader) {
-        this.imageLoader = imageLoader;
+        this.mImageLoader = imageLoader;
     }
 
     public ViewPager getPager() {
-        if (pager != null) {
-            return pager;
-        }
-        return null;
+        return mPager != null ? mPager : null;
     }
 
     //添加任意View视图
     public void setViews(final List<View> views) {
         //初始化pager
-        pager = new ViewPager(getContext());
+        mPager = new ViewPager(getContext());
         //添加viewpager到SliderLayout
-        addView(pager);
-        setSliderTransformDuration(scrollDuration);
+        addView(mPager);
+        setSliderTransformDuration(mScrollDuration);
         //初始化indicatorContainer
-        indicatorContainer = new LinearLayout(getContext());
-        indicatorContainer.setGravity(Gravity.CENTER_VERTICAL);
+        mIndicatorContainer = new LinearLayout(getContext());
+        mIndicatorContainer.setGravity(Gravity.CENTER_VERTICAL);
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-        switch (indicatorPosition) {
+        switch (mIndicatorPosition) {
             case centerBottom:
                 params.addRule(RelativeLayout.CENTER_HORIZONTAL);
                 params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -291,34 +287,34 @@ public class BannerView extends RelativeLayout {
                 break;
         }
         //设置margin
-        params.setMargins(indicatorMargin, indicatorMargin, indicatorMargin, indicatorMargin);
+        params.setMargins(mIndicatorMargin, mIndicatorMargin, mIndicatorMargin, mIndicatorMargin);
         //添加指示器容器布局到SliderLayout
-        addView(indicatorContainer, params);
+        addView(mIndicatorContainer, params);
 
         //初始化指示器，并添加到指示器容器布局
-        for (int i = 0; i < itemCount; i++) {
+        for (int i = 0; i < mItemCount; i++) {
             ImageView indicator = new ImageView(getContext());
             indicator.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            indicator.setPadding(indicatorSpace, indicatorSpace, indicatorSpace, indicatorSpace);
-            indicator.setImageDrawable(unSelectedDrawable);
-            indicatorContainer.addView(indicator);
+            indicator.setPadding(mIndicatorSpace, mIndicatorSpace, mIndicatorSpace, mIndicatorSpace);
+            indicator.setImageDrawable(mUnSelectedDrawable);
+            mIndicatorContainer.addView(indicator);
         }
         LoopPagerAdapter pagerAdapter = new LoopPagerAdapter(views);
-        pager.setAdapter(pagerAdapter);
+        mPager.setAdapter(pagerAdapter);
         //设置当前item到Integer.MAX_VALUE中间的一个值，看起来像无论是往前滑还是往后滑都是ok的
         //如果不设置，用户往左边滑动的时候已经划不动了
-        int targetItemPosition = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % itemCount;
-        currentPosition = targetItemPosition;
-        pager.setCurrentItem(targetItemPosition);
-        switchIndicator(targetItemPosition % itemCount);
-        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        int targetItemPosition = Integer.MAX_VALUE / 2 - Integer.MAX_VALUE / 2 % mItemCount;
+        mCurrentPosition = targetItemPosition;
+        mPager.setCurrentItem(targetItemPosition);
+        switchIndicator(targetItemPosition % mItemCount);
+        mPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                currentPosition = position;
-                switchIndicator(position % itemCount);
+                mCurrentPosition = position;
+                switchIndicator(position % mItemCount);
             }
         });
-        if (isAutoPlay) {
+        if (mIsAutoPlay) {
             startAutoPlay();
         }
 
@@ -328,8 +324,8 @@ public class BannerView extends RelativeLayout {
         try {
             Field mScroller = ViewPager.class.getDeclaredField("mScroller");
             mScroller.setAccessible(true);
-            FixedSpeedScroller scroller = new FixedSpeedScroller(pager.getContext(), null, duration);
-            mScroller.set(pager, scroller);
+            FixedSpeedScroller scroller = new FixedSpeedScroller(mPager.getContext(), null, duration);
+            mScroller.set(mPager, scroller);
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -341,8 +337,8 @@ public class BannerView extends RelativeLayout {
      */
     private void startAutoPlay() {
         stopAutoPlay(); // 避免重复消息
-        if (isAutoPlay) {
-            handler.sendEmptyMessageDelayed(WHAT_AUTO_PLAY, autoPlayDuration);
+        if (mIsAutoPlay) {
+            handler.sendEmptyMessageDelayed(WHAT_AUTO_PLAY, mAutoPlayDuration);
         }
     }
 
@@ -362,13 +358,13 @@ public class BannerView extends RelativeLayout {
      * 停止自动轮播
      */
     private void stopAutoPlay() {
-        if (pager != null) {
-            pager.setCurrentItem(pager.getCurrentItem(), false);
+        if (mPager != null) {
+            mPager.setCurrentItem(mPager.getCurrentItem(), false);
         }
-        if (isAutoPlay) {
+        if (mIsAutoPlay) {
             handler.removeMessages(WHAT_AUTO_PLAY);
-            if (pager != null) {
-                pager.setCurrentItem(pager.getCurrentItem(), false);
+            if (mPager != null) {
+                mPager.setCurrentItem(mPager.getCurrentItem(), false);
             }
         }
     }
@@ -377,7 +373,7 @@ public class BannerView extends RelativeLayout {
      * @param autoPlay 是否自动轮播
      */
     public void setAutoPlay(boolean autoPlay) {
-        isAutoPlay = autoPlay;
+        mIsAutoPlay = autoPlay;
     }
 
 
@@ -401,8 +397,8 @@ public class BannerView extends RelativeLayout {
      * @param currentPosition 当前位置
      */
     private void switchIndicator(int currentPosition) {
-        for (int i = 0; i < indicatorContainer.getChildCount(); i++) {
-            ((ImageView) indicatorContainer.getChildAt(i)).setImageDrawable(i == currentPosition ? selectedDrawable : unSelectedDrawable);
+        for (int i = 0; i < mIndicatorContainer.getChildCount(); i++) {
+            ((ImageView) mIndicatorContainer.getChildAt(i)).setImageDrawable(i == currentPosition ? mSelectedDrawable : mUnSelectedDrawable);
         }
     }
 
@@ -419,7 +415,7 @@ public class BannerView extends RelativeLayout {
     public void onRestoreInstanceState(Parcelable state) {
         SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
-        currentPosition = savedState.currentPosition;
+        mCurrentPosition = savedState.currentPosition;
         requestLayout();
     }
 
@@ -427,7 +423,7 @@ public class BannerView extends RelativeLayout {
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         SavedState savedState = new SavedState(superState);
-        savedState.currentPosition = currentPosition;
+        savedState.currentPosition = mCurrentPosition;
         return savedState;
     }
 

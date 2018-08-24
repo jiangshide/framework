@@ -436,7 +436,7 @@ public class Net implements NetInterface {
      */
     @Override
     public void cancelRequest(Object requestTag) {
-        BaseApplication.application.cancel(parseRequestTag(requestTag));
+        BaseApplication.mApplication.cancel(parseRequestTag(requestTag));
     }
 
     @Override
@@ -450,9 +450,9 @@ public class Net implements NetInterface {
 
     @SuppressWarnings("all")
     public boolean isNetworkAvailable() {
-        if (BaseApplication.application == null)
+        if (BaseApplication.mApplication == null)
             return true;
-        ConnectivityManager cm = (ConnectivityManager) BaseApplication.application
+        ConnectivityManager cm = (ConnectivityManager) BaseApplication.mApplication
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo net = cm.getActiveNetworkInfo();
         return net != null && net.getState() == NetworkInfo.State.CONNECTED;
@@ -463,11 +463,11 @@ public class Net implements NetInterface {
         this.builder = builder;
         this.cacheType = builder.cacheType;
         this.cacheSurvivalTime = builder.cacheSurvivalTime;
-        if (null == BaseApplication.application)
+        if (null == BaseApplication.mApplication)
             this.cacheType = FORCE_NETWORK;
         if (null == executorService)
             executorService = new ScheduledThreadPoolExecutor(20);
-        BaseApplication.application.setShowLifecycleLog(builder.showLifecycleLog);
+        BaseApplication.mApplication.setShowLifecycleLog(builder.showLifecycleLog);
         if (builder.isGlobalConfig) {
             OkHttpHelper.Builder()
                     .helperInfo(packageHelperInfo(null))
@@ -522,7 +522,7 @@ public class Net implements NetInterface {
         if (httpsCertificate != null) {
             InputStream inputStream = null;
             try {
-                inputStream = BaseApplication.application.getAssets().open(httpsCertificate);
+                inputStream = BaseApplication.mApplication.getAssets().open(httpsCertificate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -784,7 +784,7 @@ public class Net implements NetInterface {
         }
 
         //设置缓存类型
-        public Builder setCacheType(@CacheType int cacheType) {
+        public Builder setCacheType(int cacheType) {
             this.cacheType = cacheType;
             return this;
         }

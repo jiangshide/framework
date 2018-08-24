@@ -17,6 +17,7 @@ import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.service.UpdateService;
 import com.zd112.framework.utils.DialogUtils;
 import com.zd112.framework.utils.LogUtils;
+import com.zd112.framework.utils.NetUtils;
 import com.zd112.framework.utils.SystemUtils;
 
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
         if (mStatus == 0 || mStatus == 1) {
             show();
         } else {
-            BaseApplication.application.startService(new Intent(BaseApplication.application, UpdateService.class).putExtra("url", mUrl));
+            BaseApplication.mApplication.startService(new Intent(BaseApplication.mApplication, UpdateService.class).putExtra("url", mUrl));
             result();
         }
         return this;
@@ -90,7 +91,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
     }
 
     public UpdateView init(Callback callback) {
-        BaseApplication.application.request(mContext, RequestType.GET, BuildConfig.UPDATE, null, callback != null ? callback : this, UpdateData.class, false);
+        NetUtils.INSTANCE.request(mContext, RequestType.GET, BuildConfig.UPDATE, null, callback != null ? callback : this, UpdateData.class, false);
         return this;
     }
 
@@ -115,7 +116,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
     }
 
     private void download() {
-        BaseApplication.application.download(mUrl, mProgressCallback != null ? mProgressCallback : new ProgressCallback() {
+        NetUtils.INSTANCE.download(mUrl, mProgressCallback != null ? mProgressCallback : new ProgressCallback() {
             @Override
             public void onProgressMain(int percent, long bytesWritten, long contentLength, boolean done) {
                 super.onProgressMain(percent, bytesWritten, contentLength, done);
@@ -133,7 +134,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
                 super.onResponseMain(filePath, info);
                 String apkPath = info.getRetDetail();
                 if (!TextUtils.isEmpty(apkPath) && apkPath.contains(".apk")) {
-                    SystemUtils.installApkFile(BaseApplication.application, apkPath);
+                    SystemUtils.installApkFile(BaseApplication.mApplication, apkPath);
                 } else {
                     LogUtils.e("err:", info);
                     result();

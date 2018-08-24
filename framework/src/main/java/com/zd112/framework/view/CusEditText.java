@@ -23,16 +23,16 @@ import java.util.HashMap;
 public class CusEditText extends android.support.v7.widget.AppCompatEditText implements View.OnFocusChangeListener, TextWatcher {
 
     private Drawable mClearDrawable;
-    private boolean hasFoucs;
-    private int requestType;
-    private int cacheType;
-    private String action;
-    private HashMap<String, String> params;
-    private Callback callback;
-    private int length;
+    private boolean mHasFoucs;
+    private int mRequestType;
+    private int mCacheType;
+    private String mAction;
+    private HashMap<String, String> mParams;
+    private Callback mCallback;
+    private int mLength;
     public final int MOBILE = 1, ID_CARD = 2, BRAND_CARD = 3;
     private int mStart, mEnd;
-    private int format;
+    private int mFormat;
 
     public CusEditText(Context context) {
         this(context, null);
@@ -46,13 +46,13 @@ public class CusEditText extends android.support.v7.widget.AppCompatEditText imp
         super(context, attrs, defStyle);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CusEditText, 0, 0);
         if (array != null) {
-            format = array.getInteger(R.styleable.CusEditText_format, 0);
+            mFormat = array.getInteger(R.styleable.CusEditText_format, 0);
             mStart = array.getInteger(R.styleable.CusEditText_formatStart, 0);
             mEnd = array.getInteger(R.styleable.CusEditText_formatEnd, 0);
             array.recycle();
         }
-        if (format > 0) {
-            format(format);
+        if (mFormat > 0) {
+            format(mFormat);
         } else {
             format(mStart, mEnd);
         }
@@ -100,16 +100,16 @@ public class CusEditText extends android.support.v7.widget.AppCompatEditText imp
     }
 
     public CusEditText setRequestParam(int requestType, int cacheType, String action, HashMap<String, String> params, Callback callback) {
-        this.requestType = requestType;
-        this.cacheType = cacheType;
-        this.action = action;
-        this.params = params;
-        this.callback = callback;
+        this.mRequestType = requestType;
+        this.mCacheType = cacheType;
+        this.mAction = action;
+        this.mParams = params;
+        this.mCallback = callback;
         return this;
     }
 
     public CusEditText setRequestSize(int length) {
-        this.length = length;
+        this.mLength = length;
         return this;
     }
 
@@ -170,7 +170,7 @@ public class CusEditText extends android.support.v7.widget.AppCompatEditText imp
      */
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
-        this.hasFoucs = hasFocus;
+        this.mHasFoucs = hasFocus;
         if (hasFocus) {
             setClearIconVisible(getText().length() > 0);
         } else {
@@ -186,7 +186,7 @@ public class CusEditText extends android.support.v7.widget.AppCompatEditText imp
 
     @Override
     public void onTextChanged(CharSequence s, int start, int count, int after) {
-        if (hasFoucs) {
+        if (mHasFoucs) {
             setClearIconVisible(s.length() > 0);
         }
     }
@@ -198,8 +198,8 @@ public class CusEditText extends android.support.v7.widget.AppCompatEditText imp
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (callback != null && s.length() > length) {
-            Net.Builder().setCacheType(cacheType).build().doAsync(NetInfo.Builder().setRequestType(requestType).setAction(action).addParams(params).build(), callback);
+        if (mCallback != null && s.length() > mLength) {
+            Net.Builder().setCacheType(mCacheType).build().doAsync(NetInfo.Builder().setRequestType(mRequestType).setAction(mAction).addParams(mParams).build(), mCallback);
         }
     }
 

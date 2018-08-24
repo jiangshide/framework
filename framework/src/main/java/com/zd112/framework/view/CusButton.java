@@ -14,23 +14,23 @@ import com.zd112.framework.R;
 
 public class CusButton extends AppCompatButton {
     //按下颜色
-    private int pressedColor;
+    private int mPressedColor;
     //当前颜色
-    private int normalColor;
+    private int mNormalColor;
     //当前圆角
-    private float currCorner;
-    private float leftCorner, topCorner, rightCorner, bottomCorner;
+    private float mCurrCorner;
+    private float mLeftCorner, mTopCorner, mRightCorner, mBottomCorner;
     // 四边宽度
-    private float strokeWidth;
+    private float mStrokeWidth;
     // 颜色
-    private int strokeColor;
+    private int mStrokeColor;
 
-    GradientDrawable gradientDrawable;
+    GradientDrawable mGradientDrawable;
 
     //按钮类型
-    private int type;
+    private int mType;
 
-    boolean isTouchPass = true;
+    boolean mIsTouchPass = true;
 
     public CusButton(Context context) {
         this(context, null);
@@ -48,61 +48,61 @@ public class CusButton extends AppCompatButton {
 
     private void init() {
         setGravity(Gravity.CENTER);
-        gradientDrawable = new GradientDrawable();
+        mGradientDrawable = new GradientDrawable();
         //说明配置了快速按钮选项
-        if (type != 0) {
+        if (mType != 0) {
             setTextColor(Color.WHITE);
-            switch (type) {
+            switch (mType) {
                 case 1:
-                    normalColor = Color.parseColor("#5CB85C");
-                    pressedColor = Color.parseColor("#449D44");
+                    mNormalColor = Color.parseColor("#5CB85C");
+                    mPressedColor = Color.parseColor("#449D44");
                     break;
                 case 2:
-                    normalColor = Color.parseColor("#5BC0DE");
-                    pressedColor = Color.parseColor("#31B0D5");
+                    mNormalColor = Color.parseColor("#5BC0DE");
+                    mPressedColor = Color.parseColor("#31B0D5");
                     break;
                 case 3:
-                    normalColor = Color.parseColor("#F0AD4E");
-                    pressedColor = Color.parseColor("#EC971F");
+                    mNormalColor = Color.parseColor("#F0AD4E");
+                    mPressedColor = Color.parseColor("#EC971F");
                     break;
                 case 4:
-                    normalColor = Color.parseColor("#D9534F");
-                    pressedColor = Color.parseColor("#C9302C");
+                    mNormalColor = Color.parseColor("#D9534F");
+                    mPressedColor = Color.parseColor("#C9302C");
                     break;
             }
         }
 
-        gradientDrawable.setColor(normalColor);
-        gradientDrawable.setStroke((int) strokeWidth, strokeColor);
-        if (leftCorner > 0 || topCorner > 0 || rightCorner > 0 || bottomCorner > 0) {
-            gradientDrawable.setCornerRadii(new float[]{leftCorner, leftCorner, topCorner, topCorner, rightCorner, rightCorner, bottomCorner, bottomCorner});
+        mGradientDrawable.setColor(mNormalColor);
+        mGradientDrawable.setStroke((int) mStrokeWidth, mStrokeColor);
+        if (mLeftCorner > 0 || mTopCorner > 0 || mRightCorner > 0 || mBottomCorner > 0) {
+            mGradientDrawable.setCornerRadii(new float[]{mLeftCorner, mLeftCorner, mTopCorner, mTopCorner, mRightCorner, mRightCorner, mBottomCorner, mBottomCorner});
         } else {
-            gradientDrawable.setCornerRadius(currCorner);
+            mGradientDrawable.setCornerRadius(mCurrCorner);
         }
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View arg0, MotionEvent event) {
-                setBackgroundDrawable(gradientDrawable);
+                setBackgroundDrawable(mGradientDrawable);
                 return setColor(event.getAction());
             }
         });
-        setBackgroundDrawable(gradientDrawable);
+        setBackgroundDrawable(mGradientDrawable);
     }
 
     private void initAttrs(AttributeSet attrs) {
         if (attrs != null) {
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ButtonStyle);
             int color = getResources().getColor(R.color.colorPrimary);
-            normalColor = typedArray.getColor(R.styleable.ButtonStyle_normal_color, color);
-            strokeWidth = typedArray.getDimension(R.styleable.ButtonStyle_stroke, 0);
-            strokeColor = typedArray.getColor(R.styleable.ButtonStyle_stroke_color, Color.TRANSPARENT);
-            pressedColor = typedArray.getColor(R.styleable.ButtonStyle_press_color, getResources().getColor(R.color.colorPrimaryDark));
-            currCorner = typedArray.getDimension(R.styleable.ButtonStyle_corner, getResources().getDimension(R.dimen.default_con));
-            leftCorner = typedArray.getDimension(R.styleable.ButtonStyle_leftCorner, 0);
-            topCorner = typedArray.getDimension(R.styleable.ButtonStyle_topCorner, 0);
-            rightCorner = typedArray.getDimension(R.styleable.ButtonStyle_rightCorner, 0);
-            bottomCorner = typedArray.getDimension(R.styleable.ButtonStyle_bottomCorner, 0);
-            type = typedArray.getInt(R.styleable.ButtonStyle_type, 0);
+            mNormalColor = typedArray.getColor(R.styleable.ButtonStyle_normal_color, color);
+            mStrokeWidth = typedArray.getDimension(R.styleable.ButtonStyle_stroke, 0);
+            mStrokeColor = typedArray.getColor(R.styleable.ButtonStyle_stroke_color, Color.TRANSPARENT);
+            mPressedColor = typedArray.getColor(R.styleable.ButtonStyle_press_color, getResources().getColor(R.color.colorPrimaryDark));
+            mCurrCorner = typedArray.getDimension(R.styleable.ButtonStyle_corner, getResources().getDimension(R.dimen.default_con));
+            mLeftCorner = typedArray.getDimension(R.styleable.ButtonStyle_leftCorner, 0);
+            mTopCorner = typedArray.getDimension(R.styleable.ButtonStyle_topCorner, 0);
+            mRightCorner = typedArray.getDimension(R.styleable.ButtonStyle_rightCorner, 0);
+            mBottomCorner = typedArray.getDimension(R.styleable.ButtonStyle_bottomCorner, 0);
+            mType = typedArray.getInt(R.styleable.ButtonStyle_type, 0);
             typedArray.recycle();
         }
     }
@@ -110,37 +110,37 @@ public class CusButton extends AppCompatButton {
     @Override
     public void setOnClickListener(OnClickListener l) {
         super.setOnClickListener(l);
-        isTouchPass = false;
+        mIsTouchPass = false;
     }
 
     public boolean setColor(int action) {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                gradientDrawable.setColor(pressedColor);
+                mGradientDrawable.setColor(mPressedColor);
                 break;
             case MotionEvent.ACTION_UP:
-                gradientDrawable.setColor(normalColor);
+                mGradientDrawable.setColor(mNormalColor);
                 break;
             case MotionEvent.ACTION_CANCEL:
-                gradientDrawable.setColor(normalColor);
+                mGradientDrawable.setColor(mNormalColor);
                 break;
         }
 
-        return isTouchPass;
+        return mIsTouchPass;
     }
 
     /**
      * @return 获取按下颜色
      */
     public int getPressedColor() {
-        return pressedColor;
+        return mPressedColor;
     }
 
     /**
      * @param pressedColor 按下颜色设置
      */
     public CusButton setPressedColor(int pressedColor) {
-        this.pressedColor = getResources().getColor(pressedColor);
+        this.mPressedColor = getResources().getColor(pressedColor);
         return this;
     }
 
@@ -148,7 +148,7 @@ public class CusButton extends AppCompatButton {
      * @param pressedColor 设置按下颜色 例如：#ffffff
      */
     public CusButton setPressedColor(String pressedColor) {
-        this.pressedColor = Color.parseColor(pressedColor);
+        this.mPressedColor = Color.parseColor(pressedColor);
         return this;
     }
 
@@ -156,16 +156,16 @@ public class CusButton extends AppCompatButton {
      * @return 获取默认颜色
      */
     public int getNormalColor() {
-        return normalColor;
+        return mNormalColor;
     }
 
     /**
      * @param normalColor 设置默认颜色
      */
     public CusButton setNormalColor(int normalColor) {
-        this.normalColor = getResources().getColor(normalColor);
-        if (gradientDrawable != null)
-            gradientDrawable.setColor(this.normalColor);
+        this.mNormalColor = getResources().getColor(normalColor);
+        if (mGradientDrawable != null)
+            mGradientDrawable.setColor(this.mNormalColor);
         return this;
     }
 
@@ -173,9 +173,9 @@ public class CusButton extends AppCompatButton {
      * @param normalColor 设置默认颜色 例如：#ffffff
      */
     public CusButton setNormalColor(String normalColor) {
-        this.normalColor = Color.parseColor(normalColor);
-        if (gradientDrawable != null)
-            gradientDrawable.setColor(this.normalColor);
+        this.mNormalColor = Color.parseColor(normalColor);
+        if (mGradientDrawable != null)
+            mGradientDrawable.setColor(this.mNormalColor);
         return this;
     }
 
@@ -183,16 +183,16 @@ public class CusButton extends AppCompatButton {
      * @return 返回当前圆角大小
      */
     public float getCurrCorner() {
-        return currCorner;
+        return mCurrCorner;
     }
 
     /**
      * @param currCorner 设置当前圆角
      */
     public CusButton setCurrCorner(float currCorner) {
-        this.currCorner = currCorner;
-        if (gradientDrawable != null)
-            gradientDrawable.setCornerRadius(currCorner);
+        this.mCurrCorner = currCorner;
+        if (mGradientDrawable != null)
+            mGradientDrawable.setCornerRadius(currCorner);
         return this;
     }
 
@@ -202,10 +202,10 @@ public class CusButton extends AppCompatButton {
      */
     public CusButton setCurrCorner(float... currCorner) {
         if (currCorner != null && currCorner.length == 4) {
-            this.leftCorner = currCorner[0];
-            this.topCorner = currCorner[1];
-            this.rightCorner = currCorner[2];
-            this.bottomCorner = currCorner[3];
+            this.mLeftCorner = currCorner[0];
+            this.mTopCorner = currCorner[1];
+            this.mRightCorner = currCorner[2];
+            this.mBottomCorner = currCorner[3];
             init();
         }
         return this;
@@ -216,16 +216,16 @@ public class CusButton extends AppCompatButton {
      * @return 返回边框大小
      */
     public float getStrokeWidth() {
-        return strokeWidth;
+        return mStrokeWidth;
     }
 
     /**
      * @param strokeWidth 设置边框大小
      */
     public CusButton setStrokeWidth(float strokeWidth) {
-        this.strokeWidth = strokeWidth;
-        if (gradientDrawable != null)
-            gradientDrawable.setStroke((int) strokeWidth, this.strokeColor);
+        this.mStrokeWidth = strokeWidth;
+        if (mGradientDrawable != null)
+            mGradientDrawable.setStroke((int) strokeWidth, this.mStrokeColor);
         return this;
     }
 
@@ -233,16 +233,16 @@ public class CusButton extends AppCompatButton {
      * @return 返回边框颜色
      */
     public int getStrokeColor() {
-        return strokeColor;
+        return mStrokeColor;
     }
 
     /**
      * @param strokeColor 设置边框颜色
      */
     public CusButton setStrokeColor(int strokeColor) {
-        this.strokeColor = getResources().getColor(strokeColor);
-        if (gradientDrawable != null)
-            gradientDrawable.setStroke((int) strokeWidth, this.strokeColor);
+        this.mStrokeColor = getResources().getColor(strokeColor);
+        if (mGradientDrawable != null)
+            mGradientDrawable.setStroke((int) mStrokeWidth, this.mStrokeColor);
         return this;
     }
 
@@ -250,9 +250,9 @@ public class CusButton extends AppCompatButton {
      * @param strokeColor 设置边框颜色 例如：#ffffff
      */
     public CusButton setStrokeColor(String strokeColor) {
-        this.strokeColor = Color.parseColor(strokeColor);
-        if (gradientDrawable != null)
-            gradientDrawable.setStroke((int) strokeWidth, this.strokeColor);
+        this.mStrokeColor = Color.parseColor(strokeColor);
+        if (mGradientDrawable != null)
+            mGradientDrawable.setStroke((int) mStrokeWidth, this.mStrokeColor);
         return this;
     }
 }

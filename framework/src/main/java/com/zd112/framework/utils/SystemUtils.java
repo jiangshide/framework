@@ -648,7 +648,7 @@ public class SystemUtils {
 
     public static String getNetType() {
         String netType = "";
-        NetworkInfo networkInfo = ((ConnectivityManager) BaseApplication.application.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        NetworkInfo networkInfo = ((ConnectivityManager) BaseApplication.mApplication.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 netType = "WIFI";

@@ -17,31 +17,31 @@ import com.zd112.framework.R;
 
 public class NavigationTopView extends LinearLayout implements View.OnClickListener {
 
-    public static final int leftId = 0x100000;
-    public static final int rightId = 0x200000;
+    public static final int LEFT_BTN_ID = 0x100000;
+    public static final int RIGHT_BTN_ID = 0x200000;
 
-    private int bgColor;
+    private int mBgColor;
 
-    private String leftName;
-    private int leftTextColor;
-    private int leftTextSize;
-    private int leftBg;
-    private Drawable leftBgDraw;
+    private String mLeftName;
+    private int mLeftTextColor;
+    private int mLeftTextSize;
+    private int mLeftBg;
+    private Drawable mLeftBgDraw;
 
-    private String titleName;
-    private int titleTextColor;
-    private int titleTextSize;
+    private String mTitleName;
+    private int mTitleTextColor;
+    private int mTitleTextSize;
 
-    private String rightName;
-    private int rightTextColor;
-    private int rightTextSize;
-    private int rightBg;
+    private String mRightName;
+    private int mRightTextColor;
+    private int mRightTextSize;
+    private int mRightBg;
 
-    private Button leftBtn, rightBtn;
-    private TextView titleView;
+    private Button mLeftBtn, mRightBtn;
+    private TextView mTitleView;
 
-    private RelativeLayout menusLayout;
-    private OnClickListener onLeftClickListener, onRightClickListener;
+    private RelativeLayout mMenusLayout;
+    private OnClickListener mOnLeftClickListener, mOnRightClickListener;
 
     public NavigationTopView(Context context) {
         this(context, null);
@@ -55,121 +55,121 @@ public class NavigationTopView extends LinearLayout implements View.OnClickListe
         super(context, attrs, defStyleAttr);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.NavigationTopView, 0, 0);
         if (array != null) {
-            bgColor = array.getColor(R.styleable.NavigationTopView_bgColor, getResources().getColor(R.color.colorPrimaryDark));
-            leftName = array.getString(R.styleable.NavigationTopView_leftName);
-            leftTextColor = array.getColor(R.styleable.NavigationTopView_leftTextColor, getResources().getColor(R.color.white));
-            leftTextSize = array.getInteger(R.styleable.NavigationTopView_leftTextSize, 15);
+            mBgColor = array.getColor(R.styleable.NavigationTopView_bgColor, getResources().getColor(R.color.colorPrimaryDark));
+            mLeftName = array.getString(R.styleable.NavigationTopView_leftName);
+            mLeftTextColor = array.getColor(R.styleable.NavigationTopView_leftTextColor, getResources().getColor(R.color.white));
+            mLeftTextSize = array.getInteger(R.styleable.NavigationTopView_leftTextSize, 15);
 //            leftBg = array.getInteger(R.styleable.NavigationTopView_leftBg, 0);
 
-            titleName = array.getString(R.styleable.NavigationTopView_titleName);
-            titleTextColor = array.getInteger(R.styleable.NavigationTopView_titleTextColor, getResources().getColor(R.color.white));
-            titleTextSize = array.getInteger(R.styleable.NavigationTopView_titleTextSize, 18);
+            mTitleName = array.getString(R.styleable.NavigationTopView_titleName);
+            mTitleTextColor = array.getInteger(R.styleable.NavigationTopView_titleTextColor, getResources().getColor(R.color.white));
+            mTitleTextSize = array.getInteger(R.styleable.NavigationTopView_titleTextSize, 18);
 
-            rightName = array.getString(R.styleable.NavigationTopView_rightName);
-            rightTextColor = array.getColor(R.styleable.NavigationTopView_rightTextColor, getResources().getColor(R.color.white));
-            rightTextSize = array.getInteger(R.styleable.NavigationTopView_rightTextSize, 15);
+            mRightName = array.getString(R.styleable.NavigationTopView_rightName);
+            mRightTextColor = array.getColor(R.styleable.NavigationTopView_rightTextColor, getResources().getColor(R.color.white));
+            mRightTextSize = array.getInteger(R.styleable.NavigationTopView_rightTextSize, 15);
 //            rightBg = array.getInteger(R.styleable.NavigationTopView_rightBg, 0);
             array.recycle();
         }
-        menusLayout = new RelativeLayout(getContext());
-        menusLayout.setPadding(10, 5, 10, 5);
+        mMenusLayout = new RelativeLayout(getContext());
+        mMenusLayout.setPadding(10, 5, 10, 5);
         init();
     }
 
     private void init() {
-        setBackgroundColor(bgColor);
-        leftBtn = new Button(getContext());
-        leftBtn.setTextColor(leftTextColor);
-        leftBtn.setTextSize(leftTextSize);
-        leftBtn.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-        leftBtn.setId(leftId);
-        leftBtn.setOnClickListener(this);
-        if (TextUtils.isEmpty(leftName)) {
-            leftBtn.setBackgroundResource(R.drawable.back);
+        setBackgroundColor(mBgColor);
+        mLeftBtn = new Button(getContext());
+        mLeftBtn.setTextColor(mLeftTextColor);
+        mLeftBtn.setTextSize(mLeftTextSize);
+        mLeftBtn.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+        mLeftBtn.setId(LEFT_BTN_ID);
+        mLeftBtn.setOnClickListener(this);
+        if (TextUtils.isEmpty(mLeftName)) {
+            mLeftBtn.setBackgroundResource(R.drawable.back);
             RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(80, 80);
             params2.addRule(RelativeLayout.CENTER_VERTICAL);
-            menusLayout.addView(leftBtn, params2);
+            mMenusLayout.addView(mLeftBtn, params2);
         } else {
-            leftBtn.setBackgroundResource(R.drawable.alpha);
-            leftBtn.setText(leftName);
+            mLeftBtn.setBackgroundResource(R.drawable.alpha);
+            mLeftBtn.setText(mLeftName);
             RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             params2.addRule(RelativeLayout.CENTER_VERTICAL);
-            menusLayout.addView(leftBtn, params2);
-            leftBtn.setPadding(20, 0, 0, 0);
+            mMenusLayout.addView(mLeftBtn, params2);
+            mLeftBtn.setPadding(20, 0, 0, 0);
         }
 
-        titleView = new TextView(getContext());
-        titleView.setText(TextUtils.isEmpty(titleName) ? "" : titleName);
-        titleView.setTextColor(titleTextColor);
-        titleView.setTextSize(titleTextSize);
-        titleView.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
+        mTitleView = new TextView(getContext());
+        mTitleView.setText(TextUtils.isEmpty(mTitleName) ? "" : mTitleName);
+        mTitleView.setTextColor(mTitleTextColor);
+        mTitleView.setTextSize(mTitleTextSize);
+        mTitleView.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
         RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params1.addRule(RelativeLayout.CENTER_IN_PARENT);
-        menusLayout.addView(titleView, params1);
+        mMenusLayout.addView(mTitleView, params1);
 
-        rightBtn = new Button(getContext());
-        rightBtn.setText(TextUtils.isEmpty(rightName) ? "" : rightName);
-        rightBtn.setTextColor(rightTextColor);
-        rightBtn.setTextSize(rightTextSize);
-        rightBtn.setBackgroundResource(R.drawable.alpha);
-        rightBtn.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-        rightBtn.setId(rightId);
-        if (!TextUtils.isEmpty(rightName)) {
-            rightBtn.setOnClickListener(this);
+        mRightBtn = new Button(getContext());
+        mRightBtn.setText(TextUtils.isEmpty(mRightName) ? "" : mRightName);
+        mRightBtn.setTextColor(mRightTextColor);
+        mRightBtn.setTextSize(mRightTextSize);
+        mRightBtn.setBackgroundResource(R.drawable.alpha);
+        mRightBtn.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        mRightBtn.setId(RIGHT_BTN_ID);
+        if (!TextUtils.isEmpty(mRightName)) {
+            mRightBtn.setOnClickListener(this);
         }
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        menusLayout.addView(rightBtn, params);
-        rightBtn.setPadding(0, 0, 20, 0);
-        this.addView(menusLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        mMenusLayout.addView(mRightBtn, params);
+        mRightBtn.setPadding(0, 0, 20, 0);
+        this.addView(mMenusLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 
     public NavigationTopView setLeftName(String name) {
         if (!TextUtils.isEmpty(name)) {
-            leftBtn.setText(name);
-            leftBtn.setOnClickListener(this);
+            mLeftBtn.setText(name);
+            mLeftBtn.setOnClickListener(this);
         }
         return this;
     }
 
     public NavigationTopView setTitle(String name) {
         if (!TextUtils.isEmpty(name)) {
-            titleView.setText(name);
+            mTitleView.setText(name);
         }
         return this;
     }
 
     public NavigationTopView setRightName(String name) {
         if (!TextUtils.isEmpty(name)) {
-            rightBtn.setText(name);
-            rightBtn.setOnClickListener(this);
+            mRightBtn.setText(name);
+            mRightBtn.setOnClickListener(this);
         }
         return this;
     }
 
     public NavigationTopView setOnLeftClick(OnClickListener listener) {
-        this.onLeftClickListener = listener;
+        this.mOnLeftClickListener = listener;
         return this;
     }
 
     public NavigationTopView setOnRightClick(OnClickListener listener) {
-        this.onRightClickListener = listener;
+        this.mOnRightClickListener = listener;
         return this;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case leftId:
-                if (onLeftClickListener != null) {
-                    onLeftClickListener.onClick(v);
+            case LEFT_BTN_ID:
+                if (mOnLeftClickListener != null) {
+                    mOnLeftClickListener.onClick(v);
                 } else {
                     ((Activity) getContext()).finish();
                 }
                 break;
-            case rightId:
-                if (onRightClickListener != null) {
-                    onRightClickListener.onClick(v);
+            case RIGHT_BTN_ID:
+                if (mOnRightClickListener != null) {
+                    mOnRightClickListener.onClick(v);
                 } else {
                     ((Activity) getContext()).finish();
                 }

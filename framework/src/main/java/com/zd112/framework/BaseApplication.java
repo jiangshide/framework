@@ -15,29 +15,15 @@ import android.util.SparseArray;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.zd112.framework.data.BaseData;
-import com.zd112.framework.net.Net;
-import com.zd112.framework.net.annotation.Encoding;
-import com.zd112.framework.net.annotation.RequestStatus;
-import com.zd112.framework.net.callback.Callback;
-import com.zd112.framework.net.callback.ProgressCallback;
-import com.zd112.framework.net.cookie.PersistentCookieJar;
-import com.zd112.framework.net.cookie.cache.SetCookieCache;
-import com.zd112.framework.net.cookie.persistence.SharedPrefsCookiePersistor;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.net.interfaces.interceptor.ExceptionInterceptor;
 import com.zd112.framework.net.interfaces.interceptor.ResultInterceptor;
 import com.zd112.framework.net.status.NetworkStateListener;
 import com.zd112.framework.net.status.NetworkStateReceiver;
-import com.zd112.framework.utils.DialogUtils;
-import com.zd112.framework.utils.FileUtils;
 import com.zd112.framework.utils.LogUtils;
-import com.zd112.framework.utils.ShareParamUtils;
 import com.zd112.framework.utils.SystemUtils;
-import com.zd112.framework.view.DialogView;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,37 +31,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import okhttp3.Call;
 
 public abstract class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks, ResultInterceptor, ExceptionInterceptor {
-    public static BaseApplication application;
+    public static BaseApplication mApplication;
 
     private Thread.UncaughtExceptionHandler mUncaughtExceptionHandler;
     private boolean mInstalled = false;
 
-    public static String word;
-    protected DialogUtils mDialogUtils;
-    public Net.Builder netBuilder;
-
-    private Context context;
     public IWXAPI mWxApi;
-    private int requestType;
-    private String action;
-    private HashMap<String, String> params;
-    private Callback callback;
-    private Class _class;
-    private boolean isLoading;
 
-    private List<Activity> activityList = new ArrayList<>();
+    private List<Activity> mActivityList = new ArrayList<>();
 
     public void pushActivity(Activity activity) {
-        activityList.add(activity);
+        mActivityList.add(activity);
     }
 
     public void clearActivity() {
-        for (Activity activity : activityList) {
+        for (Activity activity : mActivityList) {
             if (!activity.isFinishing()) {
                 activity.finish();
             }
         }
-        activityList.clear();
+        mActivityList.clear();
     }
 
     public void cleanJump(Class _class, int toSource) {
@@ -96,18 +71,11 @@ public abstract class BaseApplication extends Application implements Application
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        application = this;
+        mApplication = this;
         install();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2) {
             registerActivityLifecycleCallbacks(this);
         }
-        String pkgName = getPackageName();
-        netBuilder = Net.Builder().setConnectTimeout(BuildConfig.HTTP_CONNECT_TIME).setWriteTimeout(BuildConfig.HTTP_READ_TIME).setReadTimeout(BuildConfig.HTTP_WRITE_TIME).setMaxCacheSize(BuildConfig.HTTP_MAX_CACHE_SIZE)
-                .setCacheType(BuildConfig.HTTP_CACHE_TYPE).setHttpLogTAG(pkgName).setIsGzip(BuildConfig.HTTP_IS_GZIP).setShowHttpLog(BuildConfig.DEBUG)
-                .setShowLifecycleLog(true).setRetryOnConnectionFailure(false).setCachedDir(FileUtils.getCacheFile(this, pkgName + "_cache"))
-                .setDownloadFileDir(getExternalCacheDir() + pkgName + "_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
-//                .setHttpsCertificate("xxx.cer")//设置全局https自定义证书
-                .addResultInterceptor(this).addExceptionInterceptor(this).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(this)));
     }
 
     @Override
@@ -202,126 +170,6 @@ public abstract class BaseApplication extends Application implements Application
     static final class RunException extends RuntimeException {
         public RunException(String msg) {
             super(msg);
-        }
-    }
-
-    public HashMap<String, String> getHeader(String token) {
-        HashMap<String, String> header = new HashMap<>();
-        header.put("Accept", "*/*");
-        if (!TextUtils.isEmpty(token)) {
-            header.put("Authorization", token);
-        }
-        header.put("Content-Type", "application/x-www-form-urlencoded");
-        return header;
-    }
-
-    public NetInfo.Builder request(final Context context, int requestType, String action, HashMap<String, String> params, final Callback callback, Class _class, boolean isLoading) {
-        this.context = context;
-        this.requestType = requestType;
-        this.action = action;
-        this.params = params;
-        this.callback = callback;
-        this._class = _class;
-        this.isLoading = isLoading;
-        return request(params, RequestStatus.NORMAL);
-    }
-
-    public NetInfo.Builder request(HashMap<String, String> params, int status) {
-        if (isLoading)
-            loading(context, R.layout.default_loading);
-        if (params == null) {
-            params = new HashMap<>();
-        }
-        params.put("platform", "1");
-        params.put("version", SystemUtils.getAppVersion(this));
-        params.put("appName", SystemUtils.getAppName(this));
-        params.put("channel", BuildConfig.CHANNEL);
-        NetInfo.Builder builder = NetInfo.Builder().setRequestType(requestType).setAction(action).addParams(params).addHeads(getHeader(ShareParamUtils.getString("token"))).setClass(_class).setStatus(status);
-        netBuilder.build().doAsync(builder.build(), new Callback() {
-            @Override
-            public void onSuccess(NetInfo info) throws IOException {
-                cancelLoading();
-                response(context, info, callback);
-            }
-
-            @Override
-            public void onFailure(NetInfo info) throws IOException {
-                loading(context, info.getRetDetail()).setOnlySure();
-                callback.onFailure(info);
-            }
-        });
-        return builder;
-    }
-
-    public Net.Builder download(String url, ProgressCallback progressCallback) {
-        return download(url, progressCallback, null);
-    }
-
-    public Net.Builder download(String url, ProgressCallback progressCallback, Object tag) {
-        return download(url, "", progressCallback, tag);
-    }
-
-    public Net.Builder download(String url, String saveFileName, ProgressCallback progressCallback, Object tag) {
-        if (!TextUtils.isEmpty(url) && TextUtils.isEmpty(saveFileName)) {
-            saveFileName = url.substring(url.lastIndexOf("."), url.length());
-        }
-        LogUtils.e("file:", saveFileName);
-        NetInfo netInfo = NetInfo.Builder().addDownloadFile(url, saveFileName, progressCallback).build();
-        netBuilder.setReadTimeout(60).build(tag).doDownloadFileAsync(netInfo);
-        return netBuilder;
-    }
-
-    private void response(Context context, NetInfo info, Callback callback) throws IOException {
-        BaseData baseData = null;
-        try {
-            baseData = info.getRetDetail(BaseData.class);
-            if (null == baseData) {
-                loading(context, "no data!").setOnlySure();
-                return;
-            }
-            if (baseData.code == 0) {
-                callback.onSuccess(info);
-            } else {
-                boolean isGlobalError = false;
-                for (int err : getResources().getIntArray(R.array.global_net_err)) {
-                    LogUtils.e("code:", baseData.code, " | err:", err);
-                    if (baseData.code == err) {
-                        isGlobalError = true;
-                        break;
-                    }
-                }
-                LogUtils.e("context:", context, " | callback:", callback, " | isGlobalError:", isGlobalError);
-                if (isGlobalError) {
-                    newGlobalError(context, baseData);
-                } else {
-                    callback.onSuccess(info);
-                }
-            }
-        } catch (Exception e) {
-            LogUtils.e(e);
-            loading(context, "data parse exception!").setOnlySure();
-        }
-    }
-
-    public DialogView loading(Context context, String msg) {
-        cancelLoading();
-        return (mDialogUtils = new DialogUtils(context)).loading(msg);
-    }
-
-    public DialogView loading(Context context, int layout) {
-        cancelLoading();
-        return (mDialogUtils = new DialogUtils(context)).loading(layout);
-    }
-
-    public DialogView loading(Context context, int layout, DialogView.DialogViewListener dialogViewListener) {
-        cancelLoading();
-        return (mDialogUtils = new DialogUtils(context)).loading(layout, dialogViewListener);
-    }
-
-    public void cancelLoading() {
-        if (mDialogUtils != null) {
-            mDialogUtils.cancelLoading();
-            mDialogUtils = null;
         }
     }
 

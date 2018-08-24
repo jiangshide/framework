@@ -20,15 +20,20 @@ import com.zd112.framework.utils.ShareParamUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author jiangshide
+ * @Created by Ender on 2018/8/24.
+ * @Emal:18311271399@163.com
+ */
 public class NavigationView extends FrameLayout {
 
-    private ImageView imageView;
-    private View menuBg;
+    private ImageView mImageView;
+    private View mMenuBg;
 
-    private List<FrameLayout> menus;
-    private List<ImageView> menuIcons;
-    private List<TextView> menuTitles, menuPorts;
-    public static int main = 0x12345678;
+    private List<FrameLayout> mMenus;
+    private List<ImageView> mMenuIcons;
+    private List<TextView> mMenuTitles, mMenuPorts;
+    public final static int MAIN = 0x12345678;
 
     private int[] mSelectes;
     private int[] mSelecteds;
@@ -36,16 +41,16 @@ public class NavigationView extends FrameLayout {
     private int mTxtColorSelected;
     private CusOnClickListener mListener;
 
-    private LinearLayout menusLayout;
-    private int navigationHeight;
-    private boolean isShowPortNum = true;
+    private LinearLayout mMenusLayout;
+    private int mNavigationHeight;
+    private boolean mIsShowPortNum = true;
 
     public NavigationView(Context context) {
         super(context);
-        navigationHeight = (int) getDim(R.dimen.navigation_height);
+        mNavigationHeight = (int) getDim(R.dimen.navigation_height);
         FrameLayout content = new FrameLayout(getContext());
-        content.setPadding(0, 0, 0, navigationHeight);
-        content.setId(main);
+        content.setPadding(0, 0, 0, mNavigationHeight);
+        content.setId(MAIN);
         this.addView(content, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
@@ -55,13 +60,13 @@ public class NavigationView extends FrameLayout {
         this.mTxtColor = txtColor;
         this.mTxtColorSelected = txtColorSelected;
         this.mListener = listener;
-        menus = new ArrayList<>();
-        menuIcons = new ArrayList<>();
-        menuTitles = new ArrayList<>();
-        menuPorts = new ArrayList<>();
-        menusLayout = new LinearLayout(getContext());
-        menusLayout.setOrientation(LinearLayout.HORIZONTAL);
-        menusLayout.setPadding(0, 5, 0, 5);
+        mMenus = new ArrayList<>();
+        mMenuIcons = new ArrayList<>();
+        mMenuTitles = new ArrayList<>();
+        mMenuPorts = new ArrayList<>();
+        mMenusLayout = new LinearLayout(getContext());
+        mMenusLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mMenusLayout.setPadding(0, 5, 0, 5);
         for (int i = 0; i < selectes.length; i++) {
             FrameLayout menuRoot = new FrameLayout(getContext());
             LinearLayout menuLayout = new LinearLayout(getContext());
@@ -73,7 +78,7 @@ public class NavigationView extends FrameLayout {
             } else {
                 imageView.setImageResource(selectes[i]);
             }
-            menuIcons.add(imageView);
+            mMenuIcons.add(imageView);
             menuLayout.addView(imageView);
 
             TextView titleTxt = new TextView(getContext());
@@ -86,7 +91,7 @@ public class NavigationView extends FrameLayout {
                 titleTxt.setTextColor(getColor(txtColor));
             }
             titleTxt.setText(titles[i]);
-            menuTitles.add(titleTxt);
+            mMenuTitles.add(titleTxt);
             menuLayout.addView(titleTxt);
 
             TextView portTxt = new TextView(getContext());
@@ -95,7 +100,7 @@ public class NavigationView extends FrameLayout {
             portTxt.setTextSize(getDim(R.dimen.navigation_port_size));
             portTxt.setTextColor(getColor(R.color.white));
             portTxt.setVisibility(GONE);
-            menuPorts.add(portTxt);
+            mMenuPorts.add(portTxt);
 
             menuRoot.addView(menuLayout);
             menuRoot.addView(portTxt, new LinearLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT));
@@ -115,55 +120,55 @@ public class NavigationView extends FrameLayout {
                     }
                 }
             });
-            menus.add(menuRoot);
-            menusLayout.addView(menuRoot, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
+            mMenus.add(menuRoot);
+            mMenusLayout.addView(menuRoot, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.CENTER | Gravity.TOP;
             params.setMargins((int) getDim(R.dimen.navigation_port), 0, 0, 0);
             portTxt.setLayoutParams(params);
         }
-        menuBg = new View(getContext());
-        menuBg.setBackgroundResource(R.drawable.bg_stroke_grey);
-        this.addView(menuBg);
-        menusLayout.setGravity(Gravity.BOTTOM);
-        this.addView(menusLayout);
-        FrameLayout.LayoutParams menuParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, navigationHeight);
+        mMenuBg = new View(getContext());
+        mMenuBg.setBackgroundResource(R.drawable.bg_stroke_grey);
+        this.addView(mMenuBg);
+        mMenusLayout.setGravity(Gravity.BOTTOM);
+        this.addView(mMenusLayout);
+        FrameLayout.LayoutParams menuParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, mNavigationHeight);
         menuParams.gravity = Gravity.BOTTOM;
-        menuBg.setLayoutParams(menuParams);
+        mMenuBg.setLayoutParams(menuParams);
 
-        imageView = new ImageView(getContext());
-        imageView.setScaleType(ImageView.ScaleType.MATRIX);
-        this.addView(imageView, new FrameLayout.LayoutParams(160, 160));
+        mImageView = new ImageView(getContext());
+        mImageView.setScaleType(ImageView.ScaleType.MATRIX);
+        this.addView(mImageView, new FrameLayout.LayoutParams(160, 160));
         invalidate();
         return this;
     }
 
     public ImageView showIcon(String url) {
         LogUtils.e("url:", url);
-        if (imageView != null) {
-            imageView.setVisibility(View.VISIBLE);
-            Glide.with(getContext()).load(url).into(imageView);
+        if (mImageView != null) {
+            mImageView.setVisibility(View.VISIBLE);
+            Glide.with(getContext()).load(url).into(mImageView);
             ShareParamUtils.INSTANCE.putString("url", url);
         }
-        return imageView;
+        return mImageView;
     }
 
     public ImageView scrollScan(int width, int height) {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
         layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
-        imageView.setLayoutParams(layoutParams);
-        return imageView;
+        mImageView.setLayoutParams(layoutParams);
+        return mImageView;
     }
 
     public NavigationView isHideIcon(boolean isHide) {
-        if (imageView != null) {
+        if (mImageView != null) {
             if (isHide) {
-                imageView.setVisibility(View.GONE);
+                mImageView.setVisibility(View.GONE);
             } else {
                 String url = ShareParamUtils.getString("url");
                 LogUtils.e("url1:", url);
                 showIcon(url);
-                imageView.setVisibility(View.VISIBLE);
+                mImageView.setVisibility(View.VISIBLE);
             }
         }
         return this;
@@ -172,13 +177,18 @@ public class NavigationView extends FrameLayout {
     public NavigationView setIcon(int icon) {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
-        imageView.setLayoutParams(layoutParams);
-        imageView.setImageResource(icon);
+        mImageView.setLayoutParams(layoutParams);
+        mImageView.setImageResource(icon);
+        return this;
+    }
+
+    public NavigationView setMenuBgColor(int color) {
+        mMenuBg.setBackgroundColor(color);
         return this;
     }
 
     public NavigationView setBgResource(int resIcon) {
-        menusLayout.setBackgroundResource(resIcon);
+        mMenusLayout.setBackgroundResource(resIcon);
         return this;
     }
 
@@ -188,26 +198,26 @@ public class NavigationView extends FrameLayout {
     }
 
     public NavigationView setTxtSize(int size) {
-        for (TextView textView : menuTitles) {
+        for (TextView textView : mMenuTitles) {
             textView.setTextSize(size);
         }
         return this;
     }
 
     public NavigationView setTxtSize(int size, int index) {
-        if (menuTitles != null && index >= 0 && menuTitles.size() > index) {
-            menuTitles.get(index).setTextSize(size);
+        if (mMenuTitles != null && index >= 0 && mMenuTitles.size() > index) {
+            mMenuTitles.get(index).setTextSize(size);
         }
         return this;
     }
 
     public NavigationView selectedTxtSize(int size) {
-        int lenth = menuTitles.size();
+        int lenth = mMenuTitles.size();
         for (int i = 0; i < lenth; i++) {
             if (size == i) {
-                menuTitles.get(i).setTextSize(size);
+                mMenuTitles.get(i).setTextSize(size);
             } else {
-                menuTitles.get(i).setTextSize(getDim(R.dimen.navigation_txt_size));
+                mMenuTitles.get(i).setTextSize(getDim(R.dimen.navigation_txt_size));
             }
         }
         invalidate();
@@ -216,13 +226,13 @@ public class NavigationView extends FrameLayout {
 
     public NavigationView showPort(int id, int count) {
         if (count < 10) {
-            menuPorts.get(id).setPadding(15, 5, 15, 5);
+            mMenuPorts.get(id).setPadding(15, 5, 15, 5);
         }
-        menuPorts.get(id).setVisibility(VISIBLE);
-        menuPorts.get(id).setText(count > 99 ? "99+" : count + "");
-        if (!isShowPortNum) {
-            menuPorts.get(id).setPadding(10, 0, 10, 0);
-            menuPorts.get(id).setTextColor(getColor(R.color.red));
+        mMenuPorts.get(id).setVisibility(VISIBLE);
+        mMenuPorts.get(id).setText(count > 99 ? "99+" : count + "");
+        if (!mIsShowPortNum) {
+            mMenuPorts.get(id).setPadding(10, 0, 10, 0);
+            mMenuPorts.get(id).setTextColor(getColor(R.color.red));
         }
         return this;
     }
@@ -241,25 +251,25 @@ public class NavigationView extends FrameLayout {
 
     public NavigationView changeBarListener(int id, Bundle bundle) {
         if (bundle == null) {
-            if (mListener != null && menus != null) {
-                mListener.onClick(menus.get(id));
+            if (mListener != null && mMenus != null) {
+                mListener.onClick(mMenus.get(id));
             }
         } else {
-            if (mListener != null && menus != null) {
-                mListener.onClick(menus.get(id), bundle);
+            if (mListener != null && mMenus != null) {
+                mListener.onClick(mMenus.get(id), bundle);
             }
         }
         return this;
     }
 
     public void changeBarStatus(int id) {
-        for (int j = 0; j < menuIcons.size(); j++) {
+        for (int j = 0; j < mMenuIcons.size(); j++) {
             if (j == id) {
-                menuIcons.get(j).setImageResource(mSelecteds[j]);
-                menuTitles.get(j).setTextColor(getColor(mTxtColorSelected));
+                mMenuIcons.get(j).setImageResource(mSelecteds[j]);
+                mMenuTitles.get(j).setTextColor(getColor(mTxtColorSelected));
             } else {
-                menuIcons.get(j).setImageResource(mSelectes[j]);
-                menuTitles.get(j).setTextColor(getColor(mTxtColor));
+                mMenuIcons.get(j).setImageResource(mSelectes[j]);
+                mMenuTitles.get(j).setTextColor(getColor(mTxtColor));
             }
         }
     }

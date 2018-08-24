@@ -8,11 +8,11 @@ public class IntentUtils extends Intent {
 
     public IntentUtils setClass(Class _class) {
         this.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.setClass(BaseApplication.application, _class);
+        this.setClass(BaseApplication.mApplication, _class);
         return this;
     }
 
     public void start() {
-        BaseApplication.application.startActivity(this);
+        BaseApplication.mApplication.startActivity(this);
     }
 }

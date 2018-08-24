@@ -1,5 +1,6 @@
 package com.zd112.framework.utils;
 
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,7 +25,7 @@ public class ShareUtils {
         req.transaction = String.valueOf(System.currentTimeMillis());
         req.message = msg;
         req.scene = scene;
-        BaseApplication.application.mWxApi.sendReq(req);
+        BaseApplication.mApplication.mWxApi.sendReq(req);
     }
 
     public static void openWeiXin(Context context) {
@@ -32,22 +33,26 @@ public class ShareUtils {
     }
 
     public static void openWeiXin(Context context, String content) {
-        if (BaseApplication.application.mWxApi == null) {
-            BaseApplication.application.loading(context, context.getString(R.string.weixin_init)).setOnlySure();
+        if (BaseApplication.mApplication.mWxApi == null) {
+            NetUtils.INSTANCE.loading(context, context.getString(R.string.weixin_init)).setOnlySure();
             return;
         }
-        if (!BaseApplication.application.mWxApi.isWXAppInstalled()) {
-            BaseApplication.application.loading(context, context.getString(R.string.weixin_install)).setOnlySure();
+        if (!BaseApplication.mApplication.mWxApi.isWXAppInstalled()) {
+            NetUtils.INSTANCE.loading(context, context.getString(R.string.weixin_install)).setOnlySure();
             return;
-        } else if (!BaseApplication.application.mWxApi.isWXAppSupportAPI()) {
-            BaseApplication.application.loading(context, context.getString(R.string.no_support_device)).setOnlySure();
+        } else if (BaseApplication.mApplication.mWxApi.getWXAppSupportAPI() == 0) {
+            NetUtils.INSTANCE.loading(context, context.getString(R.string.no_support_device)).setOnlySure();
             return;
         } else {
             if (!TextUtils.isEmpty(content)) {
                 ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.setText(content);
+                assert clipboardManager != null;
+                clipboardManager.setPrimaryClip(ClipData.newPlainText(null, content));
+                if (clipboardManager.hasPrimaryClip()) {
+                    clipboardManager.getPrimaryClip().getItemAt(0).getText();
+                }
             }
-            BaseApplication.application.mWxApi.openWXApp();
+            BaseApplication.mApplication.mWxApi.openWXApp();
         }
     }
 

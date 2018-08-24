@@ -27,8 +27,8 @@ public class DialogView extends Dialog {
     private TextView mContentView;
     private CusButton mSure, mCancel;
     private DialogOnClickListener mDialogOnClickListener;
-    private boolean isReturn;
-    private boolean isFull = false;
+    private boolean mIsReturn;
+    private boolean mIsFull = false;
 
     public DialogView(@NonNull Context context, int style) {
         super(context, style);
@@ -63,7 +63,7 @@ public class DialogView extends Dialog {
         if (mView != null) {
             ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
             layoutParams.width = getContext().getResources().getDisplayMetrics().widthPixels;
-            if (isFull) {
+            if (mIsFull) {
                 layoutParams.height = getContext().getResources().getDisplayMetrics().heightPixels;
             }
             mView.setLayoutParams(layoutParams);
@@ -74,7 +74,7 @@ public class DialogView extends Dialog {
     }
 
     public DialogView setFull(boolean isFull) {
-        this.isFull = isFull;
+        this.mIsFull = isFull;
         return this;
     }
 
@@ -175,7 +175,7 @@ public class DialogView extends Dialog {
     }
 
     public DialogView setReturn(boolean isReturn) {
-        this.isReturn = isReturn;
+        this.mIsReturn = isReturn;
         return this;
     }
 
@@ -199,7 +199,7 @@ public class DialogView extends Dialog {
 
     @Override
     public void onBackPressed() {
-        if (!isReturn) {
+        if (!mIsReturn) {
             super.onBackPressed();
         }
         if (mDialogOnClickListener != null) {

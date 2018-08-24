@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
 import com.zd112.framework.utils.DimenUtils;
+import com.zd112.framework.utils.ShareParamUtils;
 import com.zd112.framework.view.refresh.component.ClassicsFooter;
 import com.zd112.framework.view.refresh.component.ClassicsHeader;
 import com.zd112.framework.view.refresh.interfaces.DefaultRefreshFooterCreator;
@@ -183,8 +184,8 @@ public class RefreshView extends ViewGroup implements RefreshLayout, NestedScrol
 
     protected static boolean sManualFooterCreator = false;
 
-    private String defaultStr = "财富结缘，易生相伴";
-    private int index;
+    private String mDefaultStr = "财富结缘，易生相伴";
+    private int mIndex;
 
     private OnTouchEventListener onTouchEventListener;
 
@@ -205,18 +206,18 @@ public class RefreshView extends ViewGroup implements RefreshLayout, NestedScrol
 
     public void setWord(String words) {
         if (!TextUtils.isEmpty(words)) {
-            defaultStr = words;
+            mDefaultStr = words;
         }
     }
 
     @Override
     public String getWord() {
-        setWord(BaseApplication.word);
-        if (defaultStr.contains(";")) {
-            String[] words = defaultStr.split(";");
-            return words[index > words.length - 1 ? index = 0 : index++];
+        setWord(ShareParamUtils.getString("words"));
+        if (mDefaultStr.contains(";")) {
+            String[] words = mDefaultStr.split(";");
+            return words[mIndex > words.length - 1 ? mIndex = 0 : mIndex++];
         } else {
-            return defaultStr;
+            return mDefaultStr;
         }
     }
 
@@ -363,7 +364,7 @@ public class RefreshView extends ViewGroup implements RefreshLayout, NestedScrol
 
             if (mListDelayedRunnable != null) {
                 for (DelayedRunnable runnable : mListDelayedRunnable) {
-                    mHandler.postDelayed(runnable, runnable.delayMillis);
+                    mHandler.postDelayed(runnable, runnable.mDelayMillis);
                 }
                 mListDelayedRunnable.clear();
                 mListDelayedRunnable = null;

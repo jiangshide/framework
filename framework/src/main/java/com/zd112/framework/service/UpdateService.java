@@ -13,6 +13,7 @@ import com.zd112.framework.R;
 import com.zd112.framework.net.callback.ProgressCallback;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.utils.LogUtils;
+import com.zd112.framework.utils.NetUtils;
 import com.zd112.framework.utils.SystemUtils;
 
 public class UpdateService extends Service {
@@ -28,7 +29,7 @@ public class UpdateService extends Service {
             String url = intent.getStringExtra("url");
             final NotificationManager notificationManager = SystemUtils.notificationManager(this);
             final NotificationCompat.Builder build = SystemUtils.notificationBuild(this, R.drawable.update, SystemUtils.getAppName(this) + "下载更新", "正在下载");
-            ((BaseApplication) getApplication()).download(url, new ProgressCallback() {
+            NetUtils.INSTANCE.download(url, new ProgressCallback() {
                 @Override
                 public void onResponseMain(String filePath, NetInfo info) {
                     super.onResponseMain(filePath, info);

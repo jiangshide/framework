@@ -16,11 +16,11 @@ public enum ShareParamUtils {
     public boolean status;
 
     private static SharedPreferences.Editor getEdit() {
-        return BaseApplication.application.getSharedPreferences(BaseApplication.application.getPackageName(), Context.MODE_PRIVATE).edit();
+        return BaseApplication.mApplication.getSharedPreferences(BaseApplication.mApplication.getPackageName(), Context.MODE_PRIVATE).edit();
     }
 
     private static SharedPreferences getSharedPreferences() {
-        return BaseApplication.application.getSharedPreferences(BaseApplication.application.getPackageName(), Context.MODE_PRIVATE);
+        return BaseApplication.mApplication.getSharedPreferences(BaseApplication.mApplication.getPackageName(), Context.MODE_PRIVATE);
     }
 
     public synchronized ShareParamUtils putBoolean(String key, boolean value) {

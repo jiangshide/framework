@@ -29,16 +29,16 @@ import java.util.List;
 
 public class TextSwitchView extends TextSwitcher implements ViewSwitcher.ViewFactory {
     private Context mContext;
-    private long defalutTime = 2000;
+    private long mDefalutTime = 2000;
     private Rotate3dAnimation mInUp;
     private Rotate3dAnimation mOutUp;
-    private String txt;
-    private List<String> txtArr;
-    public int position;
-    private boolean isScroll = false;
-    private int EVENT_WHAT = 1;
+    private String mTxt;
+    private List<String> mTxtArr;
+    public int mPosition;
+    private boolean mIsScroll = false;
+    private final int EVENT_WHAT = 1;
 
-    private OnTextSwitchViewtListener listener;
+    private OnTextSwitchViewtListener mListener;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -46,13 +46,13 @@ public class TextSwitchView extends TextSwitcher implements ViewSwitcher.ViewFac
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == EVENT_WHAT) {
-                int size = txtArr.size() - 1;
-                if (position > size) {
-                    position = 0;
+                int size = mTxtArr.size() - 1;
+                if (mPosition > size) {
+                    mPosition = 0;
                 }
-                String txt = txtArr.get(position);
+                String txt = mTxtArr.get(mPosition);
                 scrollTxt(txt);
-                position++;
+                mPosition++;
             }
         }
     };
@@ -61,17 +61,17 @@ public class TextSwitchView extends TextSwitcher implements ViewSwitcher.ViewFac
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
         if (visibility == View.VISIBLE) {
-            isScroll = true;
-            if (txtArr != null && txtArr.size() > 0) {
-                scrollTxt(txtArr);
-            } else if (TextUtils.isEmpty(txt)) {
-                scrollTxt(txt);
+            mIsScroll = true;
+            if (mTxtArr != null && mTxtArr.size() > 0) {
+                scrollTxt(mTxtArr);
+            } else if (TextUtils.isEmpty(mTxt)) {
+                scrollTxt(mTxt);
             } else {
                 //
-                isScroll = false;
+                mIsScroll = false;
             }
         } else {
-            isScroll = false;
+            mIsScroll = false;
         }
     }
 
@@ -179,47 +179,47 @@ public class TextSwitchView extends TextSwitcher implements ViewSwitcher.ViewFac
     }
 
     public TextSwitchView scrollTxt(String txt) {
-        this.txt = txt;
+        this.mTxt = txt;
         this.setText(TextUtils.isEmpty(txt) ? "" : txt);
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener != null) {
-                    listener.onClick(TextSwitchView.this, position);
+                if (mListener != null) {
+                    mListener.onClick(TextSwitchView.this, mPosition);
                 }
             }
         });
-        if (txtArr != null && txtArr.size() > 0 && isScroll) {
-            handler.sendEmptyMessageDelayed(EVENT_WHAT, defalutTime);
+        if (mTxtArr != null && mTxtArr.size() > 0 && mIsScroll) {
+            handler.sendEmptyMessageDelayed(EVENT_WHAT, mDefalutTime);
         }
         return this;
     }
 
     public TextSwitchView scrollTxt(List<String> arr) {
-        this.txtArr = arr;
-        if (txtArr != null) {
-            position = 0;
+        this.mTxtArr = arr;
+        if (mTxtArr != null) {
+            mPosition = 0;
             handler.removeMessages(EVENT_WHAT);
-            scrollTxt(txtArr.get(position));
+            scrollTxt(mTxtArr.get(mPosition));
         }
         return this;
     }
 
     public TextSwitchView setListener(OnTextSwitchViewtListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
         return this;
     }
 
     public TextSwitchView setScroll(boolean isScroll) {
-        this.isScroll = isScroll;
-        if (txtArr != null) {
-            scrollTxt(txtArr);
+        this.mIsScroll = isScroll;
+        if (mTxtArr != null) {
+            scrollTxt(mTxtArr);
         }
         return this;
     }
 
     public TextSwitchView setDelayedTime(long delayedTime) {
-        this.defalutTime = delayedTime;
+        this.mDefalutTime = delayedTime;
         invalidate();
         return this;
     }

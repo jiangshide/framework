@@ -28,34 +28,34 @@ public class UnLockView extends View {
     private static final String INSTANCE_LINE_WIDTH = "line_width";
     private static final String INSTANCE_RADIUS_FACTOR = "text_color";
 
-    private boolean initialized = false;
-    private boolean isGestureEnd = true;
-    private boolean isGestureStart = false;
-    private boolean isGestureValid = true;
+    private boolean mInitialized = false;
+    private boolean mIsGestureEnd = true;
+    private boolean mIsGestureStart = false;
+    private boolean mIsGestureValid = true;
 
     private OnGestureDoneListener mOnGestureDoneListener;
 
     private List<Line> mGestureLines = new ArrayList<>();
     private List<LockPoint> mGesturePoints = new ArrayList<>();
-    private Line extraLine;
+    private Line mExtraLine;
 
     private Handler mHandler = new Handler();
 
     private LockPoint[][] mLockPoints = new LockPoint[3][3];
     private static float mRadius;
-    private float movingX;
-    private float movingY;
+    private float mMovingX;
+    private float mMovingY;
 
-    private Paint pointPaint;
-    private Paint linePaint;
+    private Paint mPointPaint;
+    private Paint mLinePaint;
 
-    private int colorNormal;
-    private int colorSelected;
-    private int colorError;
-    private float pointRadius;
-    private float strokeWidth;
-    private float lineWidth;
-    private float radiusFactor;
+    private int mColorNormal;
+    private int mColorSelected;
+    private int mColorError;
+    private float mPointRadius;
+    private float mStrokeWidth;
+    private float mLineWidth;
+    private float mRadiusFactor;
 
     public UnLockView(Context context) {
         this(context, null);
@@ -69,36 +69,36 @@ public class UnLockView extends View {
         super(context, attrs, defStyleAttr);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.GestureUnlockView, 0, 0);
         if (array != null) {
-            colorNormal = array.getColor(R.styleable.GestureUnlockView_color_normal, getResources().getColor(R.color.circle_normal));
-            colorError = array.getColor(R.styleable.GestureUnlockView_color_error, getResources().getColor(R.color.red));
-            colorSelected = array.getColor(R.styleable.GestureUnlockView_color_selected, getResources().getColor(R.color.colorPrimaryDark));
-            pointRadius = array.getDimension(R.styleable.GestureUnlockView_point_radius, 30.0f);
-            strokeWidth = array.getDimension(R.styleable.GestureUnlockView_stroke_width, 3.0f);
-            lineWidth = array.getDimension(R.styleable.GestureUnlockView_line_width, 3.0f);
-            radiusFactor = array.getFloat(R.styleable.GestureUnlockView_radius_factor, 3.0f);
+            mColorNormal = array.getColor(R.styleable.GestureUnlockView_color_normal, getResources().getColor(R.color.circle_normal));
+            mColorError = array.getColor(R.styleable.GestureUnlockView_color_error, getResources().getColor(R.color.red));
+            mColorSelected = array.getColor(R.styleable.GestureUnlockView_color_selected, getResources().getColor(R.color.colorPrimaryDark));
+            mPointRadius = array.getDimension(R.styleable.GestureUnlockView_point_radius, 30.0f);
+            mStrokeWidth = array.getDimension(R.styleable.GestureUnlockView_stroke_width, 3.0f);
+            mLineWidth = array.getDimension(R.styleable.GestureUnlockView_line_width, 3.0f);
+            mRadiusFactor = array.getFloat(R.styleable.GestureUnlockView_radius_factor, 3.0f);
             array.recycle();
         }
         initPaints();
     }
 
     private void initPaints() {
-        this.pointPaint = new Paint();
-        this.pointPaint.setColor(colorNormal);
-        this.pointPaint.setAntiAlias(true);
-        this.pointPaint.setStyle(Paint.Style.FILL);
-        this.pointPaint.setStrokeWidth(strokeWidth);
+        this.mPointPaint = new Paint();
+        this.mPointPaint.setColor(mColorNormal);
+        this.mPointPaint.setAntiAlias(true);
+        this.mPointPaint.setStyle(Paint.Style.FILL);
+        this.mPointPaint.setStrokeWidth(mStrokeWidth);
 
-        this.linePaint = new Paint();
-        this.linePaint.setColor(colorSelected);
-        this.linePaint.setAntiAlias(true);
-        this.linePaint.setStrokeWidth(lineWidth);
+        this.mLinePaint = new Paint();
+        this.mLinePaint.setColor(mColorSelected);
+        this.mLinePaint.setAntiAlias(true);
+        this.mLinePaint.setStrokeWidth(mLineWidth);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (!this.initialized) {
+        if (!this.mInitialized) {
             initLockPoints();
-            this.initialized = true;
+            this.mInitialized = true;
         }
         drawLines(canvas);
         drawLockPoints(canvas);
@@ -113,8 +113,8 @@ public class UnLockView extends View {
         float margin;
 
         radius = availableSize / 10;
-        if (pointRadius > 0 && (pointRadius * radiusFactor) < radius) {
-            radius = pointRadius * radiusFactor;
+        if (mPointRadius > 0 && (mPointRadius * mRadiusFactor) < radius) {
+            radius = mPointRadius * mRadiusFactor;
         }
         margin = (availableSize - 6.0F * radius) / 4.0F;
 
@@ -124,7 +124,7 @@ public class UnLockView extends View {
                 float pointY = (height - availableSize) / 2 + margin * (row + 1) + radius * (2 * (row + 1) - 1);
                 this.mLockPoints[row][col] = new LockPoint(
                         this, pointX, pointY,
-                        radius / radiusFactor, 1 + (col + row * 3)
+                        radius / mRadiusFactor, 1 + (col + row * 3)
                 );
             }
         }
@@ -145,53 +145,53 @@ public class UnLockView extends View {
                     line.draw(canvas);
                 }
             }
-            if (isGestureStart && !isGestureEnd) {
+            if (mIsGestureStart && !mIsGestureEnd) {
                 LockPoint lastPoint = mGesturePoints.get(mGesturePoints.size() - 1);
-                if (extraLine == null) {
-                    extraLine = new Line(
+                if (mExtraLine == null) {
+                    mExtraLine = new Line(
                             this,
                             lastPoint.circle.centerX, lastPoint.circle.centerY,
-                            movingX, movingY
+                            mMovingX, mMovingY
                     );
                 } else {
-                    extraLine.startX = lastPoint.circle.centerX;
-                    extraLine.startY = lastPoint.circle.centerY;
-                    extraLine.endX = movingX;
-                    extraLine.endY = movingY;
+                    mExtraLine.startX = lastPoint.circle.centerX;
+                    mExtraLine.startY = lastPoint.circle.centerY;
+                    mExtraLine.endX = mMovingX;
+                    mExtraLine.endY = mMovingY;
                 }
-                extraLine.draw(canvas);
+                mExtraLine.draw(canvas);
             }
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!isGestureValid) {
+        if (!mIsGestureValid) {
             return super.onTouchEvent(event);
         }
 
-        this.movingX = event.getX();
-        this.movingY = event.getY();
+        this.mMovingX = event.getX();
+        this.mMovingY = event.getY();
         int action = event.getAction();
         LockPoint hitPoint = null;
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                hitPoint = checkPoint(movingX, movingY);
-                this.isGestureStart = true;
-                this.isGestureEnd = false;
+                hitPoint = checkPoint(mMovingX, mMovingY);
+                this.mIsGestureStart = true;
+                this.mIsGestureEnd = false;
                 break;
             case MotionEvent.ACTION_UP:
-                this.isGestureStart = false;
-                this.isGestureEnd = true;
+                this.mIsGestureStart = false;
+                this.mIsGestureEnd = true;
                 hitPoint = null;
                 break;
             case MotionEvent.ACTION_MOVE:
-                hitPoint = checkPoint(movingX, movingY);
+                hitPoint = checkPoint(mMovingX, mMovingY);
                 break;
         }
 
-        if (isGestureStart && !isGestureEnd) {
+        if (mIsGestureStart && !mIsGestureEnd) {
             if (hitPoint != null && !mGesturePoints.contains(hitPoint)) {
                 // 大于0个点的时候开始需要画线
                 if (!mGesturePoints.isEmpty()) {
@@ -209,9 +209,9 @@ public class UnLockView extends View {
 
             postInvalidate();
         }
-        if (isGestureEnd) {
+        if (mIsGestureEnd) {
             postInvalidate();
-            isGestureValid = false;
+            mIsGestureValid = false;
 
             LinkedHashSet<Integer> selectedNumbers = new LinkedHashSet<>();
             int size = mGesturePoints.size();
@@ -263,7 +263,7 @@ public class UnLockView extends View {
             }
             this.mGesturePoints.clear();
             this.mGestureLines.clear();
-            this.isGestureValid = true;
+            this.mIsGestureValid = true;
             postInvalidate();
         }
     }
@@ -363,9 +363,9 @@ public class UnLockView extends View {
                 return;
             }
             if (this.state == State.PRESSED) {
-                view.linePaint.setColor(view.colorSelected);
+                view.mLinePaint.setColor(view.mColorSelected);
             } else {
-                view.linePaint.setColor(view.colorError);
+                view.mLinePaint.setColor(view.mColorError);
             }
         }
 
@@ -375,7 +375,7 @@ public class UnLockView extends View {
                 return;
             }
             preparePaintColor();
-            canvas.drawLine(this.startX, this.startY, this.endX, this.endY, view.linePaint);
+            canvas.drawLine(this.startX, this.startY, this.endX, this.endY, view.mLinePaint);
         }
     }
 
@@ -389,7 +389,7 @@ public class UnLockView extends View {
             this.centerX = pointX;
             this.centerY = pointY;
 //            this.radius = radius;
-            this.outerRadius = radius * unlockView.radiusFactor;
+            this.outerRadius = radius * unlockView.mRadiusFactor;
         }
 
         private void preparePaintColor(State state) {
@@ -399,13 +399,13 @@ public class UnLockView extends View {
             }
             switch (state) {
                 case NORMAL:
-                    view.pointPaint.setColor(view.colorNormal);
+                    view.mPointPaint.setColor(view.mColorNormal);
                     break;
                 case PRESSED:
-                    view.pointPaint.setColor(view.colorSelected);
+                    view.mPointPaint.setColor(view.mColorSelected);
                     break;
                 case ERROR:
-                    view.pointPaint.setColor(view.colorError);
+                    view.mPointPaint.setColor(view.mColorError);
                     break;
             }
         }
@@ -416,14 +416,14 @@ public class UnLockView extends View {
                 return;
             }
             preparePaintColor(State.NORMAL);
-            canvas.drawCircle(this.centerX, this.centerY, mRadius, view.pointPaint);
+            canvas.drawCircle(this.centerX, this.centerY, mRadius, view.mPointPaint);
             if (this.state == State.PRESSED || this.state == State.ERROR) {
-                canvas.drawCircle(this.centerX, this.centerY, this.outerRadius, view.pointPaint);
+                canvas.drawCircle(this.centerX, this.centerY, this.outerRadius, view.mPointPaint);
                 preparePaintColor(State.PRESSED);
-                canvas.drawCircle(this.centerX, this.centerY, mRadius, view.pointPaint);
+                canvas.drawCircle(this.centerX, this.centerY, mRadius, view.mPointPaint);
 //                view.pointPaint.setStyle(Paint.Style.STROKE);
 //                canvas.drawCircle(this.centerX, this.centerY, mRadius, view.pointPaint);
-                view.pointPaint.setStyle(Paint.Style.FILL);
+                view.mPointPaint.setStyle(Paint.Style.FILL);
             }
         }
 
@@ -436,13 +436,13 @@ public class UnLockView extends View {
     protected Parcelable onSaveInstanceState() {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
-        bundle.putInt(INSTANCE_COLOR_NORMAL, this.colorNormal);
-        bundle.putInt(INSTANCE_COLOR_SELECTED, this.colorSelected);
-        bundle.putInt(INSTANCE_COLOR_ERROR, this.colorError);
-        bundle.putFloat(INSTANCE_POINT_RADIUS, this.pointRadius);
-        bundle.putFloat(INSTANCE_STROKE_WIDTH, this.strokeWidth);
-        bundle.putFloat(INSTANCE_LINE_WIDTH, this.lineWidth);
-        bundle.putFloat(INSTANCE_RADIUS_FACTOR, this.radiusFactor);
+        bundle.putInt(INSTANCE_COLOR_NORMAL, this.mColorNormal);
+        bundle.putInt(INSTANCE_COLOR_SELECTED, this.mColorSelected);
+        bundle.putInt(INSTANCE_COLOR_ERROR, this.mColorError);
+        bundle.putFloat(INSTANCE_POINT_RADIUS, this.mPointRadius);
+        bundle.putFloat(INSTANCE_STROKE_WIDTH, this.mStrokeWidth);
+        bundle.putFloat(INSTANCE_LINE_WIDTH, this.mLineWidth);
+        bundle.putFloat(INSTANCE_RADIUS_FACTOR, this.mRadiusFactor);
         return bundle;
     }
 
@@ -450,16 +450,16 @@ public class UnLockView extends View {
     protected void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             final Bundle bundle = (Bundle) state;
-            colorNormal = bundle.getInt(INSTANCE_COLOR_NORMAL);
-            colorSelected = bundle.getInt(INSTANCE_COLOR_SELECTED);
-            colorError = bundle.getInt(INSTANCE_COLOR_ERROR);
-            pointRadius = bundle.getFloat(INSTANCE_POINT_RADIUS);
-            strokeWidth = bundle.getFloat(INSTANCE_STROKE_WIDTH);
-            lineWidth = bundle.getFloat(INSTANCE_LINE_WIDTH);
-            radiusFactor = bundle.getFloat(INSTANCE_RADIUS_FACTOR);
+            mColorNormal = bundle.getInt(INSTANCE_COLOR_NORMAL);
+            mColorSelected = bundle.getInt(INSTANCE_COLOR_SELECTED);
+            mColorError = bundle.getInt(INSTANCE_COLOR_ERROR);
+            mPointRadius = bundle.getFloat(INSTANCE_POINT_RADIUS);
+            mStrokeWidth = bundle.getFloat(INSTANCE_STROKE_WIDTH);
+            mLineWidth = bundle.getFloat(INSTANCE_LINE_WIDTH);
+            mRadiusFactor = bundle.getFloat(INSTANCE_RADIUS_FACTOR);
 
-            initialized = false;
-            isGestureValid = true;
+            mInitialized = false;
+            mIsGestureValid = true;
             initPaints();
             super.onRestoreInstanceState(bundle.getParcelable(INSTANCE_STATE));
             return;

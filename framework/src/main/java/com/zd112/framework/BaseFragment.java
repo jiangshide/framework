@@ -19,7 +19,7 @@ import com.zd112.framework.net.annotation.RequestType;
 import com.zd112.framework.net.callback.Callback;
 import com.zd112.framework.net.callback.ProgressCallback;
 import com.zd112.framework.net.helper.NetInfo;
-import com.zd112.framework.utils.LogUtils;
+import com.zd112.framework.utils.NetUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.DialogView;
@@ -34,9 +34,9 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     protected View mView;
     protected Bundle mBundle;
     protected RefreshView mRefreshView;
-    protected int default_page = 1;
-    protected int default_page_size = 20;
-    protected boolean isRefresh;
+    protected int mDefaultPage = BuildConfig.PAGE;
+    protected int mDefaultPageSize = BuildConfig.PAGE_SIZE;
+    private boolean mIsLoadMore;
 
     @Nullable
     @Override
@@ -83,7 +83,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
 
     public void setEnableMore(int resultSize) {
         if (mRefreshView == null) return;
-        mRefreshView.setNoMoreData(default_page_size > resultSize);
+        mRefreshView.setNoMoreData(mDefaultPageSize > resultSize);
     }
 
     protected int getColor(int resColor) {
@@ -106,15 +106,15 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     }
 
     public DialogView loading(String msg) {
-        return ((BaseApplication) getActivity().getApplication()).loading(getActivity(), msg);
+        return NetUtils.INSTANCE.loading(getActivity(), msg);
     }
 
     public DialogView loading(int layout) {
-        return ((BaseApplication) getActivity().getApplication()).loading(getActivity(), layout);
+        return NetUtils.INSTANCE.loading(getActivity(), layout);
     }
 
     public DialogView loading(int layout, DialogView.DialogViewListener dialogViewListener) {
-        return ((BaseApplication) getActivity().getApplication()).loading(getActivity(), layout, dialogViewListener);
+        return NetUtils.INSTANCE.loading(getActivity(), layout, dialogViewListener);
     }
 
     public void cancelLoading() {
@@ -122,7 +122,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
             mRefreshView.finishRefresh();
             mRefreshView.finishLoadMore();
         }
-        ((BaseApplication) getActivity().getApplication()).cancelLoading();
+        NetUtils.INSTANCE.cancelLoading();
     }
 
     public NetInfo.Builder request(String action) {
@@ -189,27 +189,30 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
         if (null == params) {
             params = new HashMap<>();
         }
-        params.put("page", default_page + "");
-        params.put("pageSize", default_page_size + "");
-        return ((BaseApplication) getActivity().getApplication()).request(getActivity(), requestType, action, params, callback, _class, isLoading);
+        params.put("page", mDefaultPage + "");
+        params.put("pageSize", mDefaultPageSize + "");
+        return NetUtils.INSTANCE.request(getActivity(), requestType, action, params, callback, _class, isLoading);
     }
 
     public Net.Builder download(String url, ProgressCallback progressCallback) {
-        return ((BaseApplication) getActivity().getApplication()).download(url, progressCallback);
+        return NetUtils.INSTANCE.download(url, progressCallback);
     }
 
     public Net.Builder download(String url, ProgressCallback progressCallback, Object tag) {
-        return ((BaseApplication) getActivity().getApplication()).download(url, progressCallback, tag);
+        return NetUtils.INSTANCE.download(url, progressCallback, tag);
     }
 
     public Net.Builder download(String url, String saveFileName, ProgressCallback progressCallback, Object tag) {
-        return ((BaseApplication) getActivity().getApplication()).download(url, saveFileName, progressCallback, tag);
+        return NetUtils.INSTANCE.download(url, saveFileName, progressCallback, tag);
     }
 
     @Override
     public void onSuccess(NetInfo info) {
         cancelRefresh();
-        LogUtils.e("---info:", info);
+        if (mIsLoadMore) {
+            mDefaultPage++;
+            mIsLoadMore = false;
+        }
     }
 
     @Override
@@ -226,25 +229,23 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        isRefresh = true;
-        default_page = 1;
+        mDefaultPage = 1;
         if (mRefreshView != null) {
             mRefreshView.setNoMoreData(false);
         }
         HashMap<String, String> params = new HashMap<>();
-        params.put("page", default_page + "");
-        params.put("pageSize", default_page_size + "");
-        ((BaseApplication) getActivity().getApplication()).request(params, RequestStatus.REFRESH);
+        params.put("page", mDefaultPage + "");
+        params.put("pageSize", mDefaultPageSize + "");
+        NetUtils.INSTANCE.request(params, RequestStatus.REFRESH);
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        isRefresh = false;
-        default_page++;
+        mIsLoadMore = true;
         HashMap<String, String> params = new HashMap<>();
-        params.put("page", default_page + "");
-        params.put("pageSize", default_page_size + "");
-        ((BaseApplication) getActivity().getApplication()).request(params, RequestStatus.MORE);
+        params.put("page", mDefaultPage + "");
+        params.put("pageSize", mDefaultPageSize + "");
+        NetUtils.INSTANCE.request(params, RequestStatus.MORE);
     }
 
     protected void scrollTxt(TextView textView, String txt) {
@@ -266,7 +267,8 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
 
     protected abstract void initView(Bundle savedInstanceState);
 
-    protected abstract void setListener();
+    protected void setListener() {
+    }
 
     protected abstract void processLogic(Bundle savedInstanceState);
 }

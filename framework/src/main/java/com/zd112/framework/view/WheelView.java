@@ -31,65 +31,65 @@ public class WheelView extends View {
 
     private static final int DEFAULT_VISIBIE_ITEMS = 9;
 
-    private float scaleX = 1.05F;
+    private float mScaleX = 1.05F;
 
     public enum ACTION {
         CLICK, FLING, DAGGLE
     }
 
-    private Context context;
+    private Context mContext;
 
-    Handler handler;
-    private GestureDetector flingGestureDetector;
-    WheelOnItemSelectedListener wheelOnItemSelectedListener;
+    private Handler mHandler;
+    private GestureDetector mFlingGestureDetector;
+    private WheelOnItemSelectedListener mWheelOnItemSelectedListener;
 
     // Timer mTimer;
-    ScheduledExecutorService mExecutor = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService mExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> mFuture;
 
-    private Paint paintOuterText;
-    private Paint paintCenterText;
-    private Paint paintIndicator;
+    private Paint mPaintOuterText;
+    private Paint mPaintCenterText;
+    private Paint mPaintIndicator;
 
-    List<IndexString> items;
+    private List<IndexString> mItems;
 
-    int textSize;
-    int maxTextHeight;
+    private int mTextSize;
+    private int mMaxTextHeight;
 
-    int outerTextColor;
+    private int mOuterTextColor;
 
-    int centerTextColor;
-    int dividerColor;
+    private int mCenterTextColor;
+    private int mDividerColor;
 
-    float lineSpacingMultiplier;
-    boolean isLoop;
+    private float mLineSpacingMultiplier;
+    private boolean mIsLoop;
 
-    int firstLineY;
-    int secondLineY;
+    private int mFirstLineY;
+    private int mSecondLineY;
 
-    int totalScrollY;
-    int initPosition;
-    private int selectedItem;
-    int preCurrentIndex;
-    int change;
+    private int mTotalScrollY;
+    private int mInitPosition;
+    private int mSelectedItem;
+    private int mPreCurrentIndex;
+    private int mChange;
 
-    int itemsVisibleCount;
+    private int mItemsVisibleCount;
 
-    HashMap<Integer, IndexString> drawingStrings;
+    private HashMap<Integer, IndexString> mDrawingStrings;
 
-    int measuredHeight;
-    int measuredWidth;
+    private int mMeasuredHeight;
+    private int mMeasuredWidth;
 
-    int halfCircumference;
-    int radius;
+    private int mHalfCircumference;
+    private int mRadius;
 
     private int mOffset = 0;
-    private float previousY;
-    long startTime = 0;
+    private float mPpreviousY;
+    private long mStartTime = 0;
 
-    private Rect tempRect = new Rect();
+    private Rect mTempRect = new Rect();
 
-    private int paddingLeft, paddingRight;
+    private int mPaddingLeft, mPaddingRight;
 
     /**
      * set text line space, must more than 1
@@ -98,7 +98,7 @@ public class WheelView extends View {
      */
     public void setLineSpacingMultiplier(float lineSpacingMultiplier) {
         if (lineSpacingMultiplier > 1.0f) {
-            this.lineSpacingMultiplier = lineSpacingMultiplier;
+            this.mLineSpacingMultiplier = lineSpacingMultiplier;
         }
     }
 
@@ -108,8 +108,8 @@ public class WheelView extends View {
      * @param centerTextColor
      */
     public void setCenterTextColor(int centerTextColor) {
-        this.centerTextColor = centerTextColor;
-        paintCenterText.setColor(centerTextColor);
+        this.mCenterTextColor = centerTextColor;
+        mPaintCenterText.setColor(centerTextColor);
     }
 
     /**
@@ -118,8 +118,8 @@ public class WheelView extends View {
      * @param outerTextColor
      */
     public void setOuterTextColor(int outerTextColor) {
-        this.outerTextColor = outerTextColor;
-        paintOuterText.setColor(outerTextColor);
+        this.mOuterTextColor = outerTextColor;
+        mPaintOuterText.setColor(outerTextColor);
     }
 
     /**
@@ -128,8 +128,8 @@ public class WheelView extends View {
      * @param dividerColor
      */
     public void setDividerColor(int dividerColor) {
-        this.dividerColor = dividerColor;
-        paintIndicator.setColor(dividerColor);
+        this.mDividerColor = dividerColor;
+        mPaintIndicator.setColor(dividerColor);
     }
 
     public WheelView(Context context) {
@@ -148,30 +148,30 @@ public class WheelView extends View {
     }
 
     private void initView(Context context, AttributeSet attributeset) {
-        this.context = context;
-        handler = new MessageHandler(this);
-        flingGestureDetector = new GestureDetector(context, new MyGestureListener(this));
-        flingGestureDetector.setIsLongpressEnabled(false);
+        this.mContext = context;
+        mHandler = new MessageHandler(this);
+        mFlingGestureDetector = new GestureDetector(context, new MyGestureListener(this));
+        mFlingGestureDetector.setIsLongpressEnabled(false);
 
         TypedArray typedArray = context.obtainStyledAttributes(attributeset, R.styleable.wheelView);
-        textSize = typedArray.getInteger(R.styleable.wheelView_textSize, DEFAULT_TEXT_SIZE);
-        textSize = (int) (Resources.getSystem().getDisplayMetrics().density * textSize);
-        lineSpacingMultiplier = typedArray.getFloat(R.styleable.wheelView_lineSpace, DEFAULT_LINE_SPACE);
-        centerTextColor = typedArray.getInteger(R.styleable.wheelView_centerTextColor, 0xff313131);
-        outerTextColor = typedArray.getInteger(R.styleable.wheelView_outerTextColor, 0xffafafaf);
-        dividerColor = typedArray.getInteger(R.styleable.wheelView_dividerTextColor, 0xffc5c5c5);
-        itemsVisibleCount =
+        mTextSize = typedArray.getInteger(R.styleable.wheelView_textSize, DEFAULT_TEXT_SIZE);
+        mTextSize = (int) (Resources.getSystem().getDisplayMetrics().density * mTextSize);
+        mLineSpacingMultiplier = typedArray.getFloat(R.styleable.wheelView_lineSpace, DEFAULT_LINE_SPACE);
+        mCenterTextColor = typedArray.getInteger(R.styleable.wheelView_centerTextColor, 0xff313131);
+        mOuterTextColor = typedArray.getInteger(R.styleable.wheelView_outerTextColor, 0xffafafaf);
+        mDividerColor = typedArray.getInteger(R.styleable.wheelView_dividerTextColor, 0xffc5c5c5);
+        mItemsVisibleCount =
                 typedArray.getInteger(R.styleable.wheelView_itemsVisibleCount, DEFAULT_VISIBIE_ITEMS);
-        if (itemsVisibleCount % 2 == 0) {
-            itemsVisibleCount = DEFAULT_VISIBIE_ITEMS;
+        if (mItemsVisibleCount % 2 == 0) {
+            mItemsVisibleCount = DEFAULT_VISIBIE_ITEMS;
         }
-        isLoop = typedArray.getBoolean(R.styleable.wheelView_isLoop, true);
+        mIsLoop = typedArray.getBoolean(R.styleable.wheelView_isLoop, true);
         typedArray.recycle();
 
 //        drawingStrings = new String[itemsVisibleCount];
-        drawingStrings = new HashMap<>();
-        totalScrollY = 0;
-        initPosition = -1;
+        mDrawingStrings = new HashMap<>();
+        mTotalScrollY = 0;
+        mInitPosition = -1;
 
         initPaints();
     }
@@ -185,76 +185,76 @@ public class WheelView extends View {
         if (visibleNumber % 2 == 0) {
             return;
         }
-        if (visibleNumber != itemsVisibleCount) {
-            itemsVisibleCount = visibleNumber;
+        if (visibleNumber != mItemsVisibleCount) {
+            mItemsVisibleCount = visibleNumber;
 //            drawingStrings = new String[itemsVisibleCount];
-            drawingStrings = new HashMap<>();
+            mDrawingStrings = new HashMap<>();
         }
     }
 
     private void initPaints() {
-        paintOuterText = new Paint();
-        paintOuterText.setColor(outerTextColor);
-        paintOuterText.setAntiAlias(true);
-        paintOuterText.setTypeface(Typeface.MONOSPACE);
-        paintOuterText.setTextSize(textSize);
+        mPaintOuterText = new Paint();
+        mPaintOuterText.setColor(mOuterTextColor);
+        mPaintOuterText.setAntiAlias(true);
+        mPaintOuterText.setTypeface(Typeface.MONOSPACE);
+        mPaintOuterText.setTextSize(mTextSize);
 
-        paintCenterText = new Paint();
-        paintCenterText.setColor(centerTextColor);
-        paintCenterText.setAntiAlias(true);
-        paintCenterText.setTextScaleX(scaleX);
-        paintCenterText.setTypeface(Typeface.MONOSPACE);
-        paintCenterText.setTextSize(textSize);
+        mPaintCenterText = new Paint();
+        mPaintCenterText.setColor(mCenterTextColor);
+        mPaintCenterText.setAntiAlias(true);
+        mPaintCenterText.setTextScaleX(mScaleX);
+        mPaintCenterText.setTypeface(Typeface.MONOSPACE);
+        mPaintCenterText.setTextSize(mTextSize);
 
-        paintIndicator = new Paint();
-        paintIndicator.setColor(dividerColor);
-        paintIndicator.setAntiAlias(true);
+        mPaintIndicator = new Paint();
+        mPaintIndicator.setColor(mDividerColor);
+        mPaintIndicator.setAntiAlias(true);
 
     }
 
     private void remeasure() {
-        if (items == null) {
+        if (mItems == null) {
             return;
         }
 
-        measuredWidth = getMeasuredWidth();
+        mMeasuredWidth = getMeasuredWidth();
 
-        measuredHeight = getMeasuredHeight();
+        mMeasuredHeight = getMeasuredHeight();
 
-        if (measuredWidth == 0 || measuredHeight == 0) {
+        if (mMeasuredWidth == 0 || mMeasuredHeight == 0) {
             return;
         }
 
-        paddingLeft = getPaddingLeft();
-        paddingRight = getPaddingRight();
+        mPaddingLeft = getPaddingLeft();
+        mPaddingRight = getPaddingRight();
 
-        measuredWidth = measuredWidth - paddingRight;
+        mMeasuredWidth = mMeasuredWidth - mPaddingRight;
 
-        paintCenterText.getTextBounds("\u661F\u671F", 0, 2, tempRect); // 星期
-        maxTextHeight = tempRect.height();
-        halfCircumference = (int) (measuredHeight * Math.PI / 2);
+        mPaintCenterText.getTextBounds("\u661F\u671F", 0, 2, mTempRect); // 星期
+        mMaxTextHeight = mTempRect.height();
+        mHalfCircumference = (int) (mMeasuredHeight * Math.PI / 2);
 
-        maxTextHeight = (int) (halfCircumference / (lineSpacingMultiplier * (itemsVisibleCount - 1)));
+        mMaxTextHeight = (int) (mHalfCircumference / (mLineSpacingMultiplier * (mItemsVisibleCount - 1)));
 
-        radius = measuredHeight / 2;
-        firstLineY = (int) ((measuredHeight - lineSpacingMultiplier * maxTextHeight) / 2.0F);
-        secondLineY = (int) ((measuredHeight + lineSpacingMultiplier * maxTextHeight) / 2.0F);
-        if (initPosition == -1) {
-            if (isLoop) {
-                initPosition = (items.size() + 1) / 2;
+        mRadius = mMeasuredHeight / 2;
+        mFirstLineY = (int) ((mMeasuredHeight - mLineSpacingMultiplier * mMaxTextHeight) / 2.0F);
+        mSecondLineY = (int) ((mMeasuredHeight + mLineSpacingMultiplier * mMaxTextHeight) / 2.0F);
+        if (mInitPosition == -1) {
+            if (mIsLoop) {
+                mInitPosition = (mItems.size() + 1) / 2;
             } else {
-                initPosition = 0;
+                mInitPosition = 0;
             }
         }
 
-        preCurrentIndex = initPosition;
+        mPreCurrentIndex = mInitPosition;
     }
 
     void smoothScroll(ACTION action) {
         cancelFuture();
         if (action == ACTION.FLING || action == ACTION.DAGGLE) {
-            float itemHeight = lineSpacingMultiplier * maxTextHeight;
-            mOffset = (int) ((totalScrollY % itemHeight + itemHeight) % itemHeight);
+            float itemHeight = mLineSpacingMultiplier * mMaxTextHeight;
+            mOffset = (int) ((mTotalScrollY % itemHeight + itemHeight) % itemHeight);
             if ((float) mOffset > itemHeight / 2.0F) {
                 mOffset = (int) (itemHeight - (float) mOffset);
             } else {
@@ -284,7 +284,7 @@ public class WheelView extends View {
      * set not loop
      */
     public void setNotLoop() {
-        isLoop = false;
+        mIsLoop = false;
     }
 
     /**
@@ -294,29 +294,29 @@ public class WheelView extends View {
      */
     public final void setTextSize(float size) {
         if (size > 0.0F) {
-            textSize = (int) (context.getResources().getDisplayMetrics().density * size);
-            paintOuterText.setTextSize(textSize);
-            paintCenterText.setTextSize(textSize);
+            mTextSize = (int) (mContext.getResources().getDisplayMetrics().density * size);
+            mPaintOuterText.setTextSize(mTextSize);
+            mPaintCenterText.setTextSize(mTextSize);
         }
     }
 
     public final void setInitPosition(int initPosition) {
         if (initPosition < 0) {
-            this.initPosition = 0;
+            this.mInitPosition = 0;
         } else {
-            if (items != null && items.size() > initPosition) {
-                this.initPosition = initPosition;
+            if (mItems != null && mItems.size() > initPosition) {
+                this.mInitPosition = initPosition;
             }
         }
     }
 
     public final void setListener(WheelOnItemSelectedListener wheelOnItemSelectedListener) {
-        this.wheelOnItemSelectedListener = wheelOnItemSelectedListener;
+        this.mWheelOnItemSelectedListener = wheelOnItemSelectedListener;
     }
 
     public final void setItems(List<String> items) {
 
-        this.items = convertData(items);
+        this.mItems = convertData(items);
         remeasure();
         invalidate();
     }
@@ -330,7 +330,7 @@ public class WheelView extends View {
     }
 
     public final int getSelectedItem() {
-        return selectedItem;
+        return mSelectedItem;
     }
     //
     // protected final void scrollBy(float velocityY) {
@@ -340,7 +340,7 @@ public class WheelView extends View {
     // }
 
     protected final void onItemSelected() {
-        if (wheelOnItemSelectedListener != null) {
+        if (mWheelOnItemSelectedListener != null) {
             postDelayed(new WheelOnItemSelectedRunnable(this), 200L);
         }
     }
@@ -349,7 +349,7 @@ public class WheelView extends View {
      * @param scaleX
      */
     public void setScaleX(float scaleX) {
-        this.scaleX = scaleX;
+        this.mScaleX = scaleX;
     }
 
     /**
@@ -358,13 +358,13 @@ public class WheelView extends View {
      * @param position
      */
     public void setCurrentPosition(int position) {
-        if (items == null || items.isEmpty()) {
+        if (mItems == null || mItems.isEmpty()) {
             return;
         }
-        int size = items.size();
-        if (position >= 0 && position < size && position != selectedItem) {
-            initPosition = position;
-            totalScrollY = 0;
+        int size = mItems.size();
+        if (position >= 0 && position < size && position != mSelectedItem) {
+            mInitPosition = position;
+            mTotalScrollY = 0;
             mOffset = 0;
             invalidate();
         }
@@ -372,103 +372,103 @@ public class WheelView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (items == null) {
+        if (mItems == null) {
             return;
         }
 
-        change = (int) (totalScrollY / (lineSpacingMultiplier * maxTextHeight));
-        preCurrentIndex = initPosition + change % items.size();
+        mChange = (int) (mTotalScrollY / (mLineSpacingMultiplier * mMaxTextHeight));
+        mPreCurrentIndex = mInitPosition + mChange % mItems.size();
 
-        if (!isLoop) {
-            if (preCurrentIndex < 0) {
-                preCurrentIndex = 0;
+        if (!mIsLoop) {
+            if (mPreCurrentIndex < 0) {
+                mPreCurrentIndex = 0;
             }
-            if (preCurrentIndex > items.size() - 1) {
-                preCurrentIndex = items.size() - 1;
+            if (mPreCurrentIndex > mItems.size() - 1) {
+                mPreCurrentIndex = mItems.size() - 1;
             }
         } else {
-            if (preCurrentIndex < 0) {
-                preCurrentIndex = items.size() + preCurrentIndex;
+            if (mPreCurrentIndex < 0) {
+                mPreCurrentIndex = mItems.size() + mPreCurrentIndex;
             }
-            if (preCurrentIndex > items.size() - 1) {
-                preCurrentIndex = preCurrentIndex - items.size();
+            if (mPreCurrentIndex > mItems.size() - 1) {
+                mPreCurrentIndex = mPreCurrentIndex - mItems.size();
             }
         }
 
-        int j2 = (int) (totalScrollY % (lineSpacingMultiplier * maxTextHeight));
+        int j2 = (int) (mTotalScrollY % (mLineSpacingMultiplier * mMaxTextHeight));
         // put value to drawingString
         int k1 = 0;
-        while (k1 < itemsVisibleCount) {
-            int l1 = preCurrentIndex - (itemsVisibleCount / 2 - k1);
-            if (isLoop) {
+        while (k1 < mItemsVisibleCount) {
+            int l1 = mPreCurrentIndex - (mItemsVisibleCount / 2 - k1);
+            if (mIsLoop) {
                 while (l1 < 0) {
-                    l1 = l1 + items.size();
+                    l1 = l1 + mItems.size();
                 }
-                while (l1 > items.size() - 1) {
-                    l1 = l1 - items.size();
+                while (l1 > mItems.size() - 1) {
+                    l1 = l1 - mItems.size();
                 }
-                drawingStrings.put(k1, items.get(l1));
+                mDrawingStrings.put(k1, mItems.get(l1));
             } else if (l1 < 0) {
 //                drawingStrings[k1] = "";
-                drawingStrings.put(k1, new IndexString());
-            } else if (l1 > items.size() - 1) {
+                mDrawingStrings.put(k1, new IndexString());
+            } else if (l1 > mItems.size() - 1) {
 //                drawingStrings[k1] = "";
-                drawingStrings.put(k1, new IndexString());
+                mDrawingStrings.put(k1, new IndexString());
             } else {
                 // drawingStrings[k1] = items.get(l1);
-                drawingStrings.put(k1, items.get(l1));
+                mDrawingStrings.put(k1, mItems.get(l1));
             }
             k1++;
         }
-        canvas.drawLine(paddingLeft, firstLineY, measuredWidth, firstLineY, paintIndicator);
-        canvas.drawLine(paddingLeft, secondLineY, measuredWidth, secondLineY, paintIndicator);
+        canvas.drawLine(mPaddingLeft, mFirstLineY, mMeasuredWidth, mFirstLineY, mPaintIndicator);
+        canvas.drawLine(mPaddingLeft, mSecondLineY, mMeasuredWidth, mSecondLineY, mPaintIndicator);
 
         int i = 0;
-        while (i < itemsVisibleCount) {
+        while (i < mItemsVisibleCount) {
             canvas.save();
-            float itemHeight = maxTextHeight * lineSpacingMultiplier;
-            double radian = ((itemHeight * i - j2) * Math.PI) / halfCircumference;
+            float itemHeight = mMaxTextHeight * mLineSpacingMultiplier;
+            double radian = ((itemHeight * i - j2) * Math.PI) / mHalfCircumference;
             if (radian >= Math.PI || radian <= 0) {
                 canvas.restore();
             } else {
-                int translateY = (int) (radius - Math.cos(radian) * radius - (Math.sin(radian) * maxTextHeight) / 2D);
+                int translateY = (int) (mRadius - Math.cos(radian) * mRadius - (Math.sin(radian) * mMaxTextHeight) / 2D);
                 canvas.translate(0.0F, translateY);
                 canvas.scale(1.0F, (float) Math.sin(radian));
-                if (translateY <= firstLineY && maxTextHeight + translateY >= firstLineY) {
+                if (translateY <= mFirstLineY && mMaxTextHeight + translateY >= mFirstLineY) {
                     // first divider
                     canvas.save();
-                    canvas.clipRect(0, 0, measuredWidth, firstLineY - translateY);
-                    canvas.drawText(drawingStrings.get(i).string, getTextX(drawingStrings.get(i).string, paintOuterText, tempRect),
-                            maxTextHeight, paintOuterText);
+                    canvas.clipRect(0, 0, mMeasuredWidth, mFirstLineY - translateY);
+                    canvas.drawText(mDrawingStrings.get(i).string, getTextX(mDrawingStrings.get(i).string, mPaintOuterText, mTempRect),
+                            mMaxTextHeight, mPaintOuterText);
                     canvas.restore();
                     canvas.save();
-                    canvas.clipRect(0, firstLineY - translateY, measuredWidth, (int) (itemHeight));
-                    canvas.drawText(drawingStrings.get(i).string, getTextX(drawingStrings.get(i).string, paintCenterText, tempRect),
-                            maxTextHeight, paintCenterText);
+                    canvas.clipRect(0, mFirstLineY - translateY, mMeasuredWidth, (int) (itemHeight));
+                    canvas.drawText(mDrawingStrings.get(i).string, getTextX(mDrawingStrings.get(i).string, mPaintCenterText, mTempRect),
+                            mMaxTextHeight, mPaintCenterText);
                     canvas.restore();
-                } else if (translateY <= secondLineY && maxTextHeight + translateY >= secondLineY) {
+                } else if (translateY <= mSecondLineY && mMaxTextHeight + translateY >= mSecondLineY) {
                     // second divider
                     canvas.save();
-                    canvas.clipRect(0, 0, measuredWidth, secondLineY - translateY);
-                    canvas.drawText(drawingStrings.get(i).string, getTextX(drawingStrings.get(i).string, paintCenterText, tempRect),
-                            maxTextHeight, paintCenterText);
+                    canvas.clipRect(0, 0, mMeasuredWidth, mSecondLineY - translateY);
+                    canvas.drawText(mDrawingStrings.get(i).string, getTextX(mDrawingStrings.get(i).string, mPaintCenterText, mTempRect),
+                            mMaxTextHeight, mPaintCenterText);
                     canvas.restore();
                     canvas.save();
-                    canvas.clipRect(0, secondLineY - translateY, measuredWidth, (int) (itemHeight));
-                    canvas.drawText(drawingStrings.get(i).string, getTextX(drawingStrings.get(i).string, paintOuterText, tempRect),
-                            maxTextHeight, paintOuterText);
+                    canvas.clipRect(0, mSecondLineY - translateY, mMeasuredWidth, (int) (itemHeight));
+                    canvas.drawText(mDrawingStrings.get(i).string, getTextX(mDrawingStrings.get(i).string, mPaintOuterText, mTempRect),
+                            mMaxTextHeight, mPaintOuterText);
                     canvas.restore();
-                } else if (translateY >= firstLineY && maxTextHeight + translateY <= secondLineY) {
+                } else if (translateY >= mFirstLineY && mMaxTextHeight + translateY <= mSecondLineY) {
                     // center item
-                    canvas.clipRect(0, 0, measuredWidth, (int) (itemHeight));
-                    canvas.drawText(drawingStrings.get(i).string, getTextX(drawingStrings.get(i).string, paintCenterText, tempRect),
-                            maxTextHeight, paintCenterText);
-                    selectedItem = items.indexOf(drawingStrings.get(i));
+                    canvas.clipRect(0, 0, mMeasuredWidth, (int) (itemHeight));
+                    canvas.drawText(mDrawingStrings.get(i).string, getTextX(mDrawingStrings.get(i).string, mPaintCenterText, mTempRect),
+                            mMaxTextHeight, mPaintCenterText);
+                    mSelectedItem = mItems.indexOf(mDrawingStrings.get(i));
                 } else {
                     // other item
-                    canvas.clipRect(0, 0, measuredWidth, (int) (itemHeight));
-                    canvas.drawText(drawingStrings.get(i).string, getTextX(drawingStrings.get(i).string, paintOuterText, tempRect),
-                            maxTextHeight, paintOuterText);
+                    canvas.clipRect(0, 0, mMeasuredWidth, (int) (itemHeight));
+                    canvas.drawText(mDrawingStrings.get(i).string, getTextX(mDrawingStrings.get(i).string, mPaintOuterText, mTempRect),
+                            mMaxTextHeight, mPaintOuterText);
                 }
                 canvas.restore();
             }
@@ -480,8 +480,8 @@ public class WheelView extends View {
     private int getTextX(String a, Paint paint, Rect rect) {
         paint.getTextBounds(a, 0, a.length(), rect);
         int textWidth = rect.width();
-        textWidth *= scaleX;
-        return (measuredWidth - paddingLeft - textWidth) / 2 + paddingLeft;
+        textWidth *= mScaleX;
+        return (mMeasuredWidth - mPaddingLeft - textWidth) / 2 + mPaddingLeft;
     }
 
     @Override
@@ -497,33 +497,33 @@ public class WheelView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean eventConsumed = flingGestureDetector.onTouchEvent(event);
-        float itemHeight = lineSpacingMultiplier * maxTextHeight;
+        boolean eventConsumed = mFlingGestureDetector.onTouchEvent(event);
+        float itemHeight = mLineSpacingMultiplier * mMaxTextHeight;
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                startTime = System.currentTimeMillis();
+                mStartTime = System.currentTimeMillis();
                 cancelFuture();
-                previousY = event.getRawY();
+                mPpreviousY = event.getRawY();
                 if (getParent() != null) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                float dy = previousY - event.getRawY();
-                previousY = event.getRawY();
+                float dy = mPpreviousY - event.getRawY();
+                mPpreviousY = event.getRawY();
 
-                totalScrollY = (int) (totalScrollY + dy);
+                mTotalScrollY = (int) (mTotalScrollY + dy);
 
-                if (!isLoop) {
-                    float top = -initPosition * itemHeight;
-                    float bottom = (items.size() - 1 - initPosition) * itemHeight;
+                if (!mIsLoop) {
+                    float top = -mInitPosition * itemHeight;
+                    float bottom = (mItems.size() - 1 - mInitPosition) * itemHeight;
 
-                    if (totalScrollY < top) {
-                        totalScrollY = (int) top;
-                    } else if (totalScrollY > bottom) {
-                        totalScrollY = (int) bottom;
+                    if (mTotalScrollY < top) {
+                        mTotalScrollY = (int) top;
+                    } else if (mTotalScrollY > bottom) {
+                        mTotalScrollY = (int) bottom;
                     }
                 }
                 break;
@@ -533,13 +533,13 @@ public class WheelView extends View {
             default:
                 if (!eventConsumed) {
                     float y = event.getY();
-                    double l = Math.acos((radius - y) / radius) * radius;
+                    double l = Math.acos((mRadius - y) / mRadius) * mRadius;
                     int circlePosition = (int) ((l + itemHeight / 2) / itemHeight);
 
-                    float extraOffset = (totalScrollY % itemHeight + itemHeight) % itemHeight;
-                    mOffset = (int) ((circlePosition - itemsVisibleCount / 2) * itemHeight - extraOffset);
+                    float extraOffset = (mTotalScrollY % itemHeight + itemHeight) % itemHeight;
+                    mOffset = (int) ((circlePosition - mItemsVisibleCount / 2) * itemHeight - extraOffset);
 
-                    if ((System.currentTimeMillis() - startTime) > 120) {
+                    if ((System.currentTimeMillis() - mStartTime) > 120) {
                         smoothScroll(ACTION.DAGGLE);
                     } else {
                         smoothScroll(ACTION.CLICK);
@@ -597,19 +597,19 @@ public class WheelView extends View {
             }
             if (Math.abs(a) >= 0.0F && Math.abs(a) <= 20F) {
                 wheelView.cancelFuture();
-                wheelView.handler.sendEmptyMessage(MessageHandler.WHAT_SMOOTH_SCROLL);
+                wheelView.mHandler.sendEmptyMessage(MessageHandler.WHAT_SMOOTH_SCROLL);
                 return;
             }
             int i = (int) ((a * 10F) / 1000F);
             WheelView wheelView = this.wheelView;
-            wheelView.totalScrollY = wheelView.totalScrollY - i;
-            if (!wheelView.isLoop) {
-                float itemHeight = wheelView.lineSpacingMultiplier * wheelView.maxTextHeight;
-                if (wheelView.totalScrollY <= (int) ((float) (-wheelView.initPosition) * itemHeight)) {
+            wheelView.mTotalScrollY = wheelView.mTotalScrollY - i;
+            if (!wheelView.mIsLoop) {
+                float itemHeight = wheelView.mLineSpacingMultiplier * wheelView.mMaxTextHeight;
+                if (wheelView.mTotalScrollY <= (int) ((float) (-wheelView.mInitPosition) * itemHeight)) {
                     a = 40F;
-                    wheelView.totalScrollY = (int) ((float) (-wheelView.initPosition) * itemHeight);
-                } else if (wheelView.totalScrollY >= (int) ((float) (wheelView.items.size() - 1 - wheelView.initPosition) * itemHeight)) {
-                    wheelView.totalScrollY = (int) ((float) (wheelView.items.size() - 1 - wheelView.initPosition) * itemHeight);
+                    wheelView.mTotalScrollY = (int) ((float) (-wheelView.mInitPosition) * itemHeight);
+                } else if (wheelView.mTotalScrollY >= (int) ((float) (wheelView.mItems.size() - 1 - wheelView.mInitPosition) * itemHeight)) {
+                    wheelView.mTotalScrollY = (int) ((float) (wheelView.mItems.size() - 1 - wheelView.mInitPosition) * itemHeight);
                     a = -40F;
                 }
             }
@@ -618,7 +618,7 @@ public class WheelView extends View {
             } else {
                 a = a - 20F;
             }
-            wheelView.handler.sendEmptyMessage(MessageHandler.WHAT_INVALIDATE_LOOP_VIEW);
+            wheelView.mHandler.sendEmptyMessage(MessageHandler.WHAT_INVALIDATE_LOOP_VIEW);
         }
     }
 
@@ -651,10 +651,10 @@ public class WheelView extends View {
             }
             if (Math.abs(realTotalOffset) <= 0) {
                 wheelView.cancelFuture();
-                wheelView.handler.sendEmptyMessage(MessageHandler.WHAT_ITEM_SELECTED);
+                wheelView.mHandler.sendEmptyMessage(MessageHandler.WHAT_ITEM_SELECTED);
             } else {
-                wheelView.totalScrollY = wheelView.totalScrollY + realOffset;
-                wheelView.handler.sendEmptyMessage(MessageHandler.WHAT_INVALIDATE_LOOP_VIEW);
+                wheelView.mTotalScrollY = wheelView.mTotalScrollY + realOffset;
+                wheelView.mHandler.sendEmptyMessage(MessageHandler.WHAT_INVALIDATE_LOOP_VIEW);
                 realTotalOffset = realTotalOffset - realOffset;
             }
         }
@@ -712,7 +712,7 @@ public class WheelView extends View {
 
         @Override
         public final void run() {
-            wheelView.wheelOnItemSelectedListener.onItemSelected(wheelView.getSelectedItem());
+            wheelView.mWheelOnItemSelectedListener.onItemSelected(wheelView.getSelectedItem());
         }
     }
 

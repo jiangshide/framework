@@ -19,21 +19,19 @@ import com.zd112.framework.utils.DimenUtils;
 import static android.graphics.Paint.Style.STROKE;
 
 public class CusProgressbar extends View {
-    private int outsideColor;    //进度的颜色
-    private float outsideRadius;    //外圆半径大小
-    private int insideColor;    //背景颜色
-    private int progressTextColor;   //圆环内文字颜色
-    private float progressTextSize;    //圆环内文字大小
-    private float progressWidth;    //圆环的宽度
-    private int maxProgress;    //最大进度
-    private float progress;    //当前进度
-    private int direction;    //进度从哪里开始(设置了4个值,上左下右)
+    private int mOutsideColor;    //进度的颜色
+    private float mOutsideRadius;    //外圆半径大小
+    private int mInsideColor;    //背景颜色
+    private int mProgressTextColor;   //圆环内文字颜色
+    private float mProgressTextSize;    //圆环内文字大小
+    private float mProgressWidth;    //圆环的宽度
+    private int mMaxProgress;    //最大进度
+    private float mProgress;    //当前进度
+    private int mDirection;    //进度从哪里开始(设置了4个值,上左下右)
 
-    private Paint paint;
-    private String progressText;     //圆环内文字
-    private Rect rect;
-
-    private ValueAnimator animator;
+    private Paint mPaint;
+    private String mProgressText;     //圆环内文字
+    private Rect mRect;
 
     enum DirectionEnum {
         LEFT(0, 180.0f),
@@ -90,19 +88,19 @@ public class CusProgressbar extends View {
     public CusProgressbar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CustomProgressBar, defStyleAttr, 0);
-        outsideColor = a.getColor(R.styleable.CustomProgressBar_outside_color, ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        outsideRadius = a.getDimension(R.styleable.CustomProgressBar_outside_radius, DimenUtils.dp2px(getContext(), 60.0f));
-        insideColor = a.getColor(R.styleable.CustomProgressBar_inside_color, ContextCompat.getColor(getContext(), R.color.inside_color));
-        progressTextColor = a.getColor(R.styleable.CustomProgressBar_progress_text_color, ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        progressTextSize = a.getDimension(R.styleable.CustomProgressBar_progress_text_size, DimenUtils.dp2px(getContext(), 14.0f));
-        progressWidth = a.getDimension(R.styleable.CustomProgressBar_progress_width, DimenUtils.dp2px(getContext(), 10.0f));
-        progress = a.getFloat(R.styleable.CustomProgressBar_progress, 50.0f);
-        maxProgress = a.getInt(R.styleable.CustomProgressBar_max_progress, 100);
-        direction = a.getInt(R.styleable.CustomProgressBar_direction, 3);
+        mOutsideColor = a.getColor(R.styleable.CustomProgressBar_outside_color, ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        mOutsideRadius = a.getDimension(R.styleable.CustomProgressBar_outside_radius, DimenUtils.dp2px(getContext(), 60.0f));
+        mInsideColor = a.getColor(R.styleable.CustomProgressBar_inside_color, ContextCompat.getColor(getContext(), R.color.inside_color));
+        mProgressTextColor = a.getColor(R.styleable.CustomProgressBar_progress_text_color, ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        mProgressTextSize = a.getDimension(R.styleable.CustomProgressBar_progress_text_size, DimenUtils.dp2px(getContext(), 14.0f));
+        mProgressWidth = a.getDimension(R.styleable.CustomProgressBar_progress_width, DimenUtils.dp2px(getContext(), 10.0f));
+        mProgress = a.getFloat(R.styleable.CustomProgressBar_progress, 50.0f);
+        mMaxProgress = a.getInt(R.styleable.CustomProgressBar_max_progress, 100);
+        mDirection = a.getInt(R.styleable.CustomProgressBar_direction, 3);
 
         a.recycle();
 
-        paint = new Paint();
+        mPaint = new Paint();
     }
 
     @Override
@@ -110,27 +108,27 @@ public class CusProgressbar extends View {
         super.onDraw(canvas);
         int circlePoint = getWidth() / 2;
         //第一步:画背景(即内层圆)
-        paint.setColor(insideColor); //设置圆的颜色
-        paint.setStyle(STROKE); //设置空心
-        paint.setStrokeWidth(progressWidth); //设置圆的宽度
-        paint.setAntiAlias(true);  //消除锯齿
-        canvas.drawCircle(circlePoint, circlePoint, outsideRadius, paint); //画出圆
+        mPaint.setColor(mInsideColor); //设置圆的颜色
+        mPaint.setStyle(STROKE); //设置空心
+        mPaint.setStrokeWidth(mProgressWidth); //设置圆的宽度
+        mPaint.setAntiAlias(true);  //消除锯齿
+        canvas.drawCircle(circlePoint, circlePoint, mOutsideRadius, mPaint); //画出圆
 
         //第二步:画进度(圆弧)
-        paint.setColor(outsideColor);  //设置进度的颜色
-        RectF oval = new RectF(circlePoint - outsideRadius, circlePoint - outsideRadius, circlePoint + outsideRadius, circlePoint + outsideRadius);  //用于定义的圆弧的形状和大小的界限
-        canvas.drawArc(oval, DirectionEnum.getDegree(direction), 360 * (progress / maxProgress), false, paint);  //根据进度画圆弧
+        mPaint.setColor(mOutsideColor);  //设置进度的颜色
+        RectF oval = new RectF(circlePoint - mOutsideRadius, circlePoint - mOutsideRadius, circlePoint + mOutsideRadius, circlePoint + mOutsideRadius);  //用于定义的圆弧的形状和大小的界限
+        canvas.drawArc(oval, DirectionEnum.getDegree(mDirection), 360 * (mProgress / mMaxProgress), false, mPaint);  //根据进度画圆弧
 
         //第三步:画圆环内百分比文字
-        rect = new Rect();
-        paint.setColor(progressTextColor);
-        paint.setTextSize(progressTextSize);
-        paint.setStrokeWidth(0);
-        progressText = getProgressText();
-        paint.getTextBounds(progressText, 0, progressText.length(), rect);
-        Paint.FontMetricsInt fontMetrics = paint.getFontMetricsInt();
+        mRect = new Rect();
+        mPaint.setColor(mProgressTextColor);
+        mPaint.setTextSize(mProgressTextSize);
+        mPaint.setStrokeWidth(0);
+        mProgressText = getProgressText();
+        mPaint.getTextBounds(mProgressText, 0, mProgressText.length(), mRect);
+        Paint.FontMetricsInt fontMetrics = mPaint.getFontMetricsInt();
         int baseline = (getMeasuredHeight() - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top;  //获得文字的基准线
-        canvas.drawText(progressText, getMeasuredWidth() / 2 - rect.width() / 2, baseline, paint);
+        canvas.drawText(mProgressText, getMeasuredWidth() / 2 - mRect.width() / 2, baseline, mPaint);
     }
 
     @Override
@@ -143,73 +141,73 @@ public class CusProgressbar extends View {
         if (mode == MeasureSpec.EXACTLY) {
             width = size;
         } else {
-            width = (int) ((2 * outsideRadius) + progressWidth);
+            width = (int) ((2 * mOutsideRadius) + mProgressWidth);
         }
         size = MeasureSpec.getSize(heightMeasureSpec);
         mode = MeasureSpec.getMode(heightMeasureSpec);
         if (mode == MeasureSpec.EXACTLY) {
             height = size;
         } else {
-            height = (int) ((2 * outsideRadius) + progressWidth);
+            height = (int) ((2 * mOutsideRadius) + mProgressWidth);
         }
         setMeasuredDimension(width, height);
     }
 
     //中间的进度百分比
     private String getProgressText() {
-        return (int) ((progress / maxProgress) * 100) + "%";
+        return (int) ((mProgress / mMaxProgress) * 100) + "%";
     }
 
     public int getOutsideColor() {
-        return outsideColor;
+        return mOutsideColor;
     }
 
     public void setOutsideColor(int outsideColor) {
-        this.outsideColor = outsideColor;
+        this.mOutsideColor = outsideColor;
     }
 
     public float getOutsideRadius() {
-        return outsideRadius;
+        return mOutsideRadius;
     }
 
     public void setOutsideRadius(float outsideRadius) {
-        this.outsideRadius = outsideRadius;
+        this.mOutsideRadius = outsideRadius;
     }
 
     public int getInsideColor() {
-        return insideColor;
+        return mInsideColor;
     }
 
     public void setInsideColor(int insideColor) {
-        this.insideColor = insideColor;
+        this.mInsideColor = insideColor;
     }
 
     public int getProgressTextColor() {
-        return progressTextColor;
+        return mProgressTextColor;
     }
 
     public void setProgressTextColor(int progressTextColor) {
-        this.progressTextColor = progressTextColor;
+        this.mProgressTextColor = progressTextColor;
     }
 
     public float getProgressTextSize() {
-        return progressTextSize;
+        return mProgressTextSize;
     }
 
     public void setProgressTextSize(float progressTextSize) {
-        this.progressTextSize = progressTextSize;
+        this.mProgressTextSize = progressTextSize;
     }
 
     public float getProgressWidth() {
-        return progressWidth;
+        return mProgressWidth;
     }
 
     public void setProgressWidth(float progressWidth) {
-        this.progressWidth = progressWidth;
+        this.mProgressWidth = progressWidth;
     }
 
     public synchronized int getMaxProgress() {
-        return maxProgress;
+        return mMaxProgress;
     }
 
     public synchronized void setMaxProgress(int maxProgress) {
@@ -217,11 +215,11 @@ public class CusProgressbar extends View {
             //此为传递非法参数异常
             throw new IllegalArgumentException("maxProgress should not be less than 0");
         }
-        this.maxProgress = maxProgress;
+        this.mMaxProgress = maxProgress;
     }
 
     public synchronized float getProgress() {
-        return progress;
+        return mProgress;
     }
 
     //加锁保证线程安全,能在线程中使用
@@ -229,18 +227,18 @@ public class CusProgressbar extends View {
         if (progress < 0) {
             throw new IllegalArgumentException("progress should not be less than 0");
         }
-        if (progress > maxProgress) {
-            progress = maxProgress;
+        if (progress > mMaxProgress) {
+            progress = mMaxProgress;
         }
         startAnim(progress);
     }
 
     private void startAnim(float startProgress) {
-        animator = ObjectAnimator.ofFloat(0, startProgress);
+        ValueAnimator animator = ObjectAnimator.ofFloat(0, startProgress);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                CusProgressbar.this.progress = (float) animation.getAnimatedValue();
+                CusProgressbar.this.mProgress = (float) animation.getAnimatedValue();
                 postInvalidate();
             }
         });

@@ -16,11 +16,13 @@ import android.widget.TextView;
 
 import com.zd112.framework.listener.CusOnClickListener;
 import com.zd112.framework.net.Net;
+import com.zd112.framework.net.annotation.RequestStatus;
 import com.zd112.framework.net.annotation.RequestType;
 import com.zd112.framework.net.callback.Callback;
 import com.zd112.framework.net.callback.ProgressCallback;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.utils.DateUtils;
+import com.zd112.framework.utils.NetUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.DialogView;
@@ -34,21 +36,21 @@ import java.util.HashMap;
 
 public abstract class BaseActivity extends AppCompatActivity implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener {
 
-    protected FragmentManager fragmentManager;
-    protected FragmentTransaction fragmentTransaction;
+    protected FragmentManager mFragmentManager;
+    protected FragmentTransaction mFragmentTransaction;
     protected View mView;
-    public NavigationView navigationBar;
+    public NavigationView mNavigationBar;
     protected RefreshView mRefreshView;
-    private DateUtils dateUtils;
-    protected int default_page = 1;
-    protected int default_page_size = 10;
-    protected boolean isRefresh;
+    private DateUtils mDateUtils;
+    protected int mDefaultPage = BuildConfig.PAGE;
+    protected int mDefaultPageSize = BuildConfig.PAGE_SIZE;
+    private boolean mIsLoadMore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentManager = getSupportFragmentManager();
-        navigationBar = new NavigationView(this);
+        mFragmentManager = getSupportFragmentManager();
+        mNavigationBar = new NavigationView(this);
         if (mView == null) {
             initView(savedInstanceState);
             setListener();
@@ -100,7 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     public void setEnableMore(int resultSize) {
         if (mRefreshView == null) return;
-        mRefreshView.setNoMoreData(default_page_size > resultSize);
+        mRefreshView.setNoMoreData(mDefaultPageSize > resultSize);
     }
 
     public int getResColor(int resColor) {
@@ -117,21 +119,21 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     public void push(Fragment fragment, Bundle bundle) {
         fragment.setArguments(bundle);
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(NavigationView.main, fragment);
-        fragmentTransaction.commit();
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.replace(NavigationView.MAIN, fragment);
+        mFragmentTransaction.commit();
     }
 
     public DialogView loading(String msg) {
-        return ((BaseApplication) getApplication()).loading(this, msg);
+        return NetUtils.INSTANCE.loading(this, msg);
     }
 
     public DialogView loading(int layout) {
-        return ((BaseApplication) getApplication()).loading(this, layout);
+        return NetUtils.INSTANCE.loading(this, layout);
     }
 
     public DialogView loading(int layout, DialogView.DialogViewListener dialogViewListener) {
-        return ((BaseApplication) getApplication()).loading(this, layout, dialogViewListener);
+        return NetUtils.INSTANCE.loading(this, layout, dialogViewListener);
     }
 
     public void cancelLoading() {
@@ -139,7 +141,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
             mRefreshView.finishRefresh();
             mRefreshView.finishLoadMore();
         }
-        ((BaseApplication) getApplication()).cancelLoading();
+        NetUtils.INSTANCE.cancelLoading();
     }
 
     public NetInfo.Builder request(String action) {
@@ -206,26 +208,30 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         if (null == params) {
             params = new HashMap<>();
         }
-        params.put("page", default_page + "");
-        params.put("pageSize", default_page_size + "");
-        return ((BaseApplication) this.getApplication()).request(this, requestType, action, params, callback, _class, isLoading);
+        params.put("page", mDefaultPage + "");
+        params.put("pageSize", mDefaultPageSize + "");
+        return NetUtils.INSTANCE.request(this, requestType, action, params, callback, _class, isLoading);
     }
 
     public Net.Builder download(String url, ProgressCallback progressCallback) {
-        return ((BaseApplication) this.getApplication()).download(url, progressCallback);
+        return NetUtils.INSTANCE.download(url, progressCallback);
     }
 
     public Net.Builder download(String url, ProgressCallback progressCallback, Object tag) {
-        return ((BaseApplication) this.getApplication()).download(url, progressCallback, tag);
+        return NetUtils.INSTANCE.download(url, progressCallback, tag);
     }
 
     public Net.Builder download(String url, String saveFileName, ProgressCallback progressCallback, Object tag) {
-        return ((BaseApplication) this.getApplication()).download(url, saveFileName, progressCallback, tag);
+        return NetUtils.INSTANCE.download(url, saveFileName, progressCallback, tag);
     }
 
     @Override
     public void onSuccess(NetInfo info) {
         cancelRefresh();
+        if (mIsLoadMore) {
+            mDefaultPage++;
+            mIsLoadMore = false;
+        }
     }
 
     @Override
@@ -242,17 +248,23 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        isRefresh = true;
-        default_page = 1;
+        mDefaultPage = 1;
         if (mRefreshView != null) {
             mRefreshView.setNoMoreData(false);
         }
+        HashMap<String, String> params = new HashMap<>();
+        params.put("page", mDefaultPage + "");
+        params.put("pageSize", mDefaultPageSize + "");
+        NetUtils.INSTANCE.request(params, RequestStatus.REFRESH);
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        isRefresh = false;
-        default_page++;
+        mIsLoadMore = true;
+        HashMap<String, String> params = new HashMap<>();
+        params.put("page", mDefaultPage + "");
+        params.put("pageSize", mDefaultPageSize + "");
+        NetUtils.INSTANCE.request(params, RequestStatus.MORE);
     }
 
     protected void scrollTxt(TextView textView, String txt) {
@@ -278,19 +290,20 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     protected DateUtils countDown(long millisInFuture, long countDownInterval) {
         cancelTime();
-        return dateUtils = new DateUtils(millisInFuture, countDownInterval);
+        return mDateUtils = new DateUtils(millisInFuture, countDownInterval);
     }
 
     protected void cancelTime() {
-        if (dateUtils != null) {
-            dateUtils.cancel();
-            dateUtils = null;
+        if (mDateUtils != null) {
+            mDateUtils.cancel();
+            mDateUtils = null;
         }
     }
 
     protected abstract void initView(Bundle savedInstanceState);
 
-    protected void setListener(){};
+    protected void setListener() {
+    }
 
     protected abstract void processLogic(Bundle savedInstanceState);
 
