@@ -1,4 +1,4 @@
-package com.zd112.framework.utils;
+package com.zd112.demo.utils;
 
 import android.Manifest;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
+import com.zd112.framework.utils.LogUtils;
 
 import java.util.List;
 

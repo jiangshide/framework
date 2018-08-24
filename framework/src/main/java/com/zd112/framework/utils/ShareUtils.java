@@ -1,15 +1,15 @@
-package com.etongdai.module.base.utils;
+package com.zd112.framework.utils;
 
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
-import com.etongdai.module.base.BaseApplication;
-import com.etongdai.module.base.R;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
+import com.zd112.framework.BaseApplication;
+import com.zd112.framework.R;
 
 public class ShareUtils {
 
