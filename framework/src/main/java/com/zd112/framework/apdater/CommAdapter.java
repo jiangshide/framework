@@ -15,10 +15,10 @@ import java.util.List;
 public abstract class CommAdapter<T> extends BaseAdapter implements View.OnClickListener {
     private Context mContext;
     private List<T> mData;
-    private int mLayoutId, index, count;
+    private int mLayoutId, mIndex, mCount;
     private Callback mCallback;
-    public static final int MIN_CLICK_DELAY_TIME = 500;
-    private long lastClickTime = 0;
+    private final int MIN_CLICK_DELAY_TIME = 500;
+    private long mLastClickTime = 0;
 
     public CommAdapter(Context context, List<T> data, int layoutId) {
         this.mContext = context;
@@ -38,12 +38,12 @@ public abstract class CommAdapter<T> extends BaseAdapter implements View.OnClick
     }
 
     public CommAdapter<T> setViewTypeCount(int count) {
-        this.count = count;
+        this.mCount = count;
         return this;
     }
 
     public CommAdapter<T> setItemViewType(int index) {
-        this.index = index;
+        this.mIndex = index;
         return this;
     }
 
@@ -74,12 +74,12 @@ public abstract class CommAdapter<T> extends BaseAdapter implements View.OnClick
 
     @Override
     public int getViewTypeCount() {
-        return count > 0 ? count : super.getViewTypeCount();
+        return mCount > 0 ? mCount : super.getViewTypeCount();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return index > 0 ? position < index ? position : index : super.getItemViewType(position);
+        return mIndex > 0 ? position < mIndex ? position : mIndex : super.getItemViewType(position);
     }
 
     @Override
@@ -144,8 +144,8 @@ public abstract class CommAdapter<T> extends BaseAdapter implements View.OnClick
     @Override
     public void onClick(View v) {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
-            lastClickTime = currentTime;
+        if (currentTime - mLastClickTime > MIN_CLICK_DELAY_TIME) {
+            mLastClickTime = currentTime;
             mCallback.click(v);
         }
     }

@@ -2,6 +2,8 @@ package com.zd112.framework.net.cookie.persistence;
 
 import android.util.Log;
 
+import com.zd112.framework.utils.LogUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,14 +14,13 @@ import java.io.Serializable;
 import okhttp3.Cookie;
 
 public class SerializableCookie implements Serializable{
-    private static final String TAG = SerializableCookie.class.getSimpleName();
 
     private static final long serialVersionUID = -8594045714036645534L;
 
-    private transient Cookie cookie;
+    private transient Cookie mCookie;
 
     public String encode(Cookie cookie) {
-        this.cookie = cookie;
+        this.mCookie = cookie;
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = null;
@@ -28,7 +29,7 @@ public class SerializableCookie implements Serializable{
             objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(this);
         } catch (IOException e) {
-            Log.d(TAG, "IOException in encodeCookie", e);
+            LogUtils.d("IOException in encodeCookie", e);
             return null;
         } finally {
             if (objectOutputStream != null) {
@@ -36,7 +37,7 @@ public class SerializableCookie implements Serializable{
                     // Closing a ByteArrayOutputStream has no effect, it can be used later (and is used in the return statement)
                     objectOutputStream.close();
                 } catch (IOException e) {
-                    Log.d(TAG, "Stream not closed in encodeCookie", e);
+                    LogUtils.d("Stream not closed in encodeCookie", e);
                 }
             }
         }
@@ -74,17 +75,17 @@ public class SerializableCookie implements Serializable{
         ObjectInputStream objectInputStream = null;
         try {
             objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            cookie = ((SerializableCookie) objectInputStream.readObject()).cookie;
+            cookie = ((SerializableCookie) objectInputStream.readObject()).mCookie;
         } catch (IOException e) {
-            Log.d(TAG, "IOException in decodeCookie", e);
+            LogUtils.d( "IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {
-            Log.d(TAG, "ClassNotFoundException in decodeCookie", e);
+            LogUtils.d( "ClassNotFoundException in decodeCookie", e);
         } finally {
             if (objectInputStream != null) {
                 try {
                     objectInputStream.close();
                 } catch (IOException e) {
-                    Log.d(TAG, "Stream not closed in decodeCookie", e);
+                    LogUtils.d( "Stream not closed in decodeCookie", e);
                 }
             }
         }
@@ -110,14 +111,14 @@ public class SerializableCookie implements Serializable{
     private static long NON_VALID_EXPIRES_AT = -1L;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(cookie.name());
-        out.writeObject(cookie.value());
-        out.writeLong(cookie.persistent() ? cookie.expiresAt() : NON_VALID_EXPIRES_AT);
-        out.writeObject(cookie.domain());
-        out.writeObject(cookie.path());
-        out.writeBoolean(cookie.secure());
-        out.writeBoolean(cookie.httpOnly());
-        out.writeBoolean(cookie.hostOnly());
+        out.writeObject(mCookie.name());
+        out.writeObject(mCookie.value());
+        out.writeLong(mCookie.persistent() ? mCookie.expiresAt() : NON_VALID_EXPIRES_AT);
+        out.writeObject(mCookie.domain());
+        out.writeObject(mCookie.path());
+        out.writeBoolean(mCookie.secure());
+        out.writeBoolean(mCookie.httpOnly());
+        out.writeBoolean(mCookie.hostOnly());
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -146,6 +147,6 @@ public class SerializableCookie implements Serializable{
         if (in.readBoolean())
             builder.hostOnlyDomain(domain);
 
-        cookie = builder.build();
+        mCookie = builder.build();
     }
 }

@@ -11,21 +11,21 @@ import java.util.Map;
 import okhttp3.Cookie;
 
 public class SharedPrefsCookiePersistor implements CookiePersistor {
-    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences mSharedPreferences;
 
     public SharedPrefsCookiePersistor(Context context) {
         this(context.getSharedPreferences("CookiePersistence", Context.MODE_PRIVATE));
     }
 
     public SharedPrefsCookiePersistor(SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
+        this.mSharedPreferences = sharedPreferences;
     }
 
     @Override
     public List<Cookie> loadAll() {
-        List<Cookie> cookies = new ArrayList<>(sharedPreferences.getAll().size());
+        List<Cookie> cookies = new ArrayList<>(mSharedPreferences.getAll().size());
 
-        for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
+        for (Map.Entry<String, ?> entry : mSharedPreferences.getAll().entrySet()) {
             String serializedCookie = (String) entry.getValue();
             Cookie cookie = new SerializableCookie().decode(serializedCookie);
             cookies.add(cookie);
@@ -35,7 +35,7 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
 
     @Override
     public void saveAll(Collection<Cookie> cookies) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
         for (Cookie cookie : cookies) {
             if (cookie.persistent()) {
                 editor.putString(createCookieKey(cookie), new SerializableCookie().encode(cookie));
@@ -46,7 +46,7 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
 
     @Override
     public void removeAll(Collection<Cookie> cookies) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
         for (Cookie cookie : cookies) {
             editor.remove(createCookieKey(cookie));
         }
@@ -59,6 +59,6 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
 
     @Override
     public void clear() {
-        sharedPreferences.edit().clear().apply();
+        mSharedPreferences.edit().clear().apply();
     }
 }

@@ -7,32 +7,32 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class CusFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private FragmentManager fragmentManager;
-    private Fragment[] fragmentList;
-    private Bundle bundle;
+    private FragmentManager mFragmentManager;
+    private Fragment[] mFragmentList;
+    private Bundle mBundle;
 
     public CusFragmentPagerAdapter(FragmentManager fm, Fragment[] list) {
         super(fm);
-        this.fragmentManager = fm;
-        this.fragmentList = list;
+        this.mFragmentManager = fm;
+        this.mFragmentList = list;
     }
 
     public CusFragmentPagerAdapter(FragmentManager fm, Fragment[] list, Bundle bundle) {
         super(fm);
-        this.fragmentManager = fm;
-        this.fragmentList = list;
-        this.bundle = bundle;
+        this.mFragmentManager = fm;
+        this.mFragmentList = list;
+        this.mBundle = bundle;
     }
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = fragmentList[position];
-        fragment.setArguments(bundle);
+        Fragment fragment = mFragmentList[position];
+        fragment.setArguments(mBundle);
         return fragment;
     }
 
     @Override
     public int getCount() {
-        return fragmentList.length;
+        return mFragmentList.length;
     }
 }

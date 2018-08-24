@@ -17,38 +17,38 @@ import okio.Okio;
 import okio.Sink;
 
 public class ProgressRequestBody extends RequestBody {
-    private final RequestBody originalRequestBody;
-    private final ProgressCallback progressCallback;
-    private BufferedSink bufferedSink;
-    private String timeStamp;
-    private String requestTag;
+    private final RequestBody mOriginalRequestBody;
+    private final ProgressCallback mProgressCallback;
+    private BufferedSink mBufferedSink;
+    private String mTimeStamp;
+    private String mRequestTag;
 
 
     public ProgressRequestBody(RequestBody originalRequestBody, ProgressCallback progressCallback,
                                String timeStamp, String requestTag) {
-        this.progressCallback = progressCallback;
-        this.originalRequestBody = originalRequestBody;
-        this.timeStamp = timeStamp;
-        this.requestTag = requestTag;
+        this.mProgressCallback = progressCallback;
+        this.mOriginalRequestBody = originalRequestBody;
+        this.mTimeStamp = timeStamp;
+        this.mRequestTag = requestTag;
     }
 
     @Override
     public MediaType contentType() {
-        return originalRequestBody.contentType();
+        return mOriginalRequestBody.contentType();
     }
 
     @Override
     public long contentLength() throws IOException {
-        return originalRequestBody.contentLength();
+        return mOriginalRequestBody.contentLength();
     }
 
     @Override
     public void writeTo(BufferedSink originalSink) throws IOException {
-        if (bufferedSink == null) {
-            bufferedSink = Okio.buffer(sink(originalSink));
+        if (mBufferedSink == null) {
+            mBufferedSink = Okio.buffer(sink(originalSink));
         }
-        originalRequestBody.writeTo(bufferedSink);
-        bufferedSink.flush();
+        mOriginalRequestBody.writeTo(mBufferedSink);
+        mBufferedSink.flush();
     }
 
 
@@ -64,19 +64,19 @@ public class ProgressRequestBody extends RequestBody {
                     contentLength = contentLength();
                 }
                 bytesWritten += byteCount;
-                if(null != progressCallback){
+                if(null != mProgressCallback){
                     int percent = (int) ((100 * bytesWritten) / contentLength);
                     //每处理1%则立即回调
                     if(percent != lastPercent) {
                         lastPercent = percent;
-                        progressCallback.onProgressAsync(percent, bytesWritten, contentLength, bytesWritten == contentLength);
+                        mProgressCallback.onProgressAsync(percent, bytesWritten, contentLength, bytesWritten == contentLength);
                         //主线程回调
                         Message msg = new ProgressMessage(OkMainHandler.PROGRESS_CALLBACK,
-                                progressCallback,
+                                mProgressCallback,
                                 percent,
                                 bytesWritten,
                                 contentLength,
-                                bytesWritten == contentLength,requestTag)
+                                bytesWritten == contentLength,mRequestTag)
                                 .build();
                         OkMainHandler.getInstance().sendMessage(msg);
                     }

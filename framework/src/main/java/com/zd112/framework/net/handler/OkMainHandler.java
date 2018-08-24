@@ -17,16 +17,16 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class OkMainHandler extends Handler {
-    private static OkMainHandler singleton;
+    private static OkMainHandler mSingleton;
 
     public static OkMainHandler getInstance() {
-        if (null == singleton) {
+        if (null == mSingleton) {
             synchronized (OkMainHandler.class) {
-                if (null == singleton)
-                    singleton = new OkMainHandler();
+                if (null == mSingleton)
+                    mSingleton = new OkMainHandler();
             }
         }
-        return singleton;
+        return mSingleton;
     }
 
     private OkMainHandler() {

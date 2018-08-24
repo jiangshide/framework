@@ -8,23 +8,23 @@ import java.util.Set;
 import okhttp3.Cookie;
 
 public class SetCookieCache implements CookieCache {
-    private Set<IdentifiableCookie> cookies;
+    private Set<IdentifiableCookie> mCookies;
 
     public SetCookieCache() {
-        cookies = new HashSet<>();
+        mCookies = new HashSet<>();
     }
 
     @Override
     public void addAll(Collection<Cookie> newCookies) {
         for (IdentifiableCookie cookie : IdentifiableCookie.decorateAll(newCookies)) {
-            this.cookies.remove(cookie);
-            this.cookies.add(cookie);
+            this.mCookies.remove(cookie);
+            this.mCookies.add(cookie);
         }
     }
 
     @Override
     public void clear() {
-        cookies.clear();
+        mCookies.clear();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SetCookieCache implements CookieCache {
         private Iterator<IdentifiableCookie> iterator;
 
         public SetCookieCacheIterator() {
-            iterator = cookies.iterator();
+            iterator = mCookies.iterator();
         }
 
         @Override

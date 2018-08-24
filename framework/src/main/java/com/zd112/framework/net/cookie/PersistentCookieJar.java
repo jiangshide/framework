@@ -11,20 +11,20 @@ import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
 public class PersistentCookieJar implements ClearableCookieJar{
-    private CookieCache cache;
-    private CookiePersistor persistor;
+    private CookieCache mCache;
+    private CookiePersistor mPersistor;
 
     public PersistentCookieJar(CookieCache cache, CookiePersistor persistor) {
-        this.cache = cache;
-        this.persistor = persistor;
+        this.mCache = cache;
+        this.mPersistor = persistor;
 
-        this.cache.addAll(persistor.loadAll());
+        this.mCache.addAll(persistor.loadAll());
     }
 
     @Override
     synchronized public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        cache.addAll(cookies);
-        persistor.saveAll(cookies);
+        mCache.addAll(cookies);
+        mPersistor.saveAll(cookies);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class PersistentCookieJar implements ClearableCookieJar{
         List<Cookie> removedCookies = new ArrayList<>();
         List<Cookie> validCookies = new ArrayList<>();
 
-        for (Iterator<Cookie> it = cache.iterator(); it.hasNext(); ) {
+        for (Iterator<Cookie> it = mCache.iterator(); it.hasNext(); ) {
             Cookie currentCookie = it.next();
 
             if (isCookieExpired(currentCookie)) {
@@ -44,7 +44,7 @@ public class PersistentCookieJar implements ClearableCookieJar{
             }
         }
 
-        persistor.removeAll(removedCookies);
+        mPersistor.removeAll(removedCookies);
 
         return validCookies;
     }
@@ -55,12 +55,12 @@ public class PersistentCookieJar implements ClearableCookieJar{
 
     @Override
     public void clearSession() {
-        cache.clear();
-        cache.addAll(persistor.loadAll());
+        mCache.clear();
+        mCache.addAll(mPersistor.loadAll());
     }
 
     synchronized public void clear() {
-        cache.clear();
-        persistor.clear();
+        mCache.clear();
+        mPersistor.clear();
     }
 }
