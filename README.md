@@ -80,6 +80,6 @@ this for android with framework
     HTTP_IS_GZIP=true
     HTTP_SHOW_LIFECYCLE_LOG=true
     
-#互动:请大赏点吧
-![https://raw.githubusercontent.com/jiangshide/framework/master/img/aliplay.png]![https://github.com/jiangshide/framework/blob/master/img/weixinplay.png?raw=true]
+# 互动:请大赏点吧
+   ![https://raw.githubusercontent.com/jiangshide/framework/master/img/aliplay.png] ![https://github.com/jiangshide/framework/blob/master/img/weixinplay.png?raw=true]
 
