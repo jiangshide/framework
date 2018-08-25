@@ -80,6 +80,7 @@ this for android with framework
     HTTP_IS_GZIP=true
     HTTP_SHOW_LIFECYCLE_LOG=true
     
-# 互动:请大赏点吧
+# 互动:请打赏点吧！
    ![Image text](https://raw.githubusercontent.com/jiangshide/framework/master/img/aliplay.png) ![Image text](https://github.com/jiangshide/framework/blob/master/img/weixinplay.png?raw=true)
 
+<img src="https://raw.githubusercontent.com/jiangshide/framework/master/img/aliplay.png" width="300" height="300" alt="我是缩小后的图"></img>
