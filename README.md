@@ -70,13 +70,16 @@ this for android with framework
     TIME=date
     MSG=msg
 #### 3.4 可修改网络默认配置
-#the http params
-HTTP_CONNECT_TIME=30
-HTTP_READ_TIME=30
-HTTP_WRITE_TIME=30
-HTTP_MAX_CACHE_SIZE=10 * 1024 * 1024
-#the four type:1~FORCE_NETWORK;2~FORCE_CACHE;3~NETWORK_THEN_CACHE;4~CACHE_THEN_NETWORK
-HTTP_CACHE_TYPE=4
-HTTP_IS_GZIP=true
-HTTP_SHOW_LIFECYCLE_LOG=true
+##### the http params
+    HTTP_CONNECT_TIME=30
+    HTTP_READ_TIME=30
+    HTTP_WRITE_TIME=30
+    HTTP_MAX_CACHE_SIZE=10 * 1024 * 1024
+##### the four type:1~FORCE_NETWORK;2~FORCE_CACHE;3~NETWORK_THEN_CACHE;4~CACHE_THEN_NETWORK
+    HTTP_CACHE_TYPE=4
+    HTTP_IS_GZIP=true
+    HTTP_SHOW_LIFECYCLE_LOG=true
+    
+#互动:请大赏点吧
+![https://raw.githubusercontent.com/jiangshide/framework/master/img/aliplay.png]![https://github.com/jiangshide/framework/blob/master/img/weixinplay.png?raw=true]
 
