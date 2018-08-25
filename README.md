@@ -81,5 +81,5 @@ this for android with framework
     HTTP_SHOW_LIFECYCLE_LOG=true
     
 # 互动:请大赏点吧
-   ![https://raw.githubusercontent.com/jiangshide/framework/master/img/aliplay.png] ![https://github.com/jiangshide/framework/blob/master/img/weixinplay.png?raw=true]
+   ![Image text](https://raw.githubusercontent.com/jiangshide/framework/master/img/aliplay.png) ![Image text](https://github.com/jiangshide/framework/blob/master/img/weixinplay.png?raw=true)
 
