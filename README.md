@@ -24,6 +24,7 @@ Platfor |	Module | Status	|	Open Level
 ## 项目目的
 打造最简单与最全的客户端移动基础框架,兼容所有原生接口(本身是基于原生开发:同步原生接口兼容实现),让开发者使用最少的代码去最大化的实现项目需求,应变各种紧急项目快速输出
 ## 项目架构
+   ![Image](https://github.com/jiangshide/framework/blob/master/img/android_frame.svg)
 ## 项目案例
 ### 1.UI模块(通用导航栏,通用加载刷新,通用对话实现,二维码相关,以及基础用到的view...)
 #### 1.1 通用导航栏
@@ -98,16 +99,18 @@ Platfor |	Module | Status	|	Open Level
     HTTP_SHOW_LIFECYCLE_LOG=true
     
 # 服务宗旨:
-### 面向企业：
-#### 提供专业的技术支持
-#### 一对一技术方案提供
-#### 零容忍问题服务
-### 面向个人：
-#### 获得与企业同等的态度
-#### 最优化项目技术支持
-#### 最大化项目技术扩展
+### 一.面向企业：
+#### 1.提供专业的技术支持
+#### 2.一对一技术方案提供
+#### 3.零容忍问题服务
+### 二.面向个人：
+#### 1.获得与企业同等的态度
+#### 2.最优化项目技术支持
+#### 3.最大化项目技术扩展
 
-# 友情合作   
+# 友情合作:
+   
+# 鼓励与支持:   
    ![Image](https://raw.githubusercontent.com/jiangshide/framework/master/img/play.png)
    
    
