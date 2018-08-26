@@ -1,22 +1,32 @@
-# Base framework
-Platform | Function |  Lnguage  | Build Status
- -------- | ------------ |  ------------ | ------------
- Android | [Framework](https://github.com/jiangshide/framework) | [Java](https://github.com/jiangshide/framework) [kotlin](https://github.com/jiangshide/kotlin_android) | [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-android.svg?branch=master)](https://github.com/jiangshide/framework)
- Ios | [Framework](https://github.com/jiangshide/ios) |	Swift	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/ios)
- Web | [Backstage](https://github.com/jiangshide/backstage) | 	[Golang](https://github.com/jiangshide/backstage) [JS](https://github.com/jiangshide/backstage_js)	|	[![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/backstage)
- Api | [Interface](https://github.com/jiangshide/zd112_api) |	Golang	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/zd112_api)
- Spark | [Analysis](https://github.com/jiangshide/analysis) |	Scala	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/analysis)
- Block Chain | [Identification](https://github.com/jiangshide/idendification) |	Golang	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/idendification) 
+# Technology Stack
+ID Platform | Function |  Lnguage  | Build Status
+ -------- | -------- | ------------ |  ------------ | ------------
+ 1  |   Android | [Framework](https://github.com/jiangshide/framework) | [Java](https://github.com/jiangshide/framework) [kotlin](https://github.com/jiangshide/kotlin_android) | [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-android.svg?branch=master)](https://github.com/jiangshide/framework)
+ 2  |   Ios | [Framework](https://github.com/jiangshide/ios) |	Swift	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/ios)
+ 3  |   Web | [Backstage](https://github.com/jiangshide/backstage) | 	[Golang](https://github.com/jiangshide/backstage) [JS](https://github.com/jiangshide/backstage_js)	|	[![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/backstage)
+ 4  |   Api | [Interface](https://github.com/jiangshide/zd112_api) |	Golang	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/zd112_api)
+ 5  |   Spark | [Analysis](https://github.com/jiangshide/analysis) |	Scala	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/analysis)
+ 6  |   Block Chain | [Identification](https://github.com/jiangshide/idendification) |	Golang	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/idendification) 
  
-此开源项目由本人主导持续开发(更希望有更多人的人参与进来),项目主要包括移动客户端([android](https://github.com/jiangshide/framework),[ios](https://github.com/jiangshide/ios),)与服务端([后台管理](https://github.com/jiangshide/backstage),[API](https://github.com/jiangshide/zd112_api)),以及基础数据分析(基于[spark](https://github.com/jiangshide/spark)输出)
-当前项目分支为android开发提供基础框架,其基础框架主要包括基础UI模块(通用导航栏,通用加载刷新,通用对话实现,二维码相关,以及基础用到的view展示,更多请在view中查询),网络模块,消息模块,事件分发模块,安全控制与认证,数据适配模块,升级模块(热更新,普通更新),错误日志模块,HTML5交互模块,分享模块等,更多可看源码,或者我会给出相应的案例在demo中一一展示
+# Base framework 
+Platfor |	Module | Status	|	Open Level
+ -------- | ------------ |  ------------ |  ------------ 
+ Android | UI模块 | 基础完成	|	低(可定制)
+ Android | 网络模块(http,socket) |	 基础完成		|	低(可定制)
+ Android | 消息模块 | 	开发中	|	需定制
+ Android | 事件分发模块 |	开发中	|	需定制
+ Android | 安全控制与认证模块 |	开发中	|	需定制
+ Android | 数据适配模块 |	基础完成	|	低(可定制)
+ Android | 升级模块 |		基础完成	|	中(可定制)
+ Android | 错误日志模块(java,native) | 	基础完成	|	低(可定制)
+ Android | HTML5交互模块 |	基础完成	|	中(可定制)
+ 
 ## 项目目的
 打造最简单与最全的客户端移动基础框架,兼容所有原生接口(本身是基于原生开发:同步原生接口兼容实现),让开发者使用最少的代码去最大化的实现项目需求,应变各种紧急项目快速输出
 ## 项目架构
 ## 项目案例
-### 1.UI模块
+### 1.UI模块(通用导航栏,通用加载刷新,通用对话实现,二维码相关,以及基础用到的view...)
 #### 1.1 通用导航栏
-
 #### 1.2 通用加载刷新控制
 #### 1.3 通用对话框实现
 #### 1.4 二维码实现
@@ -28,8 +38,8 @@ Platform | Function |  Lnguage  | Build Status
 ### 4.事件分发模块
 ### 5.安全控制与认证模块
 ### 6.数据适配模块
-### 7.升级模块
-### 8.错误日志模块
+### 7.升级模块(普通更新,热更新)
+### 8.错误日志模块(java,native)
 ### 9.HTML5交互模块
 ### 10.分享模块
 
@@ -87,5 +97,17 @@ Platform | Function |  Lnguage  | Build Status
     HTTP_IS_GZIP=true
     HTTP_SHOW_LIFECYCLE_LOG=true
     
-# 互动:请打赏点吧！
+# 服务宗旨:
+### 面向企业：
+#### 提供专业的技术支持
+#### 一对一技术方案提供
+#### 零容忍问题服务
+### 面向个人：
+#### 获得与企业同等的态度
+#### 最优化项目技术支持
+#### 最大化项目技术扩展
+
+# 友情合作   
    ![Image](https://raw.githubusercontent.com/jiangshide/framework/master/img/play.png)
+   
+   
