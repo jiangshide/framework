@@ -109,7 +109,7 @@ Platfor |	Module | Status	|	Open Level
 #### 3.最大化项目技术扩展
 
 # 友情合作:
-   
+   ![Image](https://raw.githubusercontent.com/jiangshide/framework/master/img/weixin.jpeg)
 # 鼓励与支持:   
    ![Image](https://raw.githubusercontent.com/jiangshide/framework/master/img/play.png)
    
