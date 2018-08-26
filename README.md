@@ -1,5 +1,5 @@
 # Technology Stack
-ID Platform | Function |  Lnguage  | Build Status
+ID | Platform | Function |  Lnguage  | Build Status
  -------- | -------- | ------------ |  ------------ | ------------
  1  |   Android | [Framework](https://github.com/jiangshide/framework) | [Java](https://github.com/jiangshide/framework) [kotlin](https://github.com/jiangshide/kotlin_android) | [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-android.svg?branch=master)](https://github.com/jiangshide/framework)
  2  |   Ios | [Framework](https://github.com/jiangshide/ios) |	Swift	| [![Build Status](https://travis-ci.org/Bilibili/ci-ijk-ffmpeg-ios.svg?branch=master)](https://github.com/jiangshide/ios)
