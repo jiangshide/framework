@@ -17,7 +17,6 @@ import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.service.UpdateService;
 import com.zd112.framework.utils.DialogUtils;
 import com.zd112.framework.utils.LogUtils;
-import com.zd112.framework.utils.NetUtils;
 import com.zd112.framework.utils.SystemUtils;
 
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
             show();
         } else {
             BaseApplication.mApplication.startService(new Intent(BaseApplication.mApplication, UpdateService.class).putExtra("url", mUrl));
-            result();
+            result(0);
         }
         return this;
     }
@@ -74,14 +73,14 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
 
     public void show(int layout) {
         if (mContext == null) {
-            result();
+            result(0);
             return;
         }
         mDialogUtils.cancelLoading();
         mDialogUtils.loading(layout != -1 ? layout : R.layout.default_update, this).setFull(true).setOutsideClose(false).setReturn(mStatus == 1).setListener(new DialogView.DialogOnClickListener() {
             @Override
             public void onDialogClick(boolean isCancel) {
-                result();
+                result(0);
             }
         });
     }
@@ -91,7 +90,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
     }
 
     public UpdateView init(Callback callback) {
-        NetUtils.INSTANCE.request(mContext, RequestType.GET, BuildConfig.UPDATE, null, callback != null ? callback : this, UpdateData.class, false);
+        BaseApplication.mApplication.request(mContext, BaseApplication.mApplication.build(RequestType.GET, BuildConfig.UPDATE, null, UpdateData.class), callback != null ? callback : this, false);
         return this;
     }
 
@@ -111,24 +110,12 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
         if (null != updateData && null != updateData.res && !TextUtils.isEmpty(updateData.res.url)) {
             start(updateData.res.status, updateData.res.content, updateData.res.url, updateData.res.version);
         } else {
-            result();
+            result(updateData.code);
         }
     }
 
     private void download() {
-        NetUtils.INSTANCE.download(mUrl, mProgressCallback != null ? mProgressCallback : new ProgressCallback() {
-            @Override
-            public void onProgressMain(int percent, long bytesWritten, long contentLength, boolean done) {
-                super.onProgressMain(percent, bytesWritten, contentLength, done);
-                if (null != mContext) {
-                    mUpdateBtn.setText(resStr(R.string.updating) + percent + "%");
-                    mUpdateBtn.setEnabled(false);
-                    mUpdateBtn.setNormalColor(mContext.getResources().getColor(R.color.font_gray));
-                } else {
-                    result();
-                }
-            }
-
+        BaseApplication.mApplication.request(BaseApplication.mApplication.build(mUrl, null, mProgressCallback != null ? mProgressCallback : new ProgressCallback() {
             @Override
             public void onResponseMain(String filePath, NetInfo info) {
                 super.onResponseMain(filePath, info);
@@ -137,10 +124,22 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
                     SystemUtils.installApkFile(BaseApplication.mApplication, apkPath);
                 } else {
                     LogUtils.e("err:", info);
-                    result();
+                    result(0);
                 }
             }
-        });
+
+            @Override
+            public void onProgressMain(int percent, long bytesWritten, long contentLength, boolean done) {
+                super.onProgressMain(percent, bytesWritten, contentLength, done);
+                if (null != mContext) {
+                    mUpdateBtn.setText(resStr(R.string.updating) + percent + "%");
+                    mUpdateBtn.setEnabled(false);
+                    mUpdateBtn.setNormalColor(mContext.getResources().getColor(R.color.font_gray));
+                } else {
+                    result(0);
+                }
+            }
+        }), this);
     }
 
     private String resStr(int resId) {
@@ -153,7 +152,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
 
     @Override
     public void onFailure(NetInfo info) throws IOException {
-        result();
+        result(info.getNetCode());
     }
 
     @Override
@@ -171,7 +170,7 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
                         public void onDialogClick(boolean isCancel) {
                             if (isCancel) {
                                 mDialogUtils.cancelLoading();
-                                result();
+                                result(0);
                             } else {
                                 download();
                             }
@@ -184,13 +183,13 @@ public class UpdateView implements Callback, DialogView.DialogViewListener {
         });
     }
 
-    private void result() {
+    private void result(int code) {
         if (mOnUpdateListener != null) {
-            mOnUpdateListener.onResult();
+            mOnUpdateListener.onResult(code);
         }
     }
 
     public interface OnUpdateListener {
-        void onResult();
+        void onResult(int code);
     }
 }

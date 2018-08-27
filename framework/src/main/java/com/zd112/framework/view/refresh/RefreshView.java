@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
 import com.zd112.framework.utils.DimenUtils;
+import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.ShareParamUtils;
 import com.zd112.framework.view.refresh.component.ClassicsFooter;
 import com.zd112.framework.view.refresh.component.ClassicsHeader;
@@ -862,7 +863,7 @@ public class RefreshView extends ViewGroup implements RefreshLayout, NestedScrol
                 float dx = touchX - mTouchX;
                 float dy = touchY - mTouchY;
                 float scroll = e.getY() - scrollY;
-                if (onTouchEventListener != null && scroll > 40 || scroll < -40) {
+                if (onTouchEventListener != null && (scroll > 40 || scroll < -40)) {
                     onTouchEventListener.onMove();
                 }
                 mVelocityTracker.addMovement(e);//速度追踪

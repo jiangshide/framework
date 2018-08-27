@@ -15,14 +15,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zd112.framework.listener.CusOnClickListener;
-import com.zd112.framework.net.Net;
 import com.zd112.framework.net.annotation.RequestStatus;
 import com.zd112.framework.net.annotation.RequestType;
 import com.zd112.framework.net.callback.Callback;
 import com.zd112.framework.net.callback.ProgressCallback;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.utils.DateUtils;
-import com.zd112.framework.utils.NetUtils;
+import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.DialogView;
@@ -42,9 +41,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     public NavigationView mNavigationBar;
     protected RefreshView mRefreshView;
     private DateUtils mDateUtils;
-    protected int mDefaultPage = BuildConfig.PAGE;
-    protected int mDefaultPageSize = BuildConfig.PAGE_SIZE;
     private boolean mIsLoadMore;
+    private NetInfo.Builder mBuilder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,7 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     public void setEnableMore(int resultSize) {
         if (mRefreshView == null) return;
-        mRefreshView.setNoMoreData(mDefaultPageSize > resultSize);
+//        mRefreshView.setNoMoreData(mDefaultPageSize > resultSize);
     }
 
     public int getResColor(int resColor) {
@@ -125,118 +123,104 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     }
 
     public DialogView loading(String msg) {
-        return NetUtils.INSTANCE.loading(this, msg);
+        return BaseApplication.mApplication.loading(this, msg);
     }
 
     public DialogView loading(int layout) {
-        return NetUtils.INSTANCE.loading(this, layout);
+        return BaseApplication.mApplication.loading(this, layout);
     }
 
     public DialogView loading(int layout, DialogView.DialogViewListener dialogViewListener) {
-        return NetUtils.INSTANCE.loading(this, layout, dialogViewListener);
+        return BaseApplication.mApplication.loading(this, layout, dialogViewListener);
     }
 
-    public void cancelLoading() {
-        if (mRefreshView != null) {
-            mRefreshView.finishRefresh();
-            mRefreshView.finishLoadMore();
-        }
-        NetUtils.INSTANCE.cancelLoading();
+    public void request(String action) {
+        this.request(action, null, this, null, true);
     }
 
-    public NetInfo.Builder request(String action) {
-        return request(action, null, this, null, true);
+    public void request(String action, Class _class) {
+        this.request(action, null, this, _class, true);
     }
 
-    public NetInfo.Builder request(String action, Class _class) {
-        return request(action, null, this, _class, true);
+    public void request(String action, Callback callback) {
+        this.request(action, null, callback, null, true);
     }
 
-    public NetInfo.Builder request(String action, Callback callback) {
-        return request(action, null, callback, null, true);
+    public void request(String action, Callback callback, Class _class) {
+        this.request(action, null, callback, _class, true);
     }
 
-    public NetInfo.Builder request(String action, Callback callback, Class _class) {
-        return request(action, null, callback, _class, true);
+    public void request(String action, boolean isLoading) {
+        this.request(action, null, this, null, isLoading);
     }
 
-    public NetInfo.Builder request(String action, boolean isLoading) {
-        return request(action, null, this, null, isLoading);
+    public void request(String action, Class _class, boolean isLoading) {
+        this.request(action, null, this, _class, isLoading);
     }
 
-    public NetInfo.Builder request(String action, Class _class, boolean isLoading) {
-        return request(action, null, this, _class, isLoading);
+    public void request(String action, Callback callback, boolean isLoading) {
+        this.request(action, null, callback, null, isLoading);
     }
 
-    public NetInfo.Builder request(String action, Callback callback, boolean isLoading) {
-        return request(action, null, callback, null, isLoading);
+    public void request(String action, Callback callback, Class _class, boolean isLoading) {
+        this.request(action, null, callback, _class, isLoading);
     }
 
-    public NetInfo.Builder request(String action, Callback callback, Class _class, boolean isLoading) {
-        return request(action, null, callback, _class, isLoading);
+    public void request(String action, HashMap<String, String> params) {
+        this.request(action, params, this, null, true);
     }
 
-    public NetInfo.Builder request(String action, HashMap<String, String> params) {
-        return request(action, params, this, null, true);
+    public void request(String action, HashMap<String, String> params, Class _class) {
+        this.request(action, params, this, _class, true);
     }
 
-    public NetInfo.Builder request(String action, HashMap<String, String> params, Class _class) {
-        return request(action, params, this, _class, true);
+    public void request(String action, HashMap<String, String> params, Callback callback) {
+        this.request(action, params, callback, null, true);
     }
 
-    public NetInfo.Builder request(String action, HashMap<String, String> params, Callback callback) {
-        return request(action, params, callback, null, true);
+    public void request(String action, HashMap<String, String> params, Callback callback, Class _class) {
+        this.request(action, params, callback, _class, true);
     }
 
-    public NetInfo.Builder request(String action, HashMap<String, String> params, Callback callback, Class _class) {
-        return request(action, params, callback, _class, true);
+    public void request(String action, HashMap<String, String> params, boolean isLoading) {
+        this.request(action, params, this, null, isLoading);
     }
 
-    public NetInfo.Builder request(String action, HashMap<String, String> params, boolean isLoading) {
-        return request(action, params, this, null, isLoading);
+    public void request(String action, HashMap<String, String> params, Class _class, boolean isLoading) {
+        this.request(action, params, this, _class, isLoading);
     }
 
-    public NetInfo.Builder request(String action, HashMap<String, String> params, Class _class, boolean isLoading) {
-        return request(action, params, this, _class, isLoading);
+    public void request(String action, HashMap<String, String> params, Callback callback, Class _class, boolean isLoading) {
+        this.request(RequestType.GET, action, params, callback, _class, isLoading);
     }
 
-    public NetInfo.Builder request(String action, HashMap<String, String> params, Callback callback, Class _class, boolean isLoading) {
-        return request(RequestType.GET, action, params, callback, _class, isLoading);
+    public void request(int requestType, String action, HashMap<String, String> params, Callback callback, Class _class, boolean isLoading) {
+        BaseApplication.mApplication.request(this, BaseApplication.mApplication.build(requestType, action, params, _class), callback, isLoading);
     }
 
-    public NetInfo.Builder request(int requestType, String action, HashMap<String, String> params, Callback callback, Class _class, boolean isLoading) {
-        if (null == params) {
-            params = new HashMap<>();
-        }
-        params.put("page", mDefaultPage + "");
-        params.put("pageSize", mDefaultPageSize + "");
-        return NetUtils.INSTANCE.request(this, requestType, action, params, callback, _class, isLoading);
+    public void download(String url, ProgressCallback progressCallback) {
+        this.download(url, progressCallback,null);
     }
 
-    public Net.Builder download(String url, ProgressCallback progressCallback) {
-        return NetUtils.INSTANCE.download(url, progressCallback);
+    public void download(String url, ProgressCallback progressCallback, Object tag) {
+        this.download(url,null, progressCallback, tag);
     }
 
-    public Net.Builder download(String url, ProgressCallback progressCallback, Object tag) {
-        return NetUtils.INSTANCE.download(url, progressCallback, tag);
-    }
-
-    public Net.Builder download(String url, String saveFileName, ProgressCallback progressCallback, Object tag) {
-        return NetUtils.INSTANCE.download(url, saveFileName, progressCallback, tag);
+    public void download(String url, String saveFileName, ProgressCallback progressCallback, Object tag) {
+        BaseApplication.mApplication.request(BaseApplication.mApplication.build(url, saveFileName, progressCallback), tag);
     }
 
     @Override
     public void onSuccess(NetInfo info) {
         cancelRefresh();
-        if (mIsLoadMore) {
-            mDefaultPage++;
-            mIsLoadMore = false;
-        }
+        mBuilder = info.getBuild();
+        LogUtils.e("---------mBuilder:",mBuilder);
     }
 
     @Override
     public void onFailure(NetInfo info) {
         cancelRefresh();
+        mBuilder = info.getBuild();
     }
 
     private void cancelRefresh() {
@@ -248,23 +232,16 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        mDefaultPage = 1;
         if (mRefreshView != null) {
             mRefreshView.setNoMoreData(false);
         }
-        HashMap<String, String> params = new HashMap<>();
-        params.put("page", mDefaultPage + "");
-        params.put("pageSize", mDefaultPageSize + "");
-        NetUtils.INSTANCE.request(params, RequestStatus.REFRESH);
+        BaseApplication.mApplication.mNetBuilder.build().doAsync(mBuilder.setStatus(RequestStatus.REFRESH).build(), this);
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         mIsLoadMore = true;
-        HashMap<String, String> params = new HashMap<>();
-        params.put("page", mDefaultPage + "");
-        params.put("pageSize", mDefaultPageSize + "");
-        NetUtils.INSTANCE.request(params, RequestStatus.MORE);
+        BaseApplication.mApplication.mNetBuilder.build().doAsync(mBuilder.setStatus(RequestStatus.MORE).build(), this);
     }
 
     protected void scrollTxt(TextView textView, String txt) {

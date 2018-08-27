@@ -58,7 +58,7 @@ class HttpHelper extends BaseHelper {
         try {
             httpClient = httpClient == null ? super.httpClient : httpClient;
             call = httpClient.newCall(request);
-            BaseApplication.application.putCall(requestTag, call);
+            BaseApplication.mApplication.putCall(requestTag, call);
             Response res = call.execute();
             return dealResponse(helper, res);
         } catch (IllegalArgumentException e) {
@@ -113,7 +113,7 @@ class HttpHelper extends BaseHelper {
         request = request == null ? buildRequest(info, helper.getRequestType(), helper.getProgressCallback()) : request;
         showUrlLog(request);
         Call call = httpClient.newCall(request);
-        BaseApplication.application.putCall(requestTag, call);
+        BaseApplication.mApplication.putCall(requestTag, call);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

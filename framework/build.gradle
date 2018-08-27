@@ -19,10 +19,8 @@ android {
         buildConfigField('String', 'SUCCESS', "\"${SUCCESS}\"")
         buildConfigField('String', 'TIME', "\"${TIME}\"")
         buildConfigField('String', 'MSG', "\"${MSG}\"")
-        buildConfigField('String', 'PARAM_PAGE', "\"${PARAM_PAGE}\"")
-        buildConfigField('String', 'PARAM_PAGE_SIZE', "\"${PARAM_PAGE_SIZE}\"")
-        buildConfigField('int', 'PAGE', PAGE)
-        buildConfigField('int', 'PAGE_SIZE', PAGE_SIZE)
+        buildConfigField('String', 'PAGE', "\"${PAGE}\"")
+        buildConfigField('String', 'PAGE_SIZE', "\"${PAGE_SIZE}\"")
 
         buildConfigField('Integer', 'HTTP_CONNECT_TIME', HTTP_CONNECT_TIME)
         buildConfigField('Integer', 'HTTP_READ_TIME', HTTP_READ_TIME)

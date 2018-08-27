@@ -34,14 +34,14 @@ public class ShareUtils {
 
     public static void openWeiXin(Context context, String content) {
         if (BaseApplication.mApplication.mWxApi == null) {
-            NetUtils.INSTANCE.loading(context, context.getString(R.string.weixin_init)).setOnlySure();
+            BaseApplication.mApplication.loading(context, context.getString(R.string.weixin_init)).setOnlySure();
             return;
         }
         if (!BaseApplication.mApplication.mWxApi.isWXAppInstalled()) {
-            NetUtils.INSTANCE.loading(context, context.getString(R.string.weixin_install)).setOnlySure();
+            BaseApplication.mApplication.loading(context, context.getString(R.string.weixin_install)).setOnlySure();
             return;
         } else if (BaseApplication.mApplication.mWxApi.getWXAppSupportAPI() == 0) {
-            NetUtils.INSTANCE.loading(context, context.getString(R.string.no_support_device)).setOnlySure();
+            BaseApplication.mApplication.loading(context, context.getString(R.string.no_support_device)).setOnlySure();
             return;
         } else {
             if (!TextUtils.isEmpty(content)) {

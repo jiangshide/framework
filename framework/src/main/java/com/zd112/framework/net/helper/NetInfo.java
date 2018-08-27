@@ -1,18 +1,18 @@
 package com.zd112.framework.net.helper;
 
-import android.os.Build;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.zd112.framework.BaseApplication;
 import com.zd112.framework.BuildConfig;
 import com.zd112.framework.net.annotation.ContentType;
 import com.zd112.framework.net.annotation.Encoding;
+import com.zd112.framework.net.annotation.RequestStatus;
 import com.zd112.framework.net.annotation.RequestType;
 import com.zd112.framework.net.bean.DownloadFileInfo;
 import com.zd112.framework.net.bean.UploadFileInfo;
 import com.zd112.framework.net.callback.ProgressCallback;
-import com.zd112.framework.utils.LogUtils;
-import com.zd112.framework.utils.ToastUtil;
+import com.zd112.framework.utils.SystemUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -29,7 +29,10 @@ public class NetInfo {
     //**请求参数定义**/
     private String url;
     private Class _class;
+    private int mPage;
+    private int mPageSize;
     private int status;
+    private NetInfo.Builder mBuilder;
     private Map<String, String> params;
     private byte[] paramBytes;
     private File paramFile;
@@ -67,6 +70,9 @@ public class NetInfo {
     public NetInfo(Builder builder) {
         this.url = builder.url;
         this._class = builder._class;
+        this.mBuilder = builder.builder;
+        this.mPage = builder.page;
+        this.mPageSize = builder.pageSize;
         this.status = builder.status;
         this.heads = builder.heads;
         this.params = builder.params;
@@ -97,7 +103,10 @@ public class NetInfo {
 
         private String url;//请求地址
         private Class _class;
+        private int page = 1;
+        private int pageSize = 10;
         private int status;
+        private NetInfo.Builder builder;
         private Map<String, String> params;//请求参数：键值对
         private @ContentType
         String contentType;//媒体类型
@@ -139,8 +148,36 @@ public class NetInfo {
             return this;
         }
 
-        public Builder setStatus(int status){
+        public NetInfo.Builder setBuilder(NetInfo.Builder builder) {
+            this.builder = builder;
+            return this;
+        }
+
+        public Builder setPage(int page) {
+            this.page = page;
+            return this;
+        }
+
+        public Builder setPageSize() {
+            return this.setPageSize(10);
+        }
+
+        public Builder setPageSize(int pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        public Builder setStatus(int status) {
             this.status = status;
+            if (this.status == RequestStatus.MORE) {
+                if (this.params == null) {
+                    this.params = new HashMap<>();
+                }
+                this.params.put(BuildConfig.PAGE, ++this.page + "");
+                this.params.put(BuildConfig.PAGE_SIZE, this.pageSize + "");
+            } else {
+                this.page = 1;
+            }
             return this;
         }
 
@@ -184,6 +221,46 @@ public class NetInfo {
             } else {
                 this.params.putAll(params);
             }
+            return this;
+        }
+
+        public Builder setVersion() {
+            return this.setVersion("version");
+        }
+
+        public Builder setVersion(String key) {
+            return this.setParam(key, SystemUtils.getAppVersion(BaseApplication.mApplication));
+        }
+
+        public Builder setPlatform() {
+            return this.setPlatform("platform", "1");
+        }
+
+        public Builder setPlatform(String key, String value) {
+            return this.setParam(key, value);
+        }
+
+        public Builder setAppName() {
+            return this.setAppName("appName");
+        }
+
+        public Builder setAppName(String key) {
+            return this.setParam(key, SystemUtils.getAppName(BaseApplication.mApplication));
+        }
+
+        public Builder setChannel() {
+            return this.setChannel("channel");
+        }
+
+        public Builder setChannel(String key) {
+            return this.setParam(key, BuildConfig.CHANNEL);
+        }
+
+        public Builder setParam(String key, String value) {
+            if (null == this.params) {
+                this.params = new HashMap<>();
+            }
+            this.params.put(key, value);
             return this;
         }
 
@@ -628,12 +705,36 @@ public class NetInfo {
         this._class = _class;
     }
 
-    public void setStatus(int status){
+    public void setPage(int page) {
+        this.mPage = page;
+    }
+
+    public int getPage() {
+        return mPage;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.mPageSize = pageSize;
+    }
+
+    public int getPageSize() {
+        return mPageSize;
+    }
+
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    public int getStatus(){
+    public int getStatus() {
         return status;
+    }
+
+    public void setBuild(NetInfo.Builder builder) {
+        this.mBuilder = builder;
+    }
+
+    public NetInfo.Builder getBuild() {
+        return mBuilder;
     }
 
     public <T> T getResponseObj() {

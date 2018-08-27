@@ -20,13 +20,13 @@ public class MyApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        LocationUtils.INSTANCE.initLocation(getBaseContext()).start();
-        LocationUtils.INSTANCE.setLocationListener(new LocationUtils.AmapLocationListener() {
-            @Override
-            public void onLocation(AMapLocation aMapLocation, Location location) {
-                LogUtils.e("aMapLocation:", aMapLocation.toString());
-            }
-        });
+//        LocationUtils.INSTANCE.initLocation(getBaseContext()).start();
+//        LocationUtils.INSTANCE.setLocationListener(new LocationUtils.AmapLocationListener() {
+//            @Override
+//            public void onLocation(AMapLocation aMapLocation, Location location) {
+//                LogUtils.e("aMapLocation:", aMapLocation.toString());
+//            }
+//        });
     }
 
 }
