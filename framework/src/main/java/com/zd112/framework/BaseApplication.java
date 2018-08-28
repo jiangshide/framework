@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -17,6 +18,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.zd112.framework.data.BaseData;
 import com.zd112.framework.net.Net;
 import com.zd112.framework.net.annotation.Encoding;
+import com.zd112.framework.net.annotation.RequestStatus;
 import com.zd112.framework.net.callback.Callback;
 import com.zd112.framework.net.callback.ProgressCallback;
 import com.zd112.framework.net.cookie.PersistentCookieJar;
@@ -34,9 +36,14 @@ import com.zd112.framework.utils.ShareParamUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.view.DialogView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,7 +60,7 @@ public abstract class BaseApplication extends Application implements Application
 
     public Net.Builder mNetBuilder;
     private DialogUtils mDialogUtils;
-
+    private int mJsonArrSize;
     private List<Activity> mActivityList = new ArrayList<>();
 
     public void pushActivity(Activity activity) {
@@ -156,7 +163,6 @@ public abstract class BaseApplication extends Application implements Application
     public NetInfo.Builder build(int requestType, String action, HashMap<String, String> params, Class _class) {
         NetInfo.Builder builder = NetInfo.Builder().setRequestType(requestType).setAction(action).addParams(params).setClass(_class).setVersion().setAppName().setChannel().setPlatform();
         builder.setBuilder(builder);
-        builder.setPageSize();
         String token = ShareParamUtils.getString("token");
         if (TextUtils.isEmpty(token)) {
             builder.addHeads(getHeader(token));
@@ -168,12 +174,31 @@ public abstract class BaseApplication extends Application implements Application
         mNetBuilder.build(tag).doDownloadFileAsync(builder.build());
     }
 
+    public int getJsonArrSize(JSONObject jsonObject) throws JSONException {
+        Iterator<String> keys = jsonObject.keys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            if (jsonObject.get(key) instanceof JSONObject) {
+                JSONObject innerObject = (JSONObject) jsonObject.get(key);
+                getJsonArrSize(innerObject);
+            } else if (jsonObject.get(key) instanceof JSONArray) {
+                return mJsonArrSize = ((JSONArray) jsonObject.get(key)).length();
+            }
+        }
+        return mJsonArrSize;
+    }
+
     public void request(final Context context, NetInfo.Builder builder, final Callback callback, boolean isLoading) {
         if (isLoading)
             loading(context, R.layout.default_loading);
         mNetBuilder.build().doAsync(builder.build(), new Callback() {
             @Override
             public void onSuccess(NetInfo info) throws IOException {
+                LogUtils.e("----------pageSize:",info.getPageSize());
+                info.getBuild().setPageSize(info.getPageSize());
+                if (info.getStatus() == RequestStatus.MORE) {
+                    info.getBuild().setPage(info.getPage() + 1);
+                }
                 cancelLoading();
                 BaseData baseData = null;
                 try {
@@ -187,13 +212,11 @@ public abstract class BaseApplication extends Application implements Application
                     } else {
                         boolean isGlobalError = false;
                         for (int err : context.getResources().getIntArray(R.array.global_net_err)) {
-                            LogUtils.e("code:", baseData.code, " | err:", err);
                             if (baseData.code == err) {
                                 isGlobalError = true;
                                 break;
                             }
                         }
-                        LogUtils.e("context:", context, " | callback:", callback, " | isGlobalError:", isGlobalError);
                         if (isGlobalError) {
                             BaseApplication.mApplication.newGlobalError(context, baseData);
                         } else {

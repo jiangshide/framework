@@ -30,6 +30,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
@@ -787,6 +788,15 @@ public class SystemUtils {
             return NetInfo.WIFI;
         }
         return NetInfo.NONE_NET;
+    }
 
+    public static void scrollTxt(TextView textView, String txt) {
+        if (textView == null) return;
+        textView.setText(TextUtils.isEmpty(txt) ? "" : txt);
+        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        textView.setSingleLine(true);
+        textView.setSelected(true);
+        textView.setFocusable(true);
+        textView.setFocusableInTouchMode(true);
     }
 }

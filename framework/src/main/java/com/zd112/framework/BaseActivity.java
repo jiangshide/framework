@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,9 @@ import com.zd112.framework.view.refresh.interfaces.OnLoadMoreListener;
 import com.zd112.framework.view.refresh.interfaces.OnRefreshListener;
 import com.zd112.framework.view.refresh.interfaces.RefreshLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 public abstract class BaseActivity extends AppCompatActivity implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener {
@@ -41,7 +43,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     public NavigationView mNavigationBar;
     protected RefreshView mRefreshView;
     private DateUtils mDateUtils;
-    private boolean mIsLoadMore;
     private NetInfo.Builder mBuilder;
 
     @Override
@@ -96,11 +97,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         setContentView(mView);
         ViewUtils.inject(object, mView);
         SystemUtils.setNoStatusBarFullMode(this, false);
-    }
-
-    public void setEnableMore(int resultSize) {
-        if (mRefreshView == null) return;
-//        mRefreshView.setNoMoreData(mDefaultPageSize > resultSize);
     }
 
     public int getResColor(int resColor) {
@@ -199,11 +195,11 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     }
 
     public void download(String url, ProgressCallback progressCallback) {
-        this.download(url, progressCallback,null);
+        this.download(url, progressCallback, null);
     }
 
     public void download(String url, ProgressCallback progressCallback, Object tag) {
-        this.download(url,null, progressCallback, tag);
+        this.download(url, null, progressCallback, tag);
     }
 
     public void download(String url, String saveFileName, ProgressCallback progressCallback, Object tag) {
@@ -212,9 +208,16 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     @Override
     public void onSuccess(NetInfo info) {
-        cancelRefresh();
         mBuilder = info.getBuild();
-        LogUtils.e("---------mBuilder:",mBuilder);
+        cancelRefresh();
+        if (info.getStatus() == RequestStatus.MORE) {
+            try {
+                LogUtils.e("-----------size:", info.getPageSize()," | page:",mBuilder.getPage());
+                mRefreshView.setNoMoreData(BaseApplication.mApplication.getJsonArrSize(new JSONObject(info.getRetDetail())) < info.getPageSize());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -235,22 +238,17 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         if (mRefreshView != null) {
             mRefreshView.setNoMoreData(false);
         }
-        BaseApplication.mApplication.mNetBuilder.build().doAsync(mBuilder.setStatus(RequestStatus.REFRESH).build(), this);
+        BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.REFRESH), this, false);
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        mIsLoadMore = true;
-        BaseApplication.mApplication.mNetBuilder.build().doAsync(mBuilder.setStatus(RequestStatus.MORE).build(), this);
+        LogUtils.e("---------page:",mBuilder.getPage());
+        BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.MORE), this, false);
     }
 
     protected void scrollTxt(TextView textView, String txt) {
-        textView.setText(TextUtils.isEmpty(txt) ? "" : txt);
-        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        textView.setSingleLine(true);
-        textView.setSelected(true);
-        textView.setFocusable(true);
-        textView.setFocusableInTouchMode(true);
+        SystemUtils.scrollTxt(textView, txt);
     }
 
     @Override

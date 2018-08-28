@@ -8,6 +8,6 @@ public  interface NetworkStateListener {
      * @param isNetworkAvailable 网络是否可用
      * @param netInfo 网络信息
      */
-    public void onNetworkState(boolean isNetworkAvailable, NetInfo netInfo);
+    void onNetworkState(boolean isNetworkAvailable, NetInfo netInfo);
 
 }

@@ -12,6 +12,7 @@ import com.zd112.framework.net.annotation.RequestType;
 import com.zd112.framework.net.bean.DownloadFileInfo;
 import com.zd112.framework.net.bean.UploadFileInfo;
 import com.zd112.framework.net.callback.ProgressCallback;
+import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.SystemUtils;
 
 import java.io.File;
@@ -103,8 +104,8 @@ public class NetInfo {
 
         private String url;//请求地址
         private Class _class;
-        private int page = 1;
-        private int pageSize = 10;
+        private int page;
+        private int pageSize;
         private int status;
         private NetInfo.Builder builder;
         private Map<String, String> params;//请求参数：键值对
@@ -129,7 +130,7 @@ public class NetInfo {
         private String httpsCertificate;//Https证书
         private InputStream httpsCertificateStream;//Https证书
         private boolean needResponse;//返回结果为Response
-
+        private boolean isSyncPageSize;
 
         public Builder() {
         }
@@ -158,6 +159,10 @@ public class NetInfo {
             return this;
         }
 
+        public int getPage() {
+            return page;
+        }
+
         public Builder setPageSize() {
             return this.setPageSize(10);
         }
@@ -167,15 +172,27 @@ public class NetInfo {
             return this;
         }
 
+        public int getPageSize() {
+            return pageSize;
+        }
+
         public Builder setStatus(int status) {
             this.status = status;
             if (this.status == RequestStatus.MORE) {
                 if (this.params == null) {
                     this.params = new HashMap<>();
                 }
-                this.params.put(BuildConfig.PAGE, ++this.page + "");
+                if (this.pageSize <= 0) {
+                    this.pageSize = 10;
+                }
+                this.params.put(BuildConfig.PAGE, this.page + "");
                 this.params.put(BuildConfig.PAGE_SIZE, this.pageSize + "");
             } else {
+                LogUtils.e("-------------isSyncPageSize:", isSyncPageSize);
+                if (!isSyncPageSize) {
+                    this.params.remove(BuildConfig.PAGE);
+                    this.params.remove(BuildConfig.PAGE_SIZE);
+                }
                 this.page = 1;
             }
             return this;
@@ -220,6 +237,11 @@ public class NetInfo {
                 this.params = params;
             } else {
                 this.params.putAll(params);
+            }
+            String pageSize = this.params.get(BuildConfig.PAGE_SIZE);
+            if (!TextUtils.isEmpty(pageSize)) {
+                this.pageSize = Integer.parseInt(pageSize);
+                isSyncPageSize = true;
             }
             return this;
         }

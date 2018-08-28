@@ -5,7 +5,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +25,15 @@ import com.zd112.framework.view.refresh.interfaces.OnLoadMoreListener;
 import com.zd112.framework.view.refresh.interfaces.OnRefreshListener;
 import com.zd112.framework.view.refresh.interfaces.RefreshLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 public abstract class BaseFragment extends Fragment implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener {
     protected View mView;
     protected Bundle mBundle;
     protected RefreshView mRefreshView;
-    private boolean mIsLoadMore;
     private NetInfo.Builder mBuilder;
 
     @Nullable
@@ -76,11 +77,6 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
         if (mView == null) return;
         View view = mView.findViewById(R.id.statusBar);
         view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, SystemUtils.getStatusBarHeight(getActivity())));
-    }
-
-    public void setEnableMore(int resultSize) {
-        if (mRefreshView == null) return;
-//        mRefreshView.setNoMoreData(mDefaultPageSize > resultSize);
     }
 
     protected int getColor(int resColor) {
@@ -192,8 +188,13 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
 
     @Override
     public void onSuccess(NetInfo info) {
-        cancelRefresh();
         mBuilder = info.getBuild();
+        cancelRefresh();
+        try {
+            mRefreshView.setNoMoreData(BaseApplication.mApplication.getJsonArrSize(new JSONObject(info.getRetDetail())) < info.getPageSize());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -214,22 +215,16 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
         if (mRefreshView != null) {
             mRefreshView.setNoMoreData(false);
         }
-        BaseApplication.mApplication.mNetBuilder.build().doAsync(mBuilder.setStatus(RequestStatus.REFRESH).build(), this);
+        BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.REFRESH), this, false);
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        mIsLoadMore = true;
-        BaseApplication.mApplication.mNetBuilder.build().doAsync(mBuilder.setStatus(RequestStatus.MORE).build(), this);
+        BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.MORE), this, false);
     }
 
     protected void scrollTxt(TextView textView, String txt) {
-        textView.setText(TextUtils.isEmpty(txt) ? "" : txt);
-        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        textView.setSingleLine(true);
-        textView.setSelected(true);
-        textView.setFocusable(true);
-        textView.setFocusableInTouchMode(true);
+        SystemUtils.scrollTxt(textView, txt);
     }
 
     @Override

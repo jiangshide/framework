@@ -17,9 +17,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-/**
- * https://api.etongdai.com/service/investments/list?orderArgs=2&terminalType=3&appVersion=3.0.0.17&sort=desc&useType=1&page=1&pageSize=10000
- */
 public class MainActivity extends BaseActivity {
 
     @ViewUtils.ViewInject(R.id.input)
@@ -31,7 +28,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        setView(R.layout.activity_main, this,true);
+        setView(R.layout.activity_main, this, true);
     }
 
     @Override
