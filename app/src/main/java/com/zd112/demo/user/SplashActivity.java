@@ -1,7 +1,9 @@
-package com.zd112.demo;
+package com.zd112.demo.user;
 
 import android.os.Bundle;
 
+import com.zd112.demo.MainActivity;
+import com.zd112.demo.R;
 import com.zd112.demo.data.TransferredData;
 import com.zd112.framework.BaseActivity;
 import com.zd112.framework.utils.IntentUtils;

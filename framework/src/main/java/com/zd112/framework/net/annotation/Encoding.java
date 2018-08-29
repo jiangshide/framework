@@ -14,7 +14,7 @@ public @interface Encoding {
     String ISO_8859_1 = "ISO-8859-1";
 
     /**
-     * 万国码
+     * 统一码
      */
     String UTF_8 = "UTF-8";
 

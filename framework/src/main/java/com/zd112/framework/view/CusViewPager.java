@@ -1,5 +1,6 @@
 package com.zd112.framework.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,23 +13,45 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.zd112.framework.annotation.Transformer;
 import com.zd112.framework.apdater.CusFragmentPagerAdapter;
 import com.zd112.framework.apdater.CusPagerAdapter;
+import com.zd112.framework.transforms.AccordionTransformer;
+import com.zd112.framework.transforms.BackgroundToForegroundTransformer;
+import com.zd112.framework.transforms.CubeInTransformer;
+import com.zd112.framework.transforms.CubeOutTransformer;
+import com.zd112.framework.transforms.DefaultTransformer;
+import com.zd112.framework.transforms.DepthPageTransformer;
+import com.zd112.framework.transforms.DrawerTransformer;
+import com.zd112.framework.transforms.FlipHorizontalTransformer;
+import com.zd112.framework.transforms.FlipVerticalTransformer;
+import com.zd112.framework.transforms.ForegroundToBackgroundTransformer;
+import com.zd112.framework.transforms.RotateDownTransformer;
+import com.zd112.framework.transforms.RotateUpTransformer;
+import com.zd112.framework.transforms.ScaleInOutTransformer;
+import com.zd112.framework.transforms.StackTransformer;
+import com.zd112.framework.transforms.TabletTransformer;
+import com.zd112.framework.transforms.VerticalTransformer;
+import com.zd112.framework.transforms.ZoomInTransformer;
+import com.zd112.framework.transforms.ZoomOutSlideTransformer;
+import com.zd112.framework.transforms.ZoomOutTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class CusViewPager extends ViewPager implements ViewPager.PageTransformer {
+public class CusViewPager extends ViewPager {
 
     public CusPagerAdapter mCusPagerAdapter;
     private boolean mIsCanScroll = true;
     private boolean mIsVertical = false;
-    public final int DEFAULT = 1;
-    public final int STACK = 2;
-    public final int ZOO_OUT = 3;
-    private int mMode = DEFAULT;
+    @SuppressLint("WrongConstant")
+    private @Transformer
+    int mMode = Transformer.DEFAULT;
+    private Class[] mTransformClass = {AccordionTransformer.class, BackgroundToForegroundTransformer.class, CubeInTransformer.class, CubeOutTransformer.class, DefaultTransformer.class, DepthPageTransformer.class,
+            DrawerTransformer.class, FlipHorizontalTransformer.class, FlipVerticalTransformer.class, ForegroundToBackgroundTransformer.class, RotateDownTransformer.class, RotateUpTransformer.class,
+            ScaleInOutTransformer.class, StackTransformer.class, TabletTransformer.class, VerticalTransformer.class, ZoomInTransformer.class, ZoomOutSlideTransformer.class, ZoomOutTransformer.class};
 
     public CusViewPager(@NonNull Context context) {
         super(context);
@@ -42,18 +65,25 @@ public class CusViewPager extends ViewPager implements ViewPager.PageTransformer
         this.mIsCanScroll = isCanScroll;
     }
 
+    @SuppressLint("WrongConstant")
     public void setMode(boolean isVertical) {
-        this.setMode(isVertical, DEFAULT);
+        this.setMode(isVertical, Transformer.DEFAULT);
     }
 
-    public void setMode(boolean isVertical, int mode) {
+    public void setMode(boolean isVertical, @Transformer int mode) {
         this.setMode(isVertical, true, mode);
     }
 
-    public void setMode(boolean isVertical, boolean reverseDrawingOrder, int mode) {
+    public void setMode(boolean isVertical, boolean reverseDrawingOrder, @Transformer int mode) {
         this.mIsVertical = isVertical;
         this.mMode = mode;
-        setPageTransformer(reverseDrawingOrder, this.mIsVertical ? this : null);
+        try {
+            setPageTransformer(reverseDrawingOrder, (PageTransformer) mTransformClass[mode].newInstance());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
         this.invalidate();
     }
 
@@ -91,49 +121,5 @@ public class CusViewPager extends ViewPager implements ViewPager.PageTransformer
 
     public void setAdapter(FragmentManager fragmentManager, Fragment... fragment) {
         this.setAdapter(new CusFragmentPagerAdapter(fragmentManager, fragment));
-    }
-
-    @Override
-    public void transformPage(@NonNull View view, float v) {
-        if (mMode == STACK) {
-            view.setTranslationX(view.getWidth() * -v);
-            view.setTranslationY(v < 0 ? v * view.getHeight() : 0f);
-        } else if (mMode == ZOO_OUT) {
-            int pageWidth = view.getWidth();
-            int pageHeight = view.getHeight();
-            float alpha = 0;
-            if (0 <= v && v <= 1) {
-                alpha = 1 - v;
-            } else if (-1 < v && v < 0) {
-                float scaleFactor = Math.max(0.90f, 1 - Math.abs(v));
-                float verticalMargin = pageHeight * (1 - scaleFactor) / 2;
-                float horizontalMargin = pageWidth * (1 - scaleFactor) / 2;
-                if (v < 0) {
-                    view.setTranslationX(horizontalMargin - verticalMargin / 2);
-                } else {
-                    view.setTranslationX(-horizontalMargin + verticalMargin / 2);
-                }
-
-                view.setScaleX(scaleFactor);
-                view.setScaleY(scaleFactor);
-
-                alpha = v + 1;
-            }
-            view.setAlpha(alpha);
-            view.setTranslationX(view.getWidth() * -v);
-            float yPosition = v * view.getHeight();
-            view.setTranslationY(yPosition);
-        } else {
-            float alpha = 0;
-            if (0 <= v && v <= 1) {
-                alpha = 1 - v;
-            } else if (-1 < v && v < 0) {
-                alpha = v + 1;
-            }
-            view.setAlpha(alpha);
-            view.setTranslationX(view.getWidth() * -v);
-            float yPosition = v * view.getHeight();
-            view.setTranslationY(yPosition);
-        }
     }
 }
