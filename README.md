@@ -40,6 +40,54 @@ Platfor |	Module | Status	|	Open Level
 ### 5.安全控制与认证模块
 ### 6.数据适配模块
 ### 7.升级模块(普通更新,热更新)
+#### 7.1 普通同更新~默认:只需要一段代码即可
+    new UpdateView(this).init().setListener(this);
+#### 7.2 普通更新～截取更新核查结果
+    new UpdateView(this).init(new Callback() {
+                @Override
+                public void onSuccess(NetInfo info) throws IOException {
+                    
+                }
+    
+                @Override
+                public void onFailure(NetInfo info) throws IOException {
+    
+                }
+            });
+#### 7.3 普通更新～截取更新文件下载请求过程
+    new UpdateView(this).init().setProgressListener(new ProgressCallback(){
+                @Override
+                public void onProgressMain(int percent, long bytesWritten, long contentLength, boolean done) {
+                    super.onProgressMain(percent, bytesWritten, contentLength, done);
+                }
+    
+                @Override
+                public void onResponseMain(String filePath, NetInfo info) {
+                    super.onResponseMain(filePath, info);
+                }
+            });
+#### 7.4 普通更新~同时截取更新核查与文件下载：自定义场景与界面展示
+    new UpdateView(this).init(new Callback() {
+                @Override
+                public void onSuccess(NetInfo info) throws IOException {
+    
+                }
+    
+                @Override
+                public void onFailure(NetInfo info) throws IOException {
+    
+                }
+            }).setProgressListener(new ProgressCallback(){
+                @Override
+                public void onProgressMain(int percent, long bytesWritten, long contentLength, boolean done) {
+                    super.onProgressMain(percent, bytesWritten, contentLength, done);
+                }
+    
+                @Override
+                public void onResponseMain(String filePath, NetInfo info) {
+                    super.onResponseMain(filePath, info);
+                }
+            });            
 ### 8.错误日志模块(java,native)
 ### 9.HTML5交互模块
 ### 10.分享模块

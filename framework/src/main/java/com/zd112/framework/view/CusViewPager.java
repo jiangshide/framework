@@ -20,7 +20,6 @@ import com.zd112.framework.transforms.AccordionTransformer;
 import com.zd112.framework.transforms.BackgroundToForegroundTransformer;
 import com.zd112.framework.transforms.CubeInTransformer;
 import com.zd112.framework.transforms.CubeOutTransformer;
-import com.zd112.framework.transforms.DefaultTransformer;
 import com.zd112.framework.transforms.DepthPageTransformer;
 import com.zd112.framework.transforms.DrawerTransformer;
 import com.zd112.framework.transforms.FlipHorizontalTransformer;
@@ -35,21 +34,22 @@ import com.zd112.framework.transforms.VerticalTransformer;
 import com.zd112.framework.transforms.ZoomInTransformer;
 import com.zd112.framework.transforms.ZoomOutSlideTransformer;
 import com.zd112.framework.transforms.ZoomOutTransformer;
+import com.zd112.framework.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class CusViewPager extends ViewPager {
+public class CusViewPager extends ViewPager implements ViewPager.PageTransformer {
 
     public CusPagerAdapter mCusPagerAdapter;
     private boolean mIsCanScroll = true;
     private boolean mIsVertical = false;
     @SuppressLint("WrongConstant")
     private @Transformer
-    int mMode = Transformer.DEFAULT;
-    private Class[] mTransformClass = {AccordionTransformer.class, BackgroundToForegroundTransformer.class, CubeInTransformer.class, CubeOutTransformer.class, DefaultTransformer.class, DepthPageTransformer.class,
+    int mMode = -1;
+    private Class[] mTransformClass = {AccordionTransformer.class, BackgroundToForegroundTransformer.class, CubeInTransformer.class, CubeOutTransformer.class, DepthPageTransformer.class,
             DrawerTransformer.class, FlipHorizontalTransformer.class, FlipVerticalTransformer.class, ForegroundToBackgroundTransformer.class, RotateDownTransformer.class, RotateUpTransformer.class,
             ScaleInOutTransformer.class, StackTransformer.class, TabletTransformer.class, VerticalTransformer.class, ZoomInTransformer.class, ZoomOutSlideTransformer.class, ZoomOutTransformer.class};
 
@@ -67,7 +67,7 @@ public class CusViewPager extends ViewPager {
 
     @SuppressLint("WrongConstant")
     public void setMode(boolean isVertical) {
-        this.setMode(isVertical, Transformer.DEFAULT);
+        this.setMode(isVertical, -1);
     }
 
     public void setMode(boolean isVertical, @Transformer int mode) {
@@ -78,7 +78,8 @@ public class CusViewPager extends ViewPager {
         this.mIsVertical = isVertical;
         this.mMode = mode;
         try {
-            setPageTransformer(reverseDrawingOrder, (PageTransformer) mTransformClass[mode].newInstance());
+            LogUtils.e("----------mode:", mode);
+            setPageTransformer(reverseDrawingOrder, mode < 0 ? this : (PageTransformer) mTransformClass[mMode].newInstance());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -121,5 +122,19 @@ public class CusViewPager extends ViewPager {
 
     public void setAdapter(FragmentManager fragmentManager, Fragment... fragment) {
         this.setAdapter(new CusFragmentPagerAdapter(fragmentManager, fragment));
+    }
+
+    @Override
+    public void transformPage(@NonNull View view, float v) {
+        float alpha = 0;
+        if (0 <= v && v <= 1) {
+            alpha = 1 - v;
+        } else if (-1 < v && v < 0) {
+            alpha = v + 1;
+        }
+        //view.setAlpha(alpha);
+        view.setTranslationX(view.getWidth() * -v);
+        float yPosition = v * view.getHeight();
+        view.setTranslationY(yPosition);
     }
 }

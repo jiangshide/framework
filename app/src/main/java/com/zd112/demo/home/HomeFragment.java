@@ -35,7 +35,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setView(R.layout.home, this);
-        LogUtils.e("-------home");
     }
 
     @Override
@@ -48,7 +47,7 @@ public class HomeFragment extends BaseFragment {
                     tabViewPager.setMode(isTrue,Transformer.VERTICAL);
                     isTrue = false;
                 } else {
-                    tabViewPager.setMode(isTrue,Transformer.DEFAULT);
+                    tabViewPager.setMode(isTrue,Transformer.ACCORDION);
                     isTrue = true;
                 }
             }
