@@ -28,6 +28,30 @@ Platfor |	Module | Status	|	Open Level
 ## 项目案例
 ### 1.UI模块(通用导航栏,通用加载刷新,通用对话实现,二维码相关,以及基础用到的view...)
 #### 1.1 通用导航栏
+##### 1.1.1 底部通用导航栏实现:可滑动
+    public class MainActivity extends BaseActivity {
+        @Override
+        protected void initView(Bundle savedInstanceState) {
+            setView(mNavigationBar.initView(getSupportFragmentManager(), new HomeFragment(), new CircleFragment(), new PulishFragment(), new ShopFragment(), new MineFragment()).initData(mTabIndex, new int[]{R.mipmap.tab_home, R.mipmap.tab_circle, R.mipmap.ic_launcher_round, R.mipmap.tab_shop, R.mipmap.tab_mine}, new int[]{R.mipmap.tab_home_selected, R.mipmap.tab_circle_selected, R.mipmap.tab_publish_selected, R.mipmap.tab_shop_selected, R.mipmap.tab_mine_selected}, getResArrStr(R.array.tab_main_title), R.color.font_gray, R.color.colorPrimary)
+                    .setBgColor(getResColor(R.color.app_bg)), this);
+        }
+        @Override
+        protected void processLogic(Bundle savedInstanceState) {
+            mNavigationBar.showView();
+        }
+    }
+##### 1.1.2 底部通用导航栏实现:不可滑动
+    public class MainActivity extends BaseActivity { 
+        @Override
+        protected void initView(Bundle savedInstanceState) {
+            setView(mNavigationBar.initView(new HomeFragment(), new CircleFragment(), new PulishFragment(), new ShopFragment(), new MineFragment()).initData(mTabIndex, new int[]{R.mipmap.tab_home, R.mipmap.tab_circle, R.mipmap.ic_launcher_round, R.mipmap.tab_shop, R.mipmap.tab_mine}, new int[]{R.mipmap.tab_home_selected, R.mipmap.tab_circle_selected, R.mipmap.tab_publish_selected, R.mipmap.tab_shop_selected, R.mipmap.tab_mine_selected}, getResArrStr(R.array.tab_main_title), R.color.font_gray, R.color.colorPrimary,this)
+                    .setBgColor(getResColor(R.color.app_bg)), this);
+        }
+        @Override
+        protected void processLogic(Bundle savedInstanceState) {
+            changeTab(mTabIndex);
+        }
+    }
 #### 1.2 通用加载刷新控制
 #### 1.3 通用对话框实现
 #### 1.4 二维码实现
