@@ -71,6 +71,7 @@ Platfor |	Module | Status	|	Open Level
 #### 7.1 普通同更新~默认:只需要一段代码即可
     new UpdateView(this).init().setListener(this);
 #### 7.2 普通更新～截取更新核查结果
+```Java
     new UpdateView(this).init(new Callback() {
                 @Override
                 public void onSuccess(NetInfo info) throws IOException {
@@ -82,7 +83,9 @@ Platfor |	Module | Status	|	Open Level
     
                 }
             });
+```
 #### 7.3 普通更新～截取更新文件下载请求过程
+```Java
     new UpdateView(this).init().setProgressListener(new ProgressCallback(){
                 @Override
                 public void onProgressMain(int percent, long bytesWritten, long contentLength, boolean done) {
@@ -94,7 +97,9 @@ Platfor |	Module | Status	|	Open Level
                     super.onResponseMain(filePath, info);
                 }
             });
+```
 #### 7.4 普通更新~同时截取更新核查与文件下载：自定义场景与界面展示
+```Java
     new UpdateView(this).init(new Callback() {
                 @Override
                 public void onSuccess(NetInfo info) throws IOException {
@@ -115,7 +120,8 @@ Platfor |	Module | Status	|	Open Level
                 public void onResponseMain(String filePath, NetInfo info) {
                     super.onResponseMain(filePath, info);
                 }
-            });            
+            });   
+```
 ### 8.错误日志模块(java,native)
 ### 9.HTML5交互模块
 ### 10.分享模块
@@ -123,7 +129,7 @@ Platfor |	Module | Status	|	Open Level
 ## 项目集成(非常优雅的集成,最大化灵活控制,只需要几个步骤)
 
 1.在你的项目工程根目录所在的build.gradle中添加:maven { url "https://jitpack.io" }
-
+```Gradle
         allprojects {
             repositories {
                 google()
@@ -131,9 +137,9 @@ Platfor |	Module | Status	|	Open Level
                 maven { url "https://jitpack.io" }//当前需要添加的
             }
         }
-        
+```        
 2.在你项目工程app所在目录下build.gradle中添加:implementation 'com.github.jiangshide:framework:1.0.1'
-
+```Gradle
         dependencies {
             implementation fileTree(dir: 'libs', include: ['*.jar'])
             implementation 'com.android.support:appcompat-v7:28.0.0-alpha3'
@@ -143,28 +149,35 @@ Platfor |	Module | Status	|	Open Level
             androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
             implementation 'com.github.jiangshide:framework:1.0.1'//当前需要添加的
         }
-        
+```        
 ### 3.拷贝demo中gradle.properties文件覆盖自己项目中的gradle.properties,需要注意:
 #### 3.1 如果打release包的话需要替换成自己的密钥文件与相关信息：
+```Gradle
         KEY_FILE=demo
         KEY_ALIAS=jsd
         KEY_PASSWORD=jsddemo
         STORE_PASSWORD=jsddemo
+``` 
 #### 3.2 网络主机替换：需要替换成自己的IP或域名
+```Gradle
     #the net config
     PRODUCTION=http://10.20.6.50:8091
     PREPRODUCTION=http://10.20.6.50:8091
     TEST=http://10.20.6.50:8091
     API=/api/zdb/
     UPDATE=update
+```
 #### 3.3 api协议配置,可替换成自己实际协议的名称
+```Gradle
     #BaseData protocol
     CODE=code
     SUCCESS=success
     TIME=date
     MSG=msg
+```
 #### 3.4 可修改网络默认配置
 ##### the http params
+```Gradle
     HTTP_CONNECT_TIME=30
     HTTP_READ_TIME=30
     HTTP_WRITE_TIME=30
@@ -173,7 +186,7 @@ Platfor |	Module | Status	|	Open Level
     HTTP_CACHE_TYPE=4
     HTTP_IS_GZIP=true
     HTTP_SHOW_LIFECYCLE_LOG=true
-    
+```    
 # 服务宗旨:
 ### 一.面向企业：
 #### 1.提供专业的技术支持
