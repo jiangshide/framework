@@ -80,15 +80,16 @@ public class NavigationView extends FrameLayout implements ViewPager.OnPageChang
         return this;
     }
 
-    public void showView() {
+    public void showView(int index) {
         if (cusViewPager != null && mFragmentManager != null) {
             cusViewPager.setAdapter(new CusFragmentPagerAdapter(mFragmentManager, mFragments));
             cusViewPager.addOnPageChangeListener(this);
+            cusViewPager.setCurrentItem(index);
         }
     }
 
-    public NavigationView initData(int index, int[] selectes, int[] selecteds, String[] titles, int txtColor, int txtColorSelected) {
-        this.initData(index, selectes, selecteds, titles, txtColor, txtColorSelected, null);
+    public NavigationView initData(int[] selectes, int[] selecteds, String[] titles, int txtColor, int txtColorSelected) {
+        this.initData(0, selectes, selecteds, titles, txtColor, txtColorSelected, null);
         return this;
     }
 
