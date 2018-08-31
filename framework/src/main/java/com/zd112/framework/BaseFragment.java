@@ -95,7 +95,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     }
 
     public void push(Fragment fragment) {
-        ((BaseActivity) getActivity()).push(fragment);
+        ((BaseActivity) getActivity()).push(fragment,null);
     }
 
     public DialogView loading(String msg) {

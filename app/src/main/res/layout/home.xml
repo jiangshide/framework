@@ -12,15 +12,13 @@
         android:text="@string/app_name"
         />
     <android.support.design.widget.TabLayout
-        android:id="@+id/tabTitle"
+        android:id="@+id/navigationTitle"
+        app:tabBackground="@android:color/white"
+        app:tabTextColor="@color/colorPrimary"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabMode="scrollable"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#32CD32"
-        app:tabIndicatorColor="#f00"
-        app:tabSelectedTextColor="#444"
-        app:tabTextColor="#fff"
-        />
-
+        android:layout_height="40dp" />
     <com.zd112.framework.view.CusViewPager
         android:id="@+id/tabViewPager"
         android:layout_width="match_parent"

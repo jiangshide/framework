@@ -2,7 +2,11 @@ package com.zd112.framework.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.zd112.framework.R;
+import com.zd112.framework.apdater.CusFragmentPagerAdapter;
 import com.zd112.framework.listener.CusOnClickListener;
 import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.ShareParamUtils;
@@ -25,7 +30,7 @@ import java.util.List;
  * @Created by Ender on 2018/8/24.
  * @Emal:18311271399@163.com
  */
-public class NavigationView extends FrameLayout {
+public class NavigationView extends FrameLayout implements ViewPager.OnPageChangeListener {
 
     private ImageView mImageView;
     private View mMenuBg;
@@ -40,21 +45,54 @@ public class NavigationView extends FrameLayout {
     private int mTxtColor;
     private int mTxtColorSelected;
     private CusOnClickListener mListener;
+    private FragmentManager mFragmentManager;
+    public Fragment[] mFragments;
+    private CusViewPager cusViewPager;
 
     private LinearLayout mMenusLayout;
     private int mNavigationHeight;
-    private boolean mIsShowPortNum = true;
 
     public NavigationView(Context context) {
         super(context);
-        mNavigationHeight = (int) getDim(R.dimen.navigation_height);
-        FrameLayout content = new FrameLayout(getContext());
-        content.setPadding(0, 0, 0, mNavigationHeight);
-        content.setId(MAIN);
-        this.addView(content, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
-    public NavigationView initView(int index, int[] selectes, int[] selecteds, String[] titles, int txtColor, int txtColorSelected, CusOnClickListener listener) {
+    public NavigationView initView(Fragment... fragments) {
+        this.initView(null, fragments);
+        return this;
+    }
+
+    public NavigationView initView(FragmentManager fragmentManager, Fragment... fragments) {
+        this.mFragmentManager = fragmentManager;
+        this.mFragments = fragments;
+        mNavigationHeight = (int) getDim(R.dimen.navigation_height);
+        FrameLayout content;
+        if (fragmentManager != null) {
+            cusViewPager = new CusViewPager(getContext());
+            cusViewPager.setPadding(0, 0, 0, mNavigationHeight);
+            cusViewPager.setId(MAIN);
+            this.addView(cusViewPager, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        } else {
+            content = new FrameLayout(getContext());
+            content.setPadding(0, 0, 0, mNavigationHeight);
+            content.setId(MAIN);
+            this.addView(content, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+        return this;
+    }
+
+    public void showView() {
+        if (cusViewPager != null && mFragmentManager != null) {
+            cusViewPager.setAdapter(new CusFragmentPagerAdapter(mFragmentManager, mFragments));
+            cusViewPager.addOnPageChangeListener(this);
+        }
+    }
+
+    public NavigationView initData(int index, int[] selectes, int[] selecteds, String[] titles, int txtColor, int txtColorSelected) {
+        this.initData(index, selectes, selecteds, titles, txtColor, txtColorSelected, null);
+        return this;
+    }
+
+    public NavigationView initData(int index, int[] selectes, int[] selecteds, String[] titles, int txtColor, int txtColorSelected, CusOnClickListener listener) {
         this.mSelectes = selectes;
         this.mSelecteds = selecteds;
         this.mTxtColor = txtColor;
@@ -97,7 +135,7 @@ public class NavigationView extends FrameLayout {
             TextView portTxt = new TextView(getContext());
             portTxt.setBackgroundResource(R.drawable.red_dot);
             portTxt.setTextColor(getColor(R.color.red));
-            portTxt.setTextSize(getDim(R.dimen.navigation_port_size));
+            portTxt.setTextSize(getDim(R.dimen.navigation_port_no_size));
             portTxt.setTextColor(getColor(R.color.white));
             portTxt.setVisibility(GONE);
             mMenuPorts.add(portTxt);
@@ -108,6 +146,12 @@ public class NavigationView extends FrameLayout {
             menuRoot.setOnClickListener(new CusOnClickListener() {
                 @Override
                 public void onClick(View v, Bundle bundle) {
+                    if (mFragmentManager != null) {
+                        int id = v.getId();
+                        cusViewPager.setCurrentItem(id);
+                        changeBarStatus(id);
+                        return;
+                    }
                     if (mListener != null) {
                         mListener.onClick(v, bundle);
                     }
@@ -115,6 +159,12 @@ public class NavigationView extends FrameLayout {
 
                 @Override
                 public void onClick(View v) {
+                    if (mFragmentManager != null) {
+                        int id = v.getId();
+                        cusViewPager.setCurrentItem(id);
+                        changeBarStatus(id);
+                        return;
+                    }
                     if (mListener != null) {
                         mListener.onClick(v);
                     }
@@ -224,16 +274,21 @@ public class NavigationView extends FrameLayout {
         return this;
     }
 
-    public NavigationView showPort(int id, int count) {
-        if (count < 10) {
+    public NavigationView showDot(int id, boolean isShow) {
+        this.showDot(id, 0, isShow);
+        return this;
+    }
+
+    public NavigationView showDot(int id, int count, boolean isShow) {
+        if (count >= 10) {
+            mMenuPorts.get(id).setPadding(15, 10, 15, 10);
+        } else if (count > 0 && count < 10) {
             mMenuPorts.get(id).setPadding(15, 5, 15, 5);
+        } else {
+            mMenuPorts.get(id).setPadding(15, 0, 15, 0);
         }
-        mMenuPorts.get(id).setVisibility(VISIBLE);
-        mMenuPorts.get(id).setText(count > 99 ? "99+" : count + "");
-        if (!mIsShowPortNum) {
-            mMenuPorts.get(id).setPadding(10, 0, 10, 0);
-            mMenuPorts.get(id).setTextColor(getColor(R.color.red));
-        }
+        mMenuPorts.get(id).setVisibility(isShow ? VISIBLE : GONE);
+        mMenuPorts.get(id).setText(count > 99 ? "99+" : count > 0 ? count + "" : "");
         return this;
     }
 
@@ -245,17 +300,25 @@ public class NavigationView extends FrameLayout {
         return getResources().getDimension(dim);
     }
 
+    public void push(FragmentManager mFragmentManager, Fragment fragment, Bundle bundle) {
+        if (null == mFragmentManager) return;
+        fragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(NavigationView.MAIN, fragment);
+        fragmentTransaction.commit();
+    }
+
     public NavigationView changeBarListener(int id) {
         return changeBarListener(id, null);
     }
 
     public NavigationView changeBarListener(int id, Bundle bundle) {
         if (bundle == null) {
-            if (mListener != null && mMenus != null) {
+            if (null == mFragmentManager && null != mListener && null != mMenus) {
                 mListener.onClick(mMenus.get(id));
             }
         } else {
-            if (mListener != null && mMenus != null) {
+            if (null == mFragmentManager && null != mListener && null != mMenus) {
                 mListener.onClick(mMenus.get(id), bundle);
             }
         }
@@ -272,5 +335,20 @@ public class NavigationView extends FrameLayout {
                 mMenuTitles.get(j).setTextColor(getColor(mTxtColor));
             }
         }
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        changeBarStatus(i);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
     }
 }

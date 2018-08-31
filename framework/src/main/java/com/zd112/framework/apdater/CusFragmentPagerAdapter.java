@@ -8,27 +8,23 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class CusFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private FragmentManager mFragmentManager;
     private String[] mTitle;
     private Fragment[] mFragmentList;
     private Bundle mBundle;
 
     public CusFragmentPagerAdapter(FragmentManager fm, Fragment... list) {
         super(fm);
-        this.mFragmentManager = fm;
         this.mFragmentList = list;
     }
 
     public CusFragmentPagerAdapter(FragmentManager fm, String[] titles, Fragment... list) {
         super(fm);
         this.mTitle = titles;
-        this.mFragmentManager = fm;
         this.mFragmentList = list;
     }
 
     public CusFragmentPagerAdapter(FragmentManager fm, Bundle bundle, Fragment... list) {
         super(fm);
-        this.mFragmentManager = fm;
         this.mFragmentList = list;
         this.mBundle = bundle;
     }
@@ -36,7 +32,7 @@ public class CusFragmentPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTitle[position];
+        return (null != mTitle && mTitle.length > 0 && position <= mTitle.length) ? mTitle[position] : null;
     }
 
     @Override

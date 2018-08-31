@@ -23,7 +23,7 @@ public class SplashActivity extends BaseActivity implements UpdateView.OnUpdateL
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        new UpdateView(this).init();
+        new UpdateView(this).init().setListener(this);
     }
 
     @Override

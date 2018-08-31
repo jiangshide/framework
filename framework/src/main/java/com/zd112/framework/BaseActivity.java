@@ -1,12 +1,12 @@
 package com.zd112.framework;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,6 @@ import com.zd112.framework.net.callback.Callback;
 import com.zd112.framework.net.callback.ProgressCallback;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.utils.DateUtils;
-import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.DialogView;
@@ -38,12 +37,13 @@ import java.util.HashMap;
 public abstract class BaseActivity extends AppCompatActivity implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener {
 
     protected FragmentManager mFragmentManager;
-    protected FragmentTransaction mFragmentTransaction;
     protected View mView;
     public NavigationView mNavigationBar;
     protected RefreshView mRefreshView;
     private DateUtils mDateUtils;
     private NetInfo.Builder mBuilder;
+    private Fragment[] mFragments;
+    protected int tabIndex;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +61,10 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
             }
         }
         processLogic(savedInstanceState);
+    }
+
+    protected void setFragmennt(Fragment... fragments) {
+        this.mFragments = fragments;
     }
 
     protected void setTitle(int leftResId, String name, int resId, String title) {
@@ -107,15 +111,9 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         return getResources().getStringArray(resArrStr);
     }
 
-    public void push(Fragment fragment) {
-        push(fragment, null);
-    }
 
     public void push(Fragment fragment, Bundle bundle) {
-        fragment.setArguments(bundle);
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        mFragmentTransaction.replace(NavigationView.MAIN, fragment);
-        mFragmentTransaction.commit();
+        mNavigationBar.push(mFragmentManager, fragment, bundle);
     }
 
     public DialogView loading(String msg) {
@@ -212,7 +210,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         cancelRefresh();
         if (info.getStatus() == RequestStatus.MORE) {
             try {
-                LogUtils.e("-----------size:", info.getPageSize()," | page:",mBuilder.getPage());
                 mRefreshView.setNoMoreData(BaseApplication.mApplication.getJsonArrSize(new JSONObject(info.getRetDetail())) < info.getPageSize());
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -243,7 +240,6 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        LogUtils.e("---------page:",mBuilder.getPage());
         BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.MORE), this, false);
     }
 
@@ -251,12 +247,27 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         SystemUtils.scrollTxt(textView, txt);
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onClick(View v) {
+        changeTab(v.getId());
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onClick(View v, Bundle bundle) {
+        changeTab(v.getId(), bundle);
+    }
+
+    protected void changeTab(int id) {
+        this.changeTab(id, null);
+    }
+
+    protected void changeTab(int id, Bundle bundle) {
+        if (mNavigationBar != null && mNavigationBar.mFragments != null && id <= mNavigationBar.mFragments.length) {
+            mNavigationBar.changeBarStatus(id);
+            mNavigationBar.push(mFragmentManager, mNavigationBar.mFragments[id], bundle);
+        }
     }
 
     public DateUtils countDown(long second) {
