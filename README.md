@@ -214,14 +214,9 @@ Platfor |	Module | Status	|	Open Level
     HTTP_SHOW_LIFECYCLE_LOG=true
 ```    
 # 服务宗旨:
-### 一.面向企业：
+### 一.面向中小企业及个人：
 #### 1.提供专业的技术支持
-#### 2.一对一技术方案提供
-#### 3.零容忍问题服务
-### 二.面向个人：
-#### 1.获得与企业同等的态度
-#### 2.最优化项目技术支持
-#### 3.最大化项目技术扩展
+#### 2.可做高度定制化需求
 
 # 友情合作:
    ![Image](https://raw.githubusercontent.com/jiangshide/framework/master/img/weixin.jpeg)
