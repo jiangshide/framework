@@ -88,7 +88,7 @@ Platfor |	Module | Status	|	Open Level
 ```
 ##### 1.4.1 自定义View:res与view
 ```Java
-    CusToast.fixTxt(getActivity(), R.layout.toast);
+    CusToast.fixView(getActivity(), R.layout.toast);
 ```
 #### 1.4 二维码实现
 #### 1.5 通用手势密码实现
