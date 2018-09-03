@@ -18,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
 
 public class DialogView extends Dialog {
@@ -42,6 +43,12 @@ public class DialogView extends Dialog {
     public DialogView(@NonNull Context context, int style, View view) {
         super(context, style);
         this.mView = view;
+    }
+
+    public DialogView(@NonNull Context context, int style, View view, DialogViewListener dialogViewListener) {
+        super(context, style);
+        this.mView = view;
+        this.mDialogViewListener = dialogViewListener;
     }
 
     public DialogView(@NonNull Context context, int style, int layout, DialogViewListener dialogViewListener) {

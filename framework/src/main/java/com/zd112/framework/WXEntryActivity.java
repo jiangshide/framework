@@ -15,7 +15,7 @@ import android.os.Bundle;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
-import com.zd112.framework.utils.ToastUtils;
+import com.zd112.framework.view.CusToast;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
@@ -43,16 +43,16 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             case BaseResp.ErrCode.ERR_OK:
                 String result = getString(R.string.share_success);
                 setTitle(result);
-                ToastUtils.show(this, getString(R.string.cancel));
+                CusToast.fixTxt(this, getString(R.string.cancel));
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
-                ToastUtils.show(this, getString(R.string.cancel));
+                CusToast.fixTxt(this, getString(R.string.cancel));
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                ToastUtils.show(this, getString(R.string.weixin_false));
+                CusToast.fixTxt(this, getString(R.string.weixin_false));
                 break;
             default:
-                ToastUtils.show(this, getString(R.string.back));
+                CusToast.fixTxt(this, getString(R.string.back));
                 break;
         }
     }

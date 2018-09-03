@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
+import android.view.View;
+import android.view.WindowManager;
 
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -57,7 +59,8 @@ public abstract class BaseApplication extends Application implements Application
     private boolean mInstalled = false;
 
     public IWXAPI mWxApi;
-
+    private WindowManager mWindowManager;
+    private View mView;
     public Net.Builder mNetBuilder;
     private DialogUtils mDialogUtils;
     private int mJsonArrSize;
@@ -119,6 +122,27 @@ public abstract class BaseApplication extends Application implements Application
          * 微信注册
          */
         mWxApi = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APPID);
+    }
+
+    public void showView(View view) {
+        mView = view;
+        mWindowManager = (WindowManager) BaseApplication.mApplication.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams para = new WindowManager.LayoutParams();
+        para.height = -2;//WRAP_CONTENT
+        para.width = -2;//WRAP_CONTENT
+        para.format = 1;
+
+        para.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        para.gravity = Gravity.LEFT;
+
+        para.type = WindowManager.LayoutParams.TYPE_TOAST;
+        mWindowManager.addView(view, para);
+    }
+
+    public void removeView() {
+        if (null != mWindowManager && null != mView) {
+            mWindowManager.removeView(mView);
+        }
     }
 
     public HashMap<String, String> getHeader(String token) {
@@ -194,7 +218,7 @@ public abstract class BaseApplication extends Application implements Application
         mNetBuilder.build().doAsync(builder.build(), new Callback() {
             @Override
             public void onSuccess(NetInfo info) throws IOException {
-                LogUtils.e("----------pageSize:",info.getPageSize());
+                LogUtils.e("----------pageSize:", info.getPageSize());
                 info.getBuild().setPageSize(info.getPageSize());
                 if (info.getStatus() == RequestStatus.MORE) {
                     info.getBuild().setPage(info.getPage() + 1);

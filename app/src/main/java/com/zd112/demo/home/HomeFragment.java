@@ -14,8 +14,8 @@ import com.zd112.framework.BaseFragment;
 import com.zd112.framework.annotation.Transformer;
 import com.zd112.framework.apdater.CusFragmentPagerAdapter;
 import com.zd112.framework.utils.LogUtils;
-import com.zd112.framework.utils.ToastUtils;
 import com.zd112.framework.utils.ViewUtils;
+import com.zd112.framework.view.CusToast;
 import com.zd112.framework.view.CusViewPager;
 
 /**
@@ -56,6 +56,9 @@ public class HomeFragment extends BaseFragment {
                     tabViewPager.setMode(isTrue, Transformer.ACCORDION);
                     isTrue = true;
                 }
+//                new DialogUtils(getActivity()).toast("this is the test!",2).setToastIcon(R.mipmap.ic_launcher);
+//                CusToast.showUpdateSuccessDialog();
+                CusToast.fixTxt(getActivity(), "ssss");
             }
         });
         tabViewPager.setAdapter(new CusFragmentPagerAdapter(getChildFragmentManager(), CHANNELS, new CommentFragment(), new ShareFragment(), new CommentFragment()));
@@ -72,7 +75,7 @@ public class HomeFragment extends BaseFragment {
         navigationTitle.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                ToastUtils.show(getActivity(), "tab:"+tab);
+                CusToast.fixTxt(getActivity(), "tab:" + tab);
             }
 
             @Override

@@ -43,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     private DateUtils mDateUtils;
     private NetInfo.Builder mBuilder;
     private Fragment[] mFragments;
-    protected int mTabIndex=2;
+    protected int mTabIndex;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
