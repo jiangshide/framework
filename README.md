@@ -179,7 +179,7 @@ Platfor |	Module | Status	|	Open Level
             testImplementation 'junit:junit:4.12'
             androidTestImplementation 'com.android.support.test:runner:1.0.2'
             androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-            implementation 'com.github.jiangshide:framework:1.0.1'//当前需要添加的
+            implementation 'com.github.jiangshide:framework:1.0.2'//当前需要添加的
         }
 ```        
 ### 3.拷贝demo中gradle.properties文件覆盖自己项目中的gradle.properties,需要注意:
