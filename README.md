@@ -56,8 +56,40 @@ Platfor |	Module | Status	|	Open Level
         }
     }
 ```
-#### 1.2 通用加载刷新控制
-#### 1.3 通用对话框实现
+#### 1.2 通用加载刷新控制:只需要在设置view是添加一个bool等于true即可,如果不想有刷新就置为false
+```Java
+    setView(R.layout.home, this,true);
+```
+#### 1.3 通用对话框实现:在Activity与Fragment中调用
+#### 1.3.1 直接传入字符串,有取消按钮
+```Java
+    loading("the dialog!");
+```
+#### 1.3.2 直接传入字符串,无取消按钮
+```Java
+    loading("the dialog!").setOnlySure();
+```
+#### 1.3.2 自己定义View实现:可以传res与view
+```Java
+    loading(R.layout.default_dialog, new DialogView.DialogViewListener() {
+                        @Override
+                        public void onView(View view) {
+                            TextView dialogContent = view.findViewById(R.id.dialogContent);
+                           CusButton dialogCancel = view.findViewById(R.id.dialogCancel);
+                           CusButton dialogSure = view.findViewById(R.id.dialogSure);
+                           //...
+                        }
+                    });
+```
+#### 1.4. 附加Toast实现
+##### 1.4.1 字符串
+```Java
+    CusToast.fixTxt(getActivity(), "the toast!");
+```
+##### 1.4.1 自定义View:res与view
+```Java
+    CusToast.fixTxt(getActivity(), R.layout.toast);
+```
 #### 1.4 二维码实现
 #### 1.5 通用手势密码实现
 #### 1.6 通用滚轮实现

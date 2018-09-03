@@ -224,7 +224,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     }
 
     private void cancelRefresh() {
-        if (mRefreshView != null) {
+        if (null != mRefreshView) {
             mRefreshView.finishRefresh();
             mRefreshView.finishLoadMore();
         }
@@ -235,12 +235,20 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         if (mRefreshView != null) {
             mRefreshView.setNoMoreData(false);
         }
-        BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.REFRESH), this, false);
+        if (null != mBuilder) {
+            BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.REFRESH), this, false);
+        } else {
+            cancelRefresh();
+        }
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.MORE), this, false);
+        if (null != mBuilder) {
+            BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.MORE), this, false);
+        } else {
+            cancelRefresh();
+        }
     }
 
     protected void scrollTxt(TextView textView, String txt) {

@@ -95,7 +95,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     }
 
     public void push(Fragment fragment) {
-        ((BaseActivity) getActivity()).push(fragment,null);
+        ((BaseActivity) getActivity()).push(fragment, null);
     }
 
     public DialogView loading(String msg) {
@@ -212,15 +212,23 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        if (mRefreshView != null) {
+        if (null != mRefreshView) {
             mRefreshView.setNoMoreData(false);
         }
-        BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.REFRESH), this, false);
+        if (null != mBuilder) {
+            BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.REFRESH), this, false);
+        } else {
+            cancelRefresh();
+        }
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.MORE), this, false);
+        if (null != mBuilder) {
+            BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.MORE), this, false);
+        } else {
+            cancelRefresh();
+        }
     }
 
     protected void scrollTxt(TextView textView, String txt) {

@@ -13,10 +13,11 @@ import com.zd112.demo.home.fragment.ShareFragment;
 import com.zd112.framework.BaseFragment;
 import com.zd112.framework.annotation.Transformer;
 import com.zd112.framework.apdater.CusFragmentPagerAdapter;
-import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.ViewUtils;
+import com.zd112.framework.view.CusButton;
 import com.zd112.framework.view.CusToast;
 import com.zd112.framework.view.CusViewPager;
+import com.zd112.framework.view.DialogView;
 
 /**
  * @author jiangshide
@@ -40,7 +41,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        setView(R.layout.home, this);
+        setView(R.layout.home, this,true);
     }
 
     @Override
@@ -56,13 +57,19 @@ public class HomeFragment extends BaseFragment {
                     tabViewPager.setMode(isTrue, Transformer.ACCORDION);
                     isTrue = true;
                 }
-//                new DialogUtils(getActivity()).toast("this is the test!",2).setToastIcon(R.mipmap.ic_launcher);
-//                CusToast.showUpdateSuccessDialog();
-                CusToast.fixTxt(getActivity(), "ssss");
+                CusToast.fixView(getActivity(),R.layout.toast);
+//                loading(R.layout.default_dialog, new DialogView.DialogViewListener() {
+//                    @Override
+//                    public void onView(View view) {
+//                        TextView dialogContent = view.findViewById(R.id.dialogContent);
+//                       CusButton dialogCancel = view.findViewById(R.id.dialogCancel);
+//                       CusButton dialogSure = view.findViewById(R.id.dialogSure);
+//                       //...
+//                    }
+//                });
             }
         });
         tabViewPager.setAdapter(new CusFragmentPagerAdapter(getChildFragmentManager(), CHANNELS, new CommentFragment(), new ShareFragment(), new CommentFragment()));
-        LogUtils.e("-----------tabViewPager:", tabViewPager);
         navigationTitle.setupWithViewPager(tabViewPager);
         navigationTitle.getTabAt(0).setCustomView(R.layout.red_hot);
 //        navigationTitle.getTabAt(0).getCustomView().setOnClickListener(new View.OnClickListener() {

@@ -5,11 +5,10 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.IntDef;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -214,12 +213,32 @@ public class CusToast extends Toast {
         fixView(context, LayoutInflater.from(BaseApplication.mApplication).inflate(R.layout.toast, null), resImg, txt, theme, gravity, anim, time, null);
     }
 
-    public static void fixView(Context context, int layout, int theme, int gravity, int anim, DialogView.DialogViewListener dialogViewListener) {
-        fixView(context, LayoutInflater.from(BaseApplication.mApplication).inflate(layout, null), -1, null, theme, gravity, anim, DEFAULT_DURATION, dialogViewListener);
+    public static void fixView(Context context, int layout) {
+        fixView(context, LayoutInflater.from(BaseApplication.mApplication).inflate(layout, null));
     }
 
-    public static void fixView(Context context, int layout, int theme, int gravity, int anim, int time, DialogView.DialogViewListener dialogViewListener) {
-        fixView(context, LayoutInflater.from(BaseApplication.mApplication).inflate(layout, null), -1, null, theme, gravity, anim, time, dialogViewListener);
+    public static void fixView(Context context, View view) {
+        fixView(context, view, R.style.DialogThemeAlpha);
+    }
+
+    public static void fixView(Context context, View view, int theme) {
+        fixView(context, view, theme, Gravity.BOTTOM);
+    }
+
+    public static void fixView(Context context, View view, int theme, int gravity) {
+        fixView(context, view, theme, gravity, R.style.bottomAnim);
+    }
+
+    public static void fixView(Context context, View view, int theme, int gravity, int anim) {
+        fixView(context, view, -1, null, theme, gravity, anim, DEFAULT_DURATION, null);
+    }
+
+    public static void fixView(Context context, View view, int theme, int gravity, int anim, DialogView.DialogViewListener dialogViewListener) {
+        fixView(context, view, -1, null, theme, gravity, anim, DEFAULT_DURATION, dialogViewListener);
+    }
+
+    public static void fixView(Context context, View view, int theme, int gravity, int anim, int time, DialogView.DialogViewListener dialogViewListener) {
+        fixView(context, view, -1, null, theme, gravity, anim, time, dialogViewListener);
     }
 
     public static void fixView(Context context, View view, final int resImg, final String txt, int theme, int gravity, int anim, int time, DialogView.DialogViewListener dialogViewListener) {
@@ -230,7 +249,9 @@ public class CusToast extends Toast {
                 if (resImg > 0) {
                     ((ImageView) view.findViewById(R.id.toastIcon)).setImageResource(resImg);
                 }
-                ((TextView) view.findViewById(R.id.toastTxt)).setText(txt);
+                if (!TextUtils.isEmpty(txt)) {
+                    ((TextView) view.findViewById(R.id.toastTxt)).setText(txt);
+                }
             }
         }).setOutsideClose(false).setGravity(gravity).setAnim(anim);
         mDialogView.show();
