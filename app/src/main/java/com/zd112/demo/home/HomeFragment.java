@@ -58,15 +58,6 @@ public class HomeFragment extends BaseFragment {
                     isTrue = true;
                 }
                 CusToast.fixView(getActivity(),R.layout.toast);
-//                loading(R.layout.default_dialog, new DialogView.DialogViewListener() {
-//                    @Override
-//                    public void onView(View view) {
-//                        TextView dialogContent = view.findViewById(R.id.dialogContent);
-//                       CusButton dialogCancel = view.findViewById(R.id.dialogCancel);
-//                       CusButton dialogSure = view.findViewById(R.id.dialogSure);
-//                       //...
-//                    }
-//                });
             }
         });
         tabViewPager.setAdapter(new CusFragmentPagerAdapter(getChildFragmentManager(), CHANNELS, new CommentFragment(), new ShareFragment(), new CommentFragment()));
