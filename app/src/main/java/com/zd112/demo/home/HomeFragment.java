@@ -21,6 +21,8 @@ import com.zd112.framework.utils.LogUtils
 import com.zd112.framework.utils.ViewUtils
 import com.zd112.framework.view.CusViewPager
 
+import java.util.ArrayList
+
 /**
  * @author jiangshide
  * @Created by Ender on 2018/8/28.
@@ -47,8 +49,11 @@ class HomeFragment : BaseFragment() {
     override fun onSuccess(info: NetInfo) {
         super.onSuccess(info)
         val homeData = info.getResponseObj<HomeData>()
-        val str = homeData.res.customerServiceTelnum
-        LogUtils.e("str:", str)
+        val bannerList = ArrayList<String>()
+        for (picList in homeData.res.picLists) {
+            bannerList.add(picList.picUrl)
+        }
+
     }
 
     override fun processLogic(savedInstanceState: Bundle) {
