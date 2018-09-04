@@ -12,6 +12,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
@@ -56,6 +57,15 @@ public class SystemUtils {
 
     public static final int notificationId = 0x123456;
     private static String appName;
+
+    public static boolean isDebug() {
+        try {
+            ApplicationInfo applicationInfo = BaseApplication.mApplication.getApplicationInfo();
+            return (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     /**
      * 获取当前应用程序名称

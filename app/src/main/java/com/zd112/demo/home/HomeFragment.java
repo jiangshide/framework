@@ -1,90 +1,86 @@
-package com.zd112.demo.home;
+package com.zd112.demo.home
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.support.design.widget.TabLayout
+import android.view.View
+import android.widget.Button
+import android.widget.PopupWindow
+import android.widget.TextView
 
-import com.zd112.demo.R;
-import com.zd112.demo.home.fragment.CommentFragment;
-import com.zd112.demo.home.fragment.ShareFragment;
-import com.zd112.framework.BaseFragment;
-import com.zd112.framework.annotation.Transformer;
-import com.zd112.framework.apdater.CusFragmentPagerAdapter;
-import com.zd112.framework.utils.ViewUtils;
-import com.zd112.framework.view.CusButton;
-import com.zd112.framework.view.CusToast;
-import com.zd112.framework.view.CusViewPager;
-import com.zd112.framework.view.DialogView;
+import com.zd112.demo.R
+import com.zd112.demo.home.data.HomeData
+import com.zd112.demo.home.fragment.CommentFragment
+import com.zd112.demo.home.fragment.ShareFragment
+import com.zd112.framework.BaseFragment
+import com.zd112.framework.anim.AnimUtils
+import com.zd112.framework.annotation.Transformer
+import com.zd112.framework.apdater.CusFragmentPagerAdapter
+import com.zd112.framework.net.helper.NetInfo
+import com.zd112.framework.utils.LogUtils
+import com.zd112.framework.utils.ViewUtils
+import com.zd112.framework.view.CusViewPager
 
 /**
  * @author jiangshide
  * @Created by Ender on 2018/8/28.
  * @Emal:18311271399@163.com
  */
-public class HomeFragment extends BaseFragment {
+class HomeFragment : BaseFragment() {
 
     @ViewUtils.ViewInject(R.id.testClick)
-    private Button testClick;
+    private val testClick: Button? = null
     @ViewUtils.ViewInject(R.id.navigationTitle)
-    private TabLayout navigationTitle;
+    private val navigationTitle: TabLayout? = null
     @ViewUtils.ViewInject(R.id.tabViewPager)
-    private CusViewPager tabViewPager;
+    private val tabViewPager: CusViewPager? = null
+    @ViewUtils.ViewInject(R.id.textTxt)
+    private val textTxt: TextView? = null
 
-    private boolean isTrue;
+    private var isTrue: Boolean = false
 
-    private TextView tv_tab_title;
-
-    private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "Test"};
-
-    @Override
-    protected void initView(Bundle savedInstanceState) {
-        setView(R.layout.home, this,true);
+    override fun initView(savedInstanceState: Bundle) {
+        setView(R.layout.home, this, true)
+        request("more/ind", HomeData::class.java, true)
     }
 
-    @Override
-    protected void processLogic(Bundle savedInstanceState) {
-        testClick.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("WrongConstant")
-            @Override
-            public void onClick(View v) {
-                if (isTrue) {
-                    tabViewPager.setMode(isTrue, Transformer.VERTICAL);
-                    isTrue = false;
-                } else {
-                    tabViewPager.setMode(isTrue, Transformer.ACCORDION);
-                    isTrue = true;
-                }
-                CusToast.fixView(getActivity(),R.layout.toast);
+    override fun onSuccess(info: NetInfo) {
+        super.onSuccess(info)
+        val homeData = info.getResponseObj<HomeData>()
+        val str = homeData.res.customerServiceTelnum
+        LogUtils.e("str:", str)
+    }
+
+    override fun processLogic(savedInstanceState: Bundle) {
+        testClick!!.setOnClickListener {
+            if (isTrue) {
+                tabViewPager!!.setMode(isTrue, Transformer.VERTICAL)
+                isTrue = false
+            } else {
+                tabViewPager!!.setMode(isTrue, Transformer.ACCORDION)
+                isTrue = true
             }
-        });
-        tabViewPager.setAdapter(new CusFragmentPagerAdapter(getChildFragmentManager(), CHANNELS, new CommentFragment(), new ShareFragment(), new CommentFragment()));
-        navigationTitle.setupWithViewPager(tabViewPager);
-        navigationTitle.getTabAt(0).setCustomView(R.layout.red_hot);
-//        navigationTitle.getTabAt(0).getCustomView().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ToastUtils.show(getActivity(), "sss");
-//                v.findViewById(R.id.iv_tab_red).setVisibility(View.GONE);
-//            }
-//        });
-        navigationTitle.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                CusToast.fixTxt(getActivity(), "tab:" + tab);
+            AnimUtils.anim2(textTxt)
+        }
+        tabViewPager!!.adapter = CusFragmentPagerAdapter(childFragmentManager, CHANNELS, CommentFragment(), ShareFragment(), CommentFragment())
+        navigationTitle!!.setupWithViewPager(tabViewPager)
+        navigationTitle.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                //                CusToast.fixTxt(getActivity(), "tab:" + tab);
             }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            override fun onTabUnselected(tab: TabLayout.Tab) {
 
             }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            override fun onTabReselected(tab: TabLayout.Tab) {
 
             }
-        });
+        })
+    }
+
+    companion object {
+
+        private val CHANNELS = arrayOf("CUPCAKE", "DONUT", "Test")
     }
 }

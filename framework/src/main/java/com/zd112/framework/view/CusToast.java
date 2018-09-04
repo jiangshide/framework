@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * @author jiangshide
  * @Created by Ender on 2018/9/3.
@@ -38,8 +41,10 @@ public class CusToast extends Toast {
         super(context);
     }
 
-    @IntDef({Toast.LENGTH_SHORT, Toast.LENGTH_LONG})
+    @IntDef({Duration.SHORT, Duration.LONG})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Duration {
+        int SHORT = 0, LONG = 1;
     }
 
     /**
@@ -96,7 +101,7 @@ public class CusToast extends Toast {
      * @param view 图片View
      */
     public static void view(View view) {
-        view(Gravity.CENTER, 10, 10, CusToast.LENGTH_LONG, view);
+        view(Gravity.CENTER, 10, 10, Duration.LONG, view);
     }
 
     /**
@@ -114,7 +119,7 @@ public class CusToast extends Toast {
      * @param view 图片View
      */
     public static void view(int gravity, View view) {
-        view(gravity, 10, 10, CusToast.LENGTH_LONG, view);
+        view(gravity, 10, 10, Duration.LONG, view);
     }
 
     /**
@@ -150,7 +155,7 @@ public class CusToast extends Toast {
      * @param view 图片View
      */
     public static void view(int gravity, int xOffset, int yOffset, View view) {
-        view(gravity, xOffset, yOffset, CusToast.LENGTH_LONG, view);
+        view(gravity, xOffset, yOffset, Duration.LONG, view);
     }
 
     /**
@@ -253,7 +258,7 @@ public class CusToast extends Toast {
                     ((TextView) view.findViewById(R.id.toastTxt)).setText(txt);
                 }
             }
-        }).setOutsideClose(false).setGravity(gravity).setAnim(anim);
+        }).setOutsideClose(true).setGravity(gravity).setAnim(anim);
         mDialogView.show();
         mHandler.postDelayed(new Runnable() {
             @Override

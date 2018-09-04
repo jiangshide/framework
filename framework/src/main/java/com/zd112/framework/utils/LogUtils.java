@@ -5,8 +5,6 @@ import android.os.Environment;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
-import com.zd112.framework.BuildConfig;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +58,7 @@ public class LogUtils {
     private static String defaultDir;// log默认存储目录
     private static String dir;       // log存储目录
 
-    private static boolean sLogSwitch = BuildConfig.DEBUG; // log总开关，默认开
+    private static boolean sLogSwitch = SystemUtils.isDebug(); // log总开关，默认开
     private static boolean sLog2ConsoleSwitch = true; // logcat是否打印，默认打印
     private static String sGlobalTag = null; // log标签
     private static boolean sTagIsSpace = true; // log标签是否为空白
