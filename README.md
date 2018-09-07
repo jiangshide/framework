@@ -26,7 +26,7 @@ Platfor |	Module | Status	|	Open Level
 ## 项目架构
     ![Image](https://github.com/jiangshide/framework/blob/master/img/android_frame.svg)
 ## 项目案例
-    ![Image](https://github.com/jiangshide/framework/blob/master/img/video.gif?raw=true)
+    ![image](https://github.com/jiangshide/framework/blob/master/img/video.gif)
 ### 1.UI模块(通用导航栏,通用加载刷新,通用对话实现,二维码相关,以及基础用到的view...)
 #### 1.1 通用导航栏
 ##### 1.1.1 底部通用导航栏实现:可滑动
