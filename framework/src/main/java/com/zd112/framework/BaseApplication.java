@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Call;
+import okhttp3.WebSocketListener;
 
 public abstract class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks, ResultInterceptor, ExceptionInterceptor {
     public static BaseApplication mApplication;
@@ -116,8 +117,6 @@ public abstract class BaseApplication extends Application implements Application
                 .setDownloadFileDir(BaseApplication.mApplication.getExternalCacheDir() + pkgName + "_download/").setRequestEncoding(Encoding.UTF_8).setResponseEncoding(Encoding.UTF_8)
 //                .setHttpsCertificate("xxx.cer")//设置全局https自定义证书
                 .addResultInterceptor(BaseApplication.mApplication).addExceptionInterceptor(BaseApplication.mApplication).setCookieJar(new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(BaseApplication.mApplication)));
-
-
         /**
          * 微信注册
          */

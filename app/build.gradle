@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.getkeepsafe.dexcount'
 def APP_ICON = "@mipmap/ic_launcher"
 def APP_ICON_ROUND = "@mipmap/ic_launcher_round"
 android {
@@ -39,7 +40,7 @@ android {
                 UMENG_APPKEY       : UMENG_APPKEY,
                 UMENG_CHANNEL_VALUE: CHANNEL,
                 JPUSH_PKGNAME      : applicationId,
-                JPUSH_KEY       : JPUSH_KEY,
+                JPUSH_KEY          : JPUSH_KEY,
                 JPUSH_CHANNEL      : "developer-default", //暂时填写默认值即可.
         ]
 
@@ -52,7 +53,7 @@ android {
             abi {
                 enable true
                 reset()
-                include 'x86', 'armeabi-v7a','x86_64'
+                include 'x86', 'armeabi-v7a', 'x86_64'
                 universalApk true
             }
         }
@@ -118,9 +119,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':framework')
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
-    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
     implementation 'com.amap.api:location:latest.integration'
     //定位
     implementation 'com.android.support:design:28.0.0-rc01'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 }

@@ -1,10 +1,12 @@
 package com.zd112.demo.home.fragment;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zd112.demo.R;
 import com.zd112.framework.BaseFragment;
+import com.zd112.framework.anim.AnimUtils;
 import com.zd112.framework.utils.ViewUtils;
 
 /**

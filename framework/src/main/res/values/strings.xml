@@ -38,4 +38,12 @@
     <string name="update_title">发现新版本:</string>
     <string name="updating">正在下载更新包:</string>
     <string name="update_down_tips">网络下下载更新吗!</string>
+
+    <string name="tips_not_wifi">You are currently using the mobile network, the player will continue to consume traffic</string>
+    <string name="tips_not_wifi_confirm">Resume</string>
+    <string name="tips_not_wifi_cancel">Stop play</string>
+    <string name="no_url">No url</string>
+    <string name="replay">Replay</string>
+    <string name="video_loading_faild">Video loading failed</string>
+    <string name="click_to_restart">Click to try again</string>
 </resources>

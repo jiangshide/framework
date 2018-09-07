@@ -9,4 +9,7 @@
     <dimen name="text_size_15">15sp</dimen>
     <dimen name="line">0.5dp</dimen>
     <dimen name="txt_normal_size">14sp</dimen>
+
+    <dimen name="start_button_w_h_normal">45dp</dimen>
+    <dimen name="start_button_w_h_fullscreen">62dp</dimen>
 </resources>

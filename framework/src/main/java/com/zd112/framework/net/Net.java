@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.zd112.framework.BaseApplication;
+import com.zd112.framework.BuildConfig;
 import com.zd112.framework.net.annotation.CacheType;
 import com.zd112.framework.net.annotation.Encoding;
 import com.zd112.framework.net.annotation.RequestType;
@@ -20,6 +21,7 @@ import com.zd112.framework.net.helper.HelperInfo;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.net.helper.OkHttpHelper;
 import com.zd112.framework.net.interfaces.NetInterface;
+import com.zd112.framework.net.interfaces.OnWebSocketListener;
 import com.zd112.framework.net.interfaces.interceptor.ExceptionInterceptor;
 import com.zd112.framework.net.interfaces.interceptor.ResultInterceptor;
 
@@ -36,6 +38,8 @@ import okhttp3.Cache;
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocketListener;
 
 import static com.zd112.framework.net.annotation.CacheType.FORCE_NETWORK;
 
@@ -856,6 +860,21 @@ public class Net implements NetInterface {
             return this;
         }
 
+        public Builder initWS(OnWebSocketListener onWebSocketListener) {
+            return this.initWS(onWebSocketListener, BuildConfig.WS);
+        }
+
+        public Builder initWS(OnWebSocketListener onWebSocketListener, String url) {
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .readTimeout(3, TimeUnit.SECONDS)//设置读取超时时间
+                    .writeTimeout(3, TimeUnit.SECONDS)//设置写的超时时间
+                    .connectTimeout(3, TimeUnit.SECONDS)//设置连接超时时间
+                    .build();
+            Request request = new Request.Builder().url("ws:" + url).build();
+            okHttpClient.newWebSocket(request, onWebSocketListener);
+            okHttpClient.dispatcher().executorService().shutdown();
+            return this;
+        }
     }
 
     private static String parseRequestTag(Object object) {

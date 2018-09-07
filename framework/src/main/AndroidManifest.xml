@@ -35,7 +35,9 @@
 
     <application
         android:allowBackup="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:alwaysRetainTaskState="true"
+        >
 
         <activity
             android:name=".WXEntryActivity"

@@ -184,8 +184,16 @@ public class BannerView extends RelativeLayout {
     }
 
 
+    public void setSource(String... urls) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (String url : urls) {
+            arrayList.add(url);
+        }
+        this.setSource(arrayList);
+    }
+
     //添加网络图片路径
-    public void setViewUrls(List<String> urls) {
+    public void setSource(List<String> urls) {
         setImageLoader(new GlideImageLoader());
         List<View> views = new ArrayList<>();
         mItemCount = urls.size();
@@ -202,7 +210,7 @@ public class BannerView extends RelativeLayout {
             views.add(getImageView(urls.get(0), 0));
             views.add(getImageView(urls.get(1), 1));
         } else {
-            for (int i = 0; i < urls.size(); i++) {
+            for (int i = 0; i < mItemCount; i++) {
                 views.add(getImageView(urls.get(i), i));
             }
         }
@@ -210,7 +218,7 @@ public class BannerView extends RelativeLayout {
     }
 
     //添加Res资源
-    public void setViewRes(int... resImgs) {
+    public void setSource(int... resImgs) {
         List<View> views = new ArrayList<>();
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         for (int i : resImgs) {

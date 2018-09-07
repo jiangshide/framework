@@ -190,10 +190,12 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     public void onSuccess(NetInfo info) {
         mBuilder = info.getBuild();
         cancelRefresh();
-        try {
-            mRefreshView.setNoMoreData(BaseApplication.mApplication.getJsonArrSize(new JSONObject(info.getRetDetail())) < info.getPageSize());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (info.getStatus() == RequestStatus.MORE) {
+            try {
+                mRefreshView.setNoMoreData(BaseApplication.mApplication.getJsonArrSize(new JSONObject(info.getRetDetail())) < info.getPageSize());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

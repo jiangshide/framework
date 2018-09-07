@@ -1,154 +1,161 @@
-package com.zd112.demo.home.data
+package com.zd112.demo.home.data;
 
-import com.google.gson.annotations.SerializedName
-import com.zd112.framework.data.BaseData
+import com.google.gson.annotations.SerializedName;
+import com.zd112.framework.data.BaseData;
 
-import java.io.Serializable
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author jiangshide
  * @Created by Ender on 2018/9/4.
  * @Emal:18311271399@163.com
  */
-class HomeData : BaseData() {
-    @SerializedName("body")
-    var res: Res? = null
+public class HomeData extends BaseData{
 
-    inner class Res : Serializable {
+    @SerializedName("body")
+    public Res res;
+
+    public class Res implements Serializable {
 
         @SerializedName("picList")
-        var picLists: List<PicList>? = null
+        public List<PicList> picLists;
         @SerializedName("ggList")
-        var ggLists: List<GgList>? = null
+        public List<GgList> ggLists;
         @SerializedName("itemList")
-        var itemList: Array<String>? = null
+        public String[] itemList;
         @SerializedName("profit")
-        var profit: Float = 0.toFloat()
+        public float profit;
         @SerializedName("totalDealMoney")
-        var totalDealMoney: Double = 0.toDouble()
+        public double totalDealMoney;
         @SerializedName("totalUser")
-        var totalUser: Int = 0
+        public int totalUser;
         @SerializedName("customerServiceTelnum")
-        var customerServiceTelnum: String? = null
+        public String customerServiceTelnum;
         @SerializedName("iteList")
-        var iteLists: List<IteList>? = null
+        public List<IteList> iteLists;
 
-        inner class PicList : Serializable {
+        public class PicList implements Serializable {
             @SerializedName("ppctPicPkMdl")
-            var ppctPicPkMdl: String? = null
+            public String ppctPicPkMdl;
             @SerializedName("createTime")
-            var createTime: Long = 0
+            public long createTime;
             @SerializedName("manageId")
-            var manageId: Int = 0
+            public int manageId;
             @SerializedName("picGoUrl")
-            var picGoUrl: String? = null
+            public String picGoUrl;
             @SerializedName("picId")
-            var picId: Int = 0
+            public int picId;
             @SerializedName("picPixel")
-            var picPixel: String? = null
+            public String picPixel;
             @SerializedName("picSize")
-            var picSize: Int = 0
+            public int picSize;
             @SerializedName("picTitle")
-            var picTitle: String? = null
+            public String picTitle;
             @SerializedName("picUrl")
-            var picUrl: String? = null
+            public String picUrl;
         }
 
-        inner class GgList : Serializable {
+        public class GgList implements Serializable {
             @SerializedName("pptArticlePkMdl")
-            var pptArticlePkMdl: String? = null
+            public String pptArticlePkMdl;
             @SerializedName("artBrowseCount")
-            var artBrowseCount: String? = null
+            public String artBrowseCount;
             @SerializedName("artContent")
-            var artContent: String? = null
+            public String artContent;
             @SerializedName("artCreatePerson")
-            var artCreatePerson: String? = null
+            public String artCreatePerson;
             @SerializedName("artCreateTime")
-            var artCreateTime: String? = null
+            public String artCreateTime;
             @SerializedName("artId")
-            var artId: Int = 0
+            public int artId;
             @SerializedName("artLevelTwo")
-            var artLevelTwo: String? = null
+            public String artLevelTwo;
             @SerializedName("artLevelTwoName")
-            var artLevelTwoName: String? = null
+            public String artLevelTwoName;
             @SerializedName("artLevelTwoFdName")
-            var artLevelTwoFdName: String? = null
+            public String artLevelTwoFdName;
             @SerializedName("artLock")
-            var artLock: String? = null
+            public String artLock;
             @SerializedName("artModifyPerson")
-            var artModifyPerson: String? = null
+            public String artModifyPerson;
             @SerializedName("artModifyTime")
-            var artModifyTime: String? = null
+            public String artModifyTime;
             @SerializedName("artSort")
-            var artSort: String? = null
+            public String artSort;
             @SerializedName("artSource")
-            var artSource: String? = null
+            public String artSource;
             @SerializedName("artTitle")
-            var artTitle: String? = null
+            public String artTitle;
             @SerializedName("coluId")
-            var coluId: Int = 0
+            public int coluId;
             @SerializedName("coluIdName")
-            var coluIdName: String? = null
+            public String coluIdName;
             @SerializedName("artUrl")
-            var artUrl: String? = null
+            public String artUrl;
             @SerializedName("artImgUrl")
-            var artImgUrl: String? = null
+            public String artImgUrl;
         }
 
-        inner class IteList : Serializable {
+        public class IteList implements Serializable {
             @SerializedName("iteId")
-            var iteId: Int = 0
+            public int iteId;
             @SerializedName("iteType")
-            var iteType: Int = 0
+            public int iteType;
             @SerializedName("iteTypeName")
-            var iteTypeName: String? = null
+            public String iteTypeName;
             @SerializedName("title")
-            var title: String? = null
+            public String title;
             @SerializedName("yearRate")
-            var yearRate: Double = 0.toDouble()
+            public double yearRate;
             @SerializedName("repayDate")
-            var repayDate: Int = 0
+            public int repayDate;
             @SerializedName("repayInterval")
-            var repayInterval: String? = null
+            public String repayInterval;
             @SerializedName("repayIntervalName")
-            var repayIntervalName: String? = null
+            public String repayIntervalName;
             @SerializedName("repayType")
-            var repayType: Int = 0
+            public int repayType;
             @SerializedName("repayTypeName")
-            var repayTypeName: String? = null
+            public String repayTypeName;
             @SerializedName("remainMoney")
-            var remainMoney: Long = 0
+            public long remainMoney;
             @SerializedName("remainMoneyYuan")
-            var remainMoneyYuan: String? = null
+            public String remainMoneyYuan;
             @SerializedName("progress")
-            var progress: Float = 0.toFloat()
+            public float progress;
             @SerializedName("isNewItem")
-            var isNewItem: Int = 0
+            public int isNewItem;
             @SerializedName("state")
-            var state: String? = null
+            public String state;
             @SerializedName("stateName")
-            var stateName: String? = null
+            public String stateName;
             @SerializedName("amount")
-            var amount: Long = 0
+            public long amount;
             @SerializedName("amountYuan")
-            var amountYuan: String? = null
+            public String amountYuan;
             @SerializedName("safeguardType")
-            var safeguardType: Int = 0
+            public int safeguardType;
             @SerializedName("safeguardTypeName")
-            var safeguardTypeName: String? = null
+            public String safeguardTypeName;
             @SerializedName("borrowLevelName")
-            var borrowLevelName: String? = null
+            public String borrowLevelName;
             @SerializedName("safeguardList")
-            var safeguardList: List<SafeguardList>? = null
+            public List<SafeguardList> safeguardList;
 
-            inner class SafeguardList : Serializable {
+            public class SafeguardList implements Serializable {
                 @SerializedName("iteId")
-                var iteId: Int = 0
+                public int iteId;
                 @SerializedName("type")
-                var type: Int = 0
+                public int type;
                 @SerializedName("typeName")
-                var typeName: String? = null
+                public String typeName;
             }
         }
     }
+
+
+    public String name;
+    public String url;
+    public String thumb;
 }

@@ -78,7 +78,6 @@ public class CusViewPager extends ViewPager implements ViewPager.PageTransformer
         this.mIsVertical = isVertical;
         this.mMode = mode;
         try {
-            LogUtils.e("----------mode:", mode);
             setPageTransformer(reverseDrawingOrder, mode < 0 ? this : (PageTransformer) mTransformClass[mMode].newInstance());
         } catch (IllegalAccessException e) {
             e.printStackTrace();

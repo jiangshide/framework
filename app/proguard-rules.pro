@@ -93,3 +93,5 @@
   public *;
 }
 ############--->webview end<----###########
+
+-keep class android.support.design.widget.TabLayout{*;}
