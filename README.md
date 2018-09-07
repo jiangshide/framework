@@ -25,7 +25,7 @@ Platfor |	Module | Status	|	Open Level
 打造最简单与最全的客户端移动基础框架,兼容所有原生接口(本身是基于原生开发:同步原生接口兼容实现),让开发者使用最少的代码去最大化的实现项目需求,应变各种紧急项目快速输出
 ## 项目架构
    ![Image](https://github.com/jiangshide/framework/blob/master/img/android_frame.svg)
-## 项目案例
+## 项目案例 [基于kotlin应用集成](https://github.com/jiangshide/Smallloan)
    ![image](https://github.com/jiangshide/framework/blob/master/img/video.gif)
 ### 1.UI模块(通用导航栏,通用加载刷新,通用对话实现,二维码相关,以及基础用到的view...)
 #### 1.1 通用导航栏
