@@ -171,10 +171,10 @@ Platfor |	Module | Status	|	Open Level
             }
         }
 ```        
-2.在你项目工程app所在目录下build.gradle中添加:implementation 'com.github.jiangshide:framework:1.0.1'
+2.在你项目工程app所在目录下build.gradle中添加:implementation 'com.github.jiangshide:framework:1.0.5'
 ```Gradle
         dependencies {
-            implementation 'com.github.jiangshide:framework:1.0.2'//当前需要添加的
+            implementation 'com.github.jiangshide:framework:1.0.5'//当前需要添加的
         }
 ```        
 ### 3.拷贝demo中gradle.properties文件覆盖自己项目中的gradle.properties,需要注意:
