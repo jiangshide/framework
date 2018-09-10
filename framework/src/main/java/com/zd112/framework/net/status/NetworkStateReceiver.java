@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.SystemUtils;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     private static BroadcastReceiver broadcastReceiver;
     private static ArrayList<NetworkStateListener> networkStateListenerList = new ArrayList<NetworkStateListener>();
     private final static String ANDROID_NET_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+    private final static String ANDROID_NET_CHANGE_ACTION_SUPL = "android.net.conn.CONNECTIVITY_CHANGE_SUPL";
     private static LinkedList<NetInfo> list = new LinkedList<>();
 
 
@@ -42,12 +42,11 @@ public class NetworkStateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogUtils.e("------------net~status!");
         if (broadcastReceiver == null)
             broadcastReceiver = NetworkStateReceiver.this;
         if (intent.getAction() == null)
             return;
-        if (intent.getAction().equalsIgnoreCase(ANDROID_NET_CHANGE_ACTION)) {
+        if (intent.getAction().equalsIgnoreCase(SystemUtils.getSDKVersion() < 24 ? ANDROID_NET_CHANGE_ACTION : ANDROID_NET_CHANGE_ACTION_SUPL)) {
             boolean isNetworkAvailable = SystemUtils.isNetworkAvailable(context);
             String networkType = SystemUtils.getNetworkType(context);
             NetInfo netInfo = new NetInfo(isNetworkAvailable, networkType);
@@ -100,7 +99,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
      */
     public static void registerNetworkStateReceiver(Context context) {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ANDROID_NET_CHANGE_ACTION);
+        filter.addAction(SystemUtils.getSDKVersion() < 24 ? ANDROID_NET_CHANGE_ACTION : ANDROID_NET_CHANGE_ACTION_SUPL);
         context.getApplicationContext().registerReceiver(getBroadcastReceiver(), filter);
     }
 

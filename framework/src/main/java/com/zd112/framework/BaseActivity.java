@@ -100,7 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         }
         setContentView(mView);
         ViewUtils.inject(object, mView);
-        SystemUtils.setNoStatusBarFullMode(this, false);
+        SystemUtils.setNoStatusBarFullMode(this, true);
     }
 
     public int getResColor(int resColor) {

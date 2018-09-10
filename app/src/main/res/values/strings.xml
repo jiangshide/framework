@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">demo</string>
+    <string name="jump">跳过</string>
+    <string name="experience">立即体验</string>
+    <string name="regOrLogin">注册/登录</string>
 </resources>

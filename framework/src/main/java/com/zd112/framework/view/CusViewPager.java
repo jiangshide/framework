@@ -109,6 +109,7 @@ public class CusViewPager extends ViewPager implements ViewPager.PageTransformer
         for (int resImg : resImgs) {
             ImageView imageView = new ImageView(getContext());
             imageView.setImageResource(resImg);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
             views.add(imageView);
         }

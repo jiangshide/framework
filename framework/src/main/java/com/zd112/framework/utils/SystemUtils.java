@@ -359,6 +359,12 @@ public class SystemUtils {
     }
 
 
+    public static void sendSMS(Context context, String mobile, String content) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add(mobile);
+        sendGroupSMS(context, arrayList, content);
+    }
+
     /**
      * 调用系统群发短信
      *
@@ -378,7 +384,7 @@ public class SystemUtils {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.putExtra("address", stringBuilder.toString());
         intent.putExtra("sms_body", content);
-        intent.setType("vnd.android-dir/mms-sms");
+//        intent.setType("vnd.android-dir/mms-sms");
         context.startActivity(intent);
 
     }

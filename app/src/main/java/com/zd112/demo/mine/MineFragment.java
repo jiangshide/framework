@@ -40,24 +40,24 @@ public class MineFragment extends BaseFragment {
                 android.R.color.holo_red_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light};
-//        request("more/ind", HomeData.class, true);
+        request("more/ind", HomeData.class, true);
     }
 
     @Override
     public void onSuccess(NetInfo info) {
         super.onSuccess(info);
         LogUtils.e("------info:",info.getRetDetail());
-//        HomeData homeData = info.getResponseObj();
-//        List<String> bannerUrls = new ArrayList<>();
-//        for (HomeData.Res.PicList picList : homeData.res.picLists) {
-//            bannerUrls.add(picList.picUrl);
-//        }
-//        mineCoordinatorLayout.setTranslucentStatusBar(getActivity())
-//                .setTitle("Demo")
-//                .setBackEnable(true)
-////                .setContentScrimColorArray(mColorArray)
-//                .setBanner(bannerUrls)
-//                .setupWithViewPager(mineViewPager);
+        HomeData homeData = info.getResponseObj();
+        List<String> bannerUrls = new ArrayList<>();
+        for (HomeData.Res.PicList picList : homeData.res.picLists) {
+            bannerUrls.add(picList.picUrl);
+        }
+        mineCoordinatorLayout.setTranslucentStatusBar(getActivity())
+                .setTitle("Demo")
+                .setBackEnable(true)
+//                .setContentScrimColorArray(mColorArray)
+                .setBanner(bannerUrls)
+                .setupWithViewPager(mineViewPager);
     }
 
     @Override

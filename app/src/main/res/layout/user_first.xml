@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.zd112.framework.view.CusViewPager
+        android:id="@+id/firstFirstView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.zd112.framework.view.CusButton
+        android:id="@+id/userFirstJump"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:text="@string/jump"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:corner="360dp"
+        app:normal_color="@color/font_gray"
+        app:press_color="@color/colorPrimary"
+        app:stroke="0dp"
+        app:stroke_color="@color/colorPrimary" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp"
+        android:background="@null">
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/userFirstExperience"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:text="@string/experience"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:corner="360dp"
+            app:normal_color="@color/font_grey"
+            app:press_color="@color/colorPrimary"
+            app:stroke="2dp"
+            app:stroke_color="@color/colorPrimary" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/userFirstGoLogin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:text="@string/regOrLogin"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:corner="360dp"
+            app:normal_color="@color/colorPrimary"
+            app:press_color="@color/colorPrimary"
+            app:stroke="1dp"
+            app:stroke_color="@color/colorPrimary" />
+    </LinearLayout>
+</FrameLayout>
