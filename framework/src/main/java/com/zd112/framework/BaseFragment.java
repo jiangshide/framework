@@ -55,21 +55,39 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     }
 
     protected RefreshView setView(@LayoutRes int layout, Object object) {
-        setView(layout, object, false);
-        return mRefreshView;
+        return setView(layout, object, false, -1);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, int statusBarHeight) {
+        return setView(layout, object, false, statusBarHeight);
     }
 
     protected RefreshView setView(@LayoutRes int layout, Object object, boolean isRefresh) {
+        return setView(LayoutInflater.from(getActivity()).inflate(layout, null), object, isRefresh, -1);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, boolean isRefresh, int statusBarHeight) {
+        return setView(LayoutInflater.from(getActivity()).inflate(layout, null), object, isRefresh, statusBarHeight);
+    }
+
+    protected RefreshView setView(View view, Object object) {
+        return setView(view, object, false, -1);
+    }
+
+    protected RefreshView setView(View view, Object object, int statusBarHeight) {
+        return setView(view, object, false, statusBarHeight);
+    }
+
+    protected RefreshView setView(View view, Object object, boolean isRefresh, int statusBarHeight) {
         if (isRefresh) {
-            mRefreshView = new RefreshView(getContext());
-            mRefreshView.setOnRefreshListener(this);
-            mRefreshView.setOnLoadMoreListener(this);
-            mRefreshView.addView(LayoutInflater.from(getContext()).inflate(layout, null));
+            mRefreshView = new RefreshView(getActivity()).setOnRefreshListener(this).setOnLoadMoreListener(this);
+            mRefreshView.addView(view);
             mView = mRefreshView;
         } else {
-            mView = LayoutInflater.from(getContext()).inflate(layout, null);
+            mView = view;
         }
         ViewUtils.inject(object, mView);
+        SystemUtils.setNoStatusBarFullMode(getActivity(), statusBarHeight > 0);
         return mRefreshView;
     }
 

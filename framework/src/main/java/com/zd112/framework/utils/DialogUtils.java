@@ -9,6 +9,7 @@ public class DialogUtils {
 
     private Context mContext;
     private boolean mIsFull = true;
+    protected DialogView mDialogView;
 
     public DialogUtils(Context context) {
         this.mContext = context;
@@ -19,7 +20,12 @@ public class DialogUtils {
         this.mIsFull = isFull;
     }
 
-    protected DialogView mDialogView;
+    public DialogView loading() {
+        cancelLoading();
+        mDialogView = new DialogView(mContext, R.style.DialogTheme).setOutsideClose(false);
+        mDialogView.show();
+        return mDialogView;
+    }
 
     public DialogView loading(String msg) {
         cancelLoading();

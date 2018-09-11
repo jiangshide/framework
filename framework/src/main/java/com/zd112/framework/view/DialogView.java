@@ -196,12 +196,15 @@ public class DialogView extends Dialog {
         return this;
     }
 
-    public interface DialogViewListener {
+    public interface DialogViewListener extends DialogListener{
         void onView(View view);
     }
 
-    public interface DialogOnClickListener {
+    public interface DialogOnClickListener extends DialogListener{
         void onDialogClick(boolean isCancel);
+    }
+
+    public interface DialogListener{
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.zd112.framework;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -33,8 +34,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
-public abstract class BaseActivity extends AppCompatActivity implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener {
+public abstract class BaseActivity extends AppCompatActivity implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener, DialogView.DialogOnClickListener {
 
     protected FragmentManager mFragmentManager;
     protected View mView;
@@ -44,6 +46,8 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     private NetInfo.Builder mBuilder;
     private Fragment[] mFragments;
     protected int mTabIndex;
+    private DialogView.DialogListener mDialogListener;
+    private int mExitView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,25 +78,57 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     }
 
     protected RefreshView setView(@LayoutRes int layout, Object object) {
-        setView(layout, object, false);
-        return mRefreshView;
+        return setView(layout, object, false, -1, null);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, DialogView.DialogListener dialogListener) {
+        return setView(layout, object, false, -1, dialogListener);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, int statusBarHeight) {
+        return setView(layout, object, false, statusBarHeight, null);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, int statusBarHeight, DialogView.DialogListener dialogListener) {
+        return setView(layout, object, false, statusBarHeight, dialogListener);
     }
 
     protected RefreshView setView(@LayoutRes int layout, Object object, boolean isRefresh) {
-        setView(LayoutInflater.from(this).inflate(layout, null), object, isRefresh);
-        return mRefreshView;
+        return setView(LayoutInflater.from(this).inflate(layout, null), object, isRefresh, -1, null);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, boolean isRefresh, DialogView.DialogListener dialogListener) {
+        return setView(LayoutInflater.from(this).inflate(layout, null), object, isRefresh, -1, dialogListener);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, boolean isRefresh, int statusBarHeight) {
+        return setView(LayoutInflater.from(this).inflate(layout, null), object, isRefresh, statusBarHeight, null);
+    }
+
+    protected RefreshView setView(@LayoutRes int layout, Object object, boolean isRefresh, int statusBarHeight, DialogView.DialogListener dialogListener) {
+        return setView(LayoutInflater.from(this).inflate(layout, null), object, isRefresh, statusBarHeight, dialogListener);
     }
 
     protected RefreshView setView(View view, Object object) {
-        setView(view, object, false);
-        return mRefreshView;
+        return setView(view, object, false, -1, null);
     }
 
-    protected void setView(View view, Object object, boolean isRefresh) {
-        mRefreshView = new RefreshView(this);
+    protected RefreshView setView(View view, Object object, DialogView.DialogListener dialogListener) {
+        return setView(view, object, false, -1, dialogListener);
+    }
+
+    protected RefreshView setView(View view, Object object, int statusBarHeight) {
+        return setView(view, object, false, statusBarHeight, null);
+    }
+
+    protected RefreshView setView(View view, Object object, int statusBarHeight, DialogView.DialogListener dialogListener) {
+        return setView(view, object, false, statusBarHeight, dialogListener);
+    }
+
+    protected RefreshView setView(View view, Object object, boolean isRefresh, int statusBarHeight, DialogView.DialogListener dialogListener) {
+        this.mDialogListener = dialogListener;
         if (isRefresh) {
-            mRefreshView.setOnRefreshListener(this);
-            mRefreshView.setOnLoadMoreListener(this);
+            mRefreshView = new RefreshView(this).setOnRefreshListener(this).setOnLoadMoreListener(this);
             mRefreshView.addView(view);
             mView = mRefreshView;
         } else {
@@ -100,7 +136,12 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         }
         setContentView(mView);
         ViewUtils.inject(object, mView);
-        SystemUtils.setNoStatusBarFullMode(this, true);
+        SystemUtils.setNoStatusBarFullMode(this, statusBarHeight > 0);
+        return mRefreshView;
+    }
+
+    public void setExitView(int view) {
+        this.mExitView = view;
     }
 
     public int getResColor(int resColor) {
@@ -308,14 +349,23 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     }
 
     @Override
+    public void onDialogClick(boolean isCancel) {
+        if (!isCancel) {
+            BaseActivity.super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onBackPressed() {
-        new DialogView(this, R.style.DialogTheme).setOutsideClose(false).setListener(new DialogView.DialogOnClickListener() {
-            @Override
-            public void onDialogClick(boolean isCancel) {
-                if (!isCancel) {
-                    BaseActivity.super.onBackPressed();
-                }
+        List<Activity> activityList = SystemUtils.getActivities();
+        if (activityList != null && activityList.size() <= 1) {
+            if (mExitView != 0 && null != mDialogListener) {
+                BaseApplication.mApplication.loading(this, mExitView, (DialogView.DialogViewListener) mDialogListener);
+            } else {
+                BaseApplication.mApplication.loading(this).setListener((null != mDialogListener && mDialogListener instanceof DialogView.DialogOnClickListener) ? (DialogView.DialogOnClickListener) mDialogListener : this);
             }
-        }).show();
+            return;
+        }
+        super.onBackPressed();
     }
 }

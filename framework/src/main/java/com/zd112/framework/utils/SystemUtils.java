@@ -595,13 +595,13 @@ public class SystemUtils {
      *
      * @return
      */
-    public static List<Activity> getActivities(Context context) {
+    public static List<Activity> getActivities() {
         List<Activity> list = new ArrayList<>();
         try {
             Class<Application> applicationClass = Application.class;
             Field mLoadedApkField = applicationClass.getDeclaredField("mLoadedApk");
             mLoadedApkField.setAccessible(true);
-            Object mLoadedApk = mLoadedApkField.get(context);
+            Object mLoadedApk = mLoadedApkField.get(BaseApplication.mApplication);
             Class<?> mLoadedApkClass = mLoadedApk.getClass();
             Field mActivityThreadField = mLoadedApkClass.getDeclaredField("mActivityThread");
             mActivityThreadField.setAccessible(true);

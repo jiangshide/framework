@@ -51,7 +51,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Call;
-import okhttp3.WebSocketListener;
 
 public abstract class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks, ResultInterceptor, ExceptionInterceptor {
     public static BaseApplication mApplication;
@@ -80,8 +79,16 @@ public abstract class BaseApplication extends Application implements Application
         mActivityList.clear();
     }
 
+    public void cleanJump() {
+        this.cleanJump(null);
+    }
+
+    public void cleanJump(Class _class) {
+        this.cleanJump(_class, -1);
+    }
+
     public void cleanJump(Class _class, int toSource) {
-        List<Activity> activitys = SystemUtils.getActivities(this);
+        List<Activity> activitys = SystemUtils.getActivities();
         if (activitys == null) return;
         for (Activity activity : activitys) {
             activity.finish();
@@ -154,6 +161,11 @@ public abstract class BaseApplication extends Application implements Application
         return header;
     }
 
+    public DialogView loading(Context context) {
+        cancelLoading();
+        return (mDialogUtils = new DialogUtils(context)).loading();
+    }
+
     public DialogView loading(Context context, String msg) {
         cancelLoading();
         return (mDialogUtils = new DialogUtils(context)).loading(msg);
@@ -217,7 +229,6 @@ public abstract class BaseApplication extends Application implements Application
         mNetBuilder.build().doAsync(builder.build(), new Callback() {
             @Override
             public void onSuccess(NetInfo info) throws IOException {
-                LogUtils.e("----------pageSize:", info.getPageSize());
                 info.getBuild().setPageSize(info.getPageSize());
                 if (info.getStatus() == RequestStatus.MORE) {
                     info.getBuild().setPage(info.getPage() + 1);
