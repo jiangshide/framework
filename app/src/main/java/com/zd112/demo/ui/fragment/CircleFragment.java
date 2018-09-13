@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.zd112.demo.R;
@@ -18,6 +17,7 @@ import com.zd112.framework.utils.ShareUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.CusButton;
 import com.zd112.framework.view.CusToast;
+import com.zd112.framework.view.DialogView;
 import com.zd112.framework.view.TagView;
 
 import java.util.Random;
@@ -27,7 +27,7 @@ import java.util.Random;
  * @Created by Ender on 2018/8/28.
  * @Emal:18311271399@163.com
  */
-public class CircleFragment extends BaseFragment {
+public class CircleFragment extends BaseFragment implements DialogView.DialogViewListener {
 
     @ViewUtils.ViewInject(R.id.shareContactBbtn)
     private CusButton shareContactBbtn;
@@ -37,6 +37,12 @@ public class CircleFragment extends BaseFragment {
     private CusButton toastTipsBtn;
     @ViewUtils.ViewInject(R.id.dialogTipsBtn)
     private CusButton dialogTipsBtn;
+    @ViewUtils.ViewInject(R.id.dialogBtn)
+    private CusButton dialogBtn;
+    @ViewUtils.ViewInject(R.id.dialogLoadingBtn)
+    private CusButton dialogLoadingBtn;
+    @ViewUtils.ViewInject(R.id.dialogCusViewBtn)
+    private CusButton dialogCusViewBtn;
     @ViewUtils.ViewInject(R.id.tagViewBtn)
     private CusButton tagViewBtn;
     @ViewUtils.ViewInject(R.id.tagView)
@@ -65,6 +71,9 @@ public class CircleFragment extends BaseFragment {
         tagViewBtn.setOnClickListener(this);
         dialogTipsBtn.setOnClickListener(this);
         toastTipsBtn.setOnClickListener(this);
+        dialogBtn.setOnClickListener(this);
+        dialogLoadingBtn.setOnClickListener(this);
+        dialogCusViewBtn.setOnClickListener(this);
         shareContactBbtn.setOnClickListener(this);
         shareFriendCircleBtn.setOnClickListener(this);
     }
@@ -89,6 +98,18 @@ public class CircleFragment extends BaseFragment {
                 break;
             case R.id.dialogTipsBtn:
                 CusToast.fixTxt(getActivity(), "this is the toast!");
+                break;
+            case R.id.dialogLoadingBtn:
+                new DialogView(getActivity(), R.style.DialogTheme, R.layout.default_loading).setOutsideClose(false).show();
+                break;
+            case R.id.dialogBtn:
+                loading("this is the dialog!");
+                break;
+            case R.id.dialogCusViewBtn:
+                loading(R.layout.default_dialog, this);
+                break;
+            case R.id.dialogSure:
+                cancelLoading();
                 break;
             case R.id.tagViewBtn:
                 mTagView.setPadding(10, 10, 10, 10);
@@ -124,5 +145,10 @@ public class CircleFragment extends BaseFragment {
                 ShareUtils.shareWeixin(scene, pageUrl, title, content, bitmap);
             }
         }).start();
+    }
+
+    @Override
+    public void onView(View view) {
+        view.findViewById(R.id.dialogSure).setOnClickListener(this);
     }
 }

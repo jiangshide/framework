@@ -207,7 +207,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     @Override
     public void onSuccess(NetInfo info) {
         mBuilder = info.getBuild();
-        cancelRefresh();
+        cancelLoading();
         if (info.getStatus() == RequestStatus.MORE) {
             try {
                 mRefreshView.setNoMoreData(BaseApplication.mApplication.getJsonArrSize(new JSONObject(info.getRetDetail())) < info.getPageSize());
@@ -220,14 +220,15 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     @Override
     public void onFailure(NetInfo info) {
         mBuilder = info.getBuild();
-        cancelRefresh();
+        cancelLoading();
     }
 
-    private void cancelRefresh() {
-        if (mRefreshView != null) {
+    protected void cancelLoading() {
+        if (null != mRefreshView) {
             mRefreshView.finishRefresh();
             mRefreshView.finishLoadMore();
         }
+        ((BaseApplication) getActivity().getApplication()).cancelLoading();
     }
 
     @Override
@@ -238,7 +239,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
         if (null != mBuilder) {
             BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.REFRESH), this, false);
         } else {
-            cancelRefresh();
+            cancelLoading();
         }
     }
 
@@ -247,7 +248,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
         if (null != mBuilder) {
             BaseApplication.mApplication.request(getActivity(), mBuilder.setStatus(RequestStatus.MORE), this, false);
         } else {
-            cancelRefresh();
+            cancelLoading();
         }
     }
 

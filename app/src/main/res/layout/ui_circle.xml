@@ -64,6 +64,48 @@
             app:press_color="@color/line" />
 
         <com.zd112.framework.view.CusButton
+            android:id="@+id/dialogBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="对话提示"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:normal_color="#025FCB"
+            app:press_color="@color/red"
+            app:stroke="1dp"
+            app:stroke_color="#9B9B9B" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/dialogLoadingBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="自定义loading"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:normal_color="#025FCB"
+            app:press_color="@color/red"
+            app:stroke="1dp"
+            app:stroke_color="#9B9B9B" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/dialogCusViewBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="自定义对话框UI"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:normal_color="#025FCB"
+            app:press_color="@color/red"
+            app:stroke="1dp"
+            app:stroke_color="#9B9B9B" />
+
+        <com.zd112.framework.view.CusButton
             android:id="@+id/tagViewBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -40,8 +40,7 @@ public class NetActivity extends BaseActivity {
     }
 
     public void fixUrlBtn(View view) {
-//        request("more/ind", HomeData.class, true);
-        new DialogView(this, com.zd112.framework.R.style.DialogTheme, R.layout.default_loading).setOutsideClose(false).show();
+        request("https://api.etongdai.com/service/more/ind ", HomeData.class, true);
     }
 
     @Override

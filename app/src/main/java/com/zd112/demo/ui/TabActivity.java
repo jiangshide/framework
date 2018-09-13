@@ -25,5 +25,8 @@ public class TabActivity extends BaseActivity {
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         mNavigationBar.showView(mTabIndex);
+//        mNavigationBar.showDot(0, 2, true);
+//        mNavigationBar.showDot(1, 20, true);
+//        mNavigationBar.showDot(3, 1000, true);
     }
 }

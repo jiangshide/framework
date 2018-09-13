@@ -248,7 +248,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     @Override
     public void onSuccess(NetInfo info) {
         mBuilder = info.getBuild();
-        cancelRefresh();
+        cancelLoading();
         if (info.getStatus() == RequestStatus.MORE) {
             try {
                 mRefreshView.setNoMoreData(BaseApplication.mApplication.getJsonArrSize(new JSONObject(info.getRetDetail())) < info.getPageSize());
@@ -260,15 +260,16 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     @Override
     public void onFailure(NetInfo info) {
-        cancelRefresh();
+        cancelLoading();
         mBuilder = info.getBuild();
     }
 
-    private void cancelRefresh() {
+    protected void cancelLoading() {
         if (null != mRefreshView) {
             mRefreshView.finishRefresh();
             mRefreshView.finishLoadMore();
         }
+        ((BaseApplication) getApplication()).cancelLoading();
     }
 
     @Override
@@ -279,7 +280,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         if (null != mBuilder) {
             BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.REFRESH), this, false);
         } else {
-            cancelRefresh();
+            cancelLoading();
         }
     }
 
@@ -288,7 +289,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
         if (null != mBuilder) {
             BaseApplication.mApplication.request(this, mBuilder.setStatus(RequestStatus.MORE), this, false);
         } else {
-            cancelRefresh();
+            cancelLoading();
         }
     }
 

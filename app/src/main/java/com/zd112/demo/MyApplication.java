@@ -1,21 +1,16 @@
 package com.zd112.demo;
 
 import android.content.Context;
-import android.location.Location;
-import android.os.HandlerThread;
 
-import com.amap.api.location.AMapLocation;
-import com.zd112.demo.utils.LocationUtils;
 import com.zd112.framework.BaseApplication;
 import com.zd112.framework.data.BaseData;
-import com.zd112.framework.utils.LogUtils;
 
 public class MyApplication extends BaseApplication {
 
 
     @Override
     public void newGlobalError(Context context, BaseData baseData) {
-
+        loading(context, baseData.msg);
     }
 
     @Override
