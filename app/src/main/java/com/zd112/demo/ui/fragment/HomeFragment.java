@@ -1,4 +1,4 @@
-package com.zd112.demo.ui.fragment.home;
+package com.zd112.demo.ui.fragment;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,15 +8,15 @@ import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 import com.zd112.demo.R;
-import com.zd112.demo.ui.fragment.home.data.HomeData;
+import com.zd112.demo.data.HomeData;
 import com.zd112.demo.utils.Constant;
 import com.zd112.framework.BaseFragment;
 import com.zd112.framework.apdater.CommAdapter;
 import com.zd112.framework.net.helper.NetInfo;
-import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.BannerView;
+import com.zd112.framework.view.CusListView;
 import com.zd112.framework.view.CusToast;
 import com.zd112.framework.view.player.media.VideoPlayer;
 import com.zd112.framework.view.player.media.VideoPlayerNormal;
@@ -33,14 +33,13 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
     @ViewUtils.ViewInject(R.id.homeBanner)
     private BannerView mHomeBanner;
     @ViewUtils.ViewInject(R.id.homeList)
-    private ListView homeList;
+    private CusListView homeList;
 
     private CommAdapter<HomeData> circleListDataCommAdapter;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        setView(R.layout.home, this, true);
-        SystemUtils.setNoStatusBarFullMode(getActivity(), true);
+        setView(R.layout.ui_home, this, true);
         request("more/ind", HomeData.class, true);
     }
 
@@ -63,7 +62,7 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        homeList.setAdapter(circleListDataCommAdapter = new CommAdapter<HomeData>(getActivity(), getTempData(), R.layout.home_list_item) {
+        homeList.setAdapter(circleListDataCommAdapter = new CommAdapter<HomeData>(getActivity(), getTempData(), R.layout.ui_home_list_item) {
             @Override
             protected void convertView(int position, View item, HomeData circleListData) {
                 VideoPlayerNormal circleListViewItemVideo = get(item, R.id.circleListViewItemVideo);
@@ -89,7 +88,6 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
     @Override
     public void onSuccess(NetInfo info) {
         super.onSuccess(info);
-        LogUtils.e("---info:", info.getRetDetail());
         HomeData homeData = info.getResponseObj();
         circleListDataCommAdapter.addList(getTempData(), info.getStatus());
         ArrayList<String> bannerUrls = new ArrayList<>();

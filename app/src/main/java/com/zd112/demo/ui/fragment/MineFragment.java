@@ -1,15 +1,12 @@
-package com.zd112.demo.ui.fragment.mine;
+package com.zd112.demo.ui.fragment;
 
 import android.os.Bundle;
 
 import com.zd112.demo.R;
-import com.zd112.demo.ui.fragment.home.data.HomeData;
-import com.zd112.demo.ui.fragment.home.fragment.CommentFragment;
-import com.zd112.demo.ui.fragment.home.fragment.ShareFragment;
+import com.zd112.demo.data.HomeData;
 import com.zd112.framework.BaseFragment;
 import com.zd112.framework.apdater.CusFragmentPagerAdapter;
 import com.zd112.framework.net.helper.NetInfo;
-import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.CusCoordinatorLayout;
 import com.zd112.framework.view.CusViewPager;
@@ -34,7 +31,7 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        setView(R.layout.mine, this);
+        setView(R.layout.ui_mine, this);
         mColorArray = new int[]{
                 android.R.color.holo_blue_light,
                 android.R.color.holo_red_light,
@@ -46,14 +43,13 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onSuccess(NetInfo info) {
         super.onSuccess(info);
-        LogUtils.e("------info:",info.getRetDetail());
         HomeData homeData = info.getResponseObj();
         List<String> bannerUrls = new ArrayList<>();
         for (HomeData.Res.PicList picList : homeData.res.picLists) {
             bannerUrls.add(picList.picUrl);
         }
         mineCoordinatorLayout.setTranslucentStatusBar(getActivity())
-                .setTitle("Demo")
+                .setTitle("ui_mine")
                 .setBackEnable(true)
 //                .setContentScrimColorArray(mColorArray)
                 .setBanner(bannerUrls)
@@ -62,7 +58,7 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        mineViewPager.setAdapter(new CusFragmentPagerAdapter(getChildFragmentManager(), mTitles, new CommentFragment(), new ShareFragment(), new CommentFragment()));
+        mineViewPager.setAdapter(new CusFragmentPagerAdapter(getChildFragmentManager(), mTitles, new OtherFragment(), new OtherFragment(), new OtherFragment(), new OtherFragment()));
     }
 
 }
