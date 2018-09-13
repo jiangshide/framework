@@ -48,8 +48,6 @@ public class FirstActivity extends BaseActivity implements ViewPager.OnPageChang
     public void onClick(View v) {
         super.onClick(v);
         ShareParamUtils.INSTANCE.putBoolean(Constant.GUIDE, true);
-        LogUtils.e("-----------v:",v.getId());
-        SystemUtils.sendSMS(this,"18311271399","你已收到短信验证码:56399,请忽泄漏!");
         if (v.getId() == R.id.userFirstJump || v.getId() == R.id.userFirstExperience) {
             startActivity(new Intent(this, SplashActivity.class));
         } else {

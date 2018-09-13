@@ -65,6 +65,8 @@ public abstract class BaseApplication extends Application implements Application
     private DialogUtils mDialogUtils;
     private int mJsonArrSize;
     private List<Activity> mActivityList = new ArrayList<>();
+    private boolean mIsScreenAdapter = true;
+    private int mScreenWidth;
 
     public void pushActivity(Activity activity) {
         mActivityList.add(activity);
@@ -106,7 +108,7 @@ public abstract class BaseApplication extends Application implements Application
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         mApplication = this;
-        install();
+//        install();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2) {
             registerActivityLifecycleCallbacks(this);
         }
@@ -128,6 +130,7 @@ public abstract class BaseApplication extends Application implements Application
          * 微信注册
          */
         mWxApi = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APPID);
+//        ScreenUtils.apdater(this, mScreenWidth, mIsScreenAdapter);
     }
 
     public void showView(View view) {
@@ -163,7 +166,7 @@ public abstract class BaseApplication extends Application implements Application
 
     public DialogView loading(Context context) {
         cancelLoading();
-        return (mDialogUtils = new DialogUtils(context)).loading();
+        return (mDialogUtils = new DialogUtils(context)).loading().setReturn(false);
     }
 
     public DialogView loading(Context context, String msg) {
@@ -172,6 +175,7 @@ public abstract class BaseApplication extends Application implements Application
     }
 
     public DialogView loading(Context context, int layout) {
+        LogUtils.e("-------------loading");
         cancelLoading();
         return (mDialogUtils = new DialogUtils(context)).loading(layout);
     }
@@ -224,6 +228,7 @@ public abstract class BaseApplication extends Application implements Application
     }
 
     public void request(final Context context, NetInfo.Builder builder, final Callback callback, boolean isLoading) {
+        LogUtils.e("--------------isLoading:", isLoading);
         if (isLoading)
             loading(context, R.layout.default_loading);
         mNetBuilder.build().doAsync(builder.build(), new Callback() {
@@ -487,23 +492,35 @@ public abstract class BaseApplication extends Application implements Application
         LogUtils.d(isCancel ? "cancel request!" : "add request!" + ": " + tag);
     }
 
+    public void setScreenAdapter(boolean isApdater) {
+        this.setScreenAdapter(isApdater);
+    }
+
+    public void setScreenAdapter(int width, boolean isApdater) {
+        this.mIsScreenAdapter = isApdater;
+        this.mScreenWidth = width;
+    }
+
     public void setShowLifecycleLog(boolean showLifecycle) {
         showLifecycleLog = showLifecycle;
     }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
-
+//        ScreenUtils.apdater(this, mScreenWidth, mIsScreenAdapter);
+//        ScreenUtils.apdater(activity, mScreenWidth, mIsScreenAdapter);
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-
+//        ScreenUtils.apdater(this, mScreenWidth, mIsScreenAdapter);
+//        ScreenUtils.apdater(activity, mScreenWidth, mIsScreenAdapter);
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-
+//        ScreenUtils.apdater(this, mScreenWidth, mIsScreenAdapter);
+//        ScreenUtils.apdater(activity, mScreenWidth, mIsScreenAdapter);
     }
 
     @Override

@@ -15,11 +15,7 @@
         <activity
             android:name=".user.SplashActivity"
             android:theme="@style/Splash">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <!-- open app for link start -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -28,16 +24,16 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="etongdai.app"
-                    android:scheme="etongdai" />
+                    android:host="zd112.app"
+                    android:scheme="zd112" />
                 <data
-                    android:host="etongdai.com"
-                    android:scheme="etongdai" />
+                    android:host="zd112.com"
+                    android:scheme="zd112" />
                 <data
-                    android:host="etongdai.com"
+                    android:host="zd112.com"
                     android:scheme="http" />
                 <data
-                    android:host="etongdai.com"
+                    android:host="zd112.com"
                     android:scheme="https" />
             </intent-filter>
             <!-- open app for link end-->
@@ -45,7 +41,25 @@
         <activity
             android:name=".user.FirstActivity"
             android:noHistory="true" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.UIActivity" />
+        <activity android:name=".ui.TabActivity"/>
+        <activity android:name=".net.NetActivity" />
+        <activity android:name=".msg.MsgActivity" />
+        <activity android:name=".event.EventActivity" />
+        <activity android:name=".author.AuthorActivity" />
+        <activity android:name=".apdater.AdapterActivtiy" />
+        <activity android:name=".upgrade.UpgradeActivity" />
+        <activity android:name=".errorlog.ErrorLogActivity" />
+        <activity
+            android:name=".html5.Html5Activity"
+            android:launchMode="singleInstance" />
         <activity android:name=".user.LoginActivity" />
 
         <service android:name="com.amap.api.location.APSService" />

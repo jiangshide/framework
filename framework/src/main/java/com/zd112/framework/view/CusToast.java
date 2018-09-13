@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
+import com.zd112.framework.utils.LogUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,7 +29,7 @@ public class CusToast extends Toast {
 
     private static DialogView mDialogView;
     private static Handler mHandler = new Handler();
-    private static final int DEFAULT_DURATION = 2;
+    private static final int DEFAULT_DURATION = 3;
 
     /**
      * Construct an empty Toast object.  You must call {@link #setView} before you
@@ -248,7 +249,7 @@ public class CusToast extends Toast {
 
     public static void fixView(Context context, View view, final int resImg, final String txt, int theme, int gravity, int anim, int time, DialogView.DialogViewListener dialogViewListener) {
         cancelLoading();
-        mDialogView = new DialogView(context, theme, R.layout.toast, new DialogView.DialogViewListener() {
+        mDialogView = new DialogView(context, theme, view, new DialogView.DialogViewListener() {
             @Override
             public void onView(View view) {
                 if (resImg > 0) {

@@ -110,12 +110,36 @@ public class ViewUtils {
         int value() default -1;
     }
 
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ContentView {
+        int value();
+    }
+
+    @Target(ElementType.ANNOTATION_TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface EventType {
+        Class<?> listenerType();
+
+        String listenerSetter();
+
+        String methodName();
+    }
+
+//    @Target(ElementType.METHOD)
+//    @Retention(RetentionPolicy.RUNTIME)
+//    public @interface OnClick {
+//        int[] value();
+//    }
+
+
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
+    @EventType(listenerType = View.OnClickListener.class, listenerSetter = "setOnClickListener",
+            methodName = "onClick")
     public @interface OnClick {
         int[] value();
     }
-
 }
 
 

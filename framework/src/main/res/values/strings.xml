@@ -4,7 +4,6 @@
     <string name="ok_notifyTitle">提示</string>
     <string name="ok_notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
     <string name="ok_setting">设置</string>
-    <string name="ok_cancel">取消</string>
 
     <string name="rf_header_pulling">下拉可以刷新</string>
     <string name="rf_header_refreshing">正在刷新…</string>
@@ -31,7 +30,10 @@
     <string name="weixin_public_num">已复制微信公众号,\n打开微信-通讯录-粘贴公众号</string>
     <string name="share_success">分享成功</string>
     <string name="share_null">分享内容为空!</string>
+    <string name="tips">提示</string>
+    <string name="sure_exit">您确定要退出吗?</string>
     <string name="cancel">取消</string>
+    <string name="sure">确定</string>
     <string name="weixin_false">微信拒绝</string>
     <string name="back">返回</string>
 

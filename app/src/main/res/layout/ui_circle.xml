@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/status_bar" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/shareContactBbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="微信分享到联系人"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:normal_color="#025FCB"
+            app:press_color="@color/line" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/shareFriendCircleBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="微信分享到朋友圈"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:corner="360dp"
+            app:normal_color="#025FCB"
+            app:press_color="@color/line" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/toastTipsBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="Toast提示"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:normal_color="#025FCB"
+            app:press_color="@color/red"
+            app:stroke="1dp"
+            app:stroke_color="#9B9B9B" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/dialogTipsBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="底部提示"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:corner="40dp"
+            app:normal_color="@color/red"
+            app:press_color="@color/line" />
+
+        <com.zd112.framework.view.CusButton
+            android:id="@+id/tagViewBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:text="标签流展示"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:corner="15dp"
+            app:normal_color="#025FCB"
+            app:press_color="@color/line" />
+
+        <com.zd112.framework.view.TagView
+            android:id="@+id/tagView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</ScrollView>

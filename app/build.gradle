@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 def APP_ICON = "@mipmap/ic_launcher"
 def APP_ICON_ROUND = "@mipmap/ic_launcher_round"
-android {
 
+android {
     signingConfigs {
         demo {
             keyAlias 'jsd'
@@ -54,7 +54,7 @@ android {
                 enable true
                 reset()
                 include 'x86', 'armeabi-v7a', 'x86_64'
-                universalApk true
+                universalApk false
             }
         }
 

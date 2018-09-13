@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="10sp" />
+            android:padding="20dp"
+            android:textSize="25sp" />
 
         <com.zd112.framework.view.CusListView
             android:id="@+id/homeListView"

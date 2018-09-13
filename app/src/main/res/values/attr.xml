@@ -7,4 +7,15 @@
         <item>商城</item>
         <item>我的</item>
     </array>
+    <array name="main_btn">
+        <item>UI案例</item>
+        <item>网络案例</item>
+        <item>消息模块案例</item>
+        <item>事件分发模块案例</item>
+        <item>安全控制与认证模块案例</item>
+        <item>数据适配模块案例</item>
+        <item>升级模块案例</item>
+        <item>错误日志模块(java,native)案例</item>
+        <item>HTML5交互模块案例</item>
+    </array>
 </resources>

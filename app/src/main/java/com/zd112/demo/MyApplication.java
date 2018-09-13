@@ -2,6 +2,7 @@ package com.zd112.demo;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.HandlerThread;
 
 import com.amap.api.location.AMapLocation;
 import com.zd112.demo.utils.LocationUtils;

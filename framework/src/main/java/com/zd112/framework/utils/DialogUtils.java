@@ -38,6 +38,7 @@ public class DialogUtils {
         cancelLoading();
         mDialogView = new DialogView(mContext, R.style.DialogTheme, layout).setOutsideClose(false);
         mDialogView.show();
+        LogUtils.e("----------------show");
         return mDialogView;
     }
 

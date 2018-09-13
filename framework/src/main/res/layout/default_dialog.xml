@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="提示"
+            android:text="@string/tips"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -30,7 +30,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="您确定要退出吗?"
+            android:text="@string/sure_exit"
             android:textColor="@color/dialog_text"
             android:textSize="12sp" />
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:text="取消"
+                android:text="@string/cancel"
                 android:textColor="@color/dialog_text"
                 android:textSize="14sp"
                 app:bottomCorner="10dp"
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:text="确定"
+                android:text="@string/sure"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="14sp"
                 app:bottomCorner="0dp"

@@ -36,7 +36,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class BaseActivity extends AppCompatActivity implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener, DialogView.DialogOnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements CusOnClickListener, Callback, OnRefreshListener, OnLoadMoreListener, DialogView.DialogOnClickListener, DialogView.DialogViewListener {
 
     protected FragmentManager mFragmentManager;
     protected View mView;
@@ -349,20 +349,29 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     }
 
     @Override
+    public void onView(View view) {
+    }
+
+    @Override
     public void onDialogClick(boolean isCancel) {
-        if (!isCancel) {
+        if (isCancel) {
             BaseActivity.super.onBackPressed();
         }
     }
 
+    protected void showDialog(DialogView dialogView) {
+    }
+
     @Override
     public void onBackPressed() {
+//        Process.killProcess(0);
+//        System.exit(0);
         List<Activity> activityList = SystemUtils.getActivities();
         if (activityList != null && activityList.size() <= 1) {
-            if (mExitView != 0 && null != mDialogListener) {
-                BaseApplication.mApplication.loading(this, mExitView, (DialogView.DialogViewListener) mDialogListener);
+            if (mExitView != 0) {
+                showDialog(BaseApplication.mApplication.loading(this, mExitView, null != mDialogListener ? (DialogView.DialogViewListener) mDialogListener : this));
             } else {
-                BaseApplication.mApplication.loading(this).setListener((null != mDialogListener && mDialogListener instanceof DialogView.DialogOnClickListener) ? (DialogView.DialogOnClickListener) mDialogListener : this);
+                showDialog(BaseApplication.mApplication.loading(this).setListener((null != mDialogListener && mDialogListener instanceof DialogView.DialogOnClickListener) ? (DialogView.DialogOnClickListener) mDialogListener : this).setReturn(false).setOutsideClose(false).setSure(getString(R.string.cancel)).setCancel(getString(R.string.sure)));
             }
             return;
         }

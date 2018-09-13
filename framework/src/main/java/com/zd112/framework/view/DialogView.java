@@ -18,13 +18,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.zd112.framework.BaseApplication;
 import com.zd112.framework.R;
+import com.zd112.framework.utils.LogUtils;
 
 public class DialogView extends Dialog {
     private View mView, mDialogLine;
     private DialogViewListener mDialogViewListener;
-    private String mContent;
+    private String mContent, mSureStr, mCancelStr;
     private TextView mContentView;
     private CusButton mSure, mCancel;
     private DialogOnClickListener mDialogOnClickListener;
@@ -150,11 +150,6 @@ public class DialogView extends Dialog {
         return this;
     }
 
-    public DialogView setOutside(boolean isCanceledOnTouchOutside) {
-        setCanceledOnTouchOutside(isCanceledOnTouchOutside);
-        return this;
-    }
-
     public DialogView setContent(String content) {
         this.mContent = content;
         return this;
@@ -168,15 +163,17 @@ public class DialogView extends Dialog {
     }
 
     public DialogView setSure(String sure) {
+        this.mSureStr = sure;
         if (mSure != null) {
-            mSure.setText(sure);
+            mSure.setText(mSureStr);
         }
         return this;
     }
 
     public DialogView setCancel(String cancel) {
+        this.mCancelStr = cancel;
         if (mCancel != null) {
-            mCancel.setText(cancel);
+            mCancel.setText(mCancelStr);
         }
         return this;
     }
@@ -196,24 +193,27 @@ public class DialogView extends Dialog {
         return this;
     }
 
-    public interface DialogViewListener extends DialogListener{
+    public interface DialogViewListener extends DialogListener {
         void onView(View view);
     }
 
-    public interface DialogOnClickListener extends DialogListener{
+    public interface DialogOnClickListener extends DialogListener {
         void onDialogClick(boolean isCancel);
     }
 
-    public interface DialogListener{
+    public interface DialogListener {
+
     }
 
     @Override
     public void onBackPressed() {
-        if (!mIsReturn) {
-            super.onBackPressed();
-        }
+        LogUtils.e("---------mIsReturn:", mIsReturn, " | mDialogOnClickListener:", mDialogOnClickListener);
         if (mDialogOnClickListener != null) {
             mDialogOnClickListener.onDialogClick(false);
+            return;
+        }
+        if (!mIsReturn) {
+            super.onBackPressed();
         }
     }
 }
