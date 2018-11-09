@@ -2,16 +2,23 @@ package com.zd112.framework;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zd112.framework.listener.CusOnClickListener;
@@ -21,6 +28,7 @@ import com.zd112.framework.net.callback.Callback;
 import com.zd112.framework.net.callback.ProgressCallback;
 import com.zd112.framework.net.helper.NetInfo;
 import com.zd112.framework.utils.DateUtils;
+import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.DialogView;
@@ -32,6 +40,7 @@ import com.zd112.framework.view.refresh.interfaces.RefreshLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +60,28 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        LayoutInflaterCompat.setFactory2(LayoutInflater.from(this), new LayoutInflater.Factory2() {
+            @Override
+            public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+                View view = getDelegate().createView(parent,name,context,attrs);
+                if(view instanceof TextView){
+                    TextView textView = (TextView) view;
+                    textView.setTextSize(textView.getTextSize()+1);
+                }else if(view instanceof Button){
+                    Button button = (Button) view;
+                    button.setTextSize(button.getTextSize()+1);
+                }else if(view instanceof ImageView){
+
+                }
+                return view;
+            }
+
+            @Override
+            public View onCreateView(String name, Context context, AttributeSet attrs) {
+                return null;
+            }
+        });
+
         super.onCreate(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
         mNavigationBar = new NavigationView(this);

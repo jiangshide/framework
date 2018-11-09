@@ -17,5 +17,6 @@
         <item>升级模块案例</item>
         <item>错误日志模块(java,native)案例</item>
         <item>HTML5交互模块案例</item>
+        <item>跨进程双向通信</item>
     </array>
 </resources>

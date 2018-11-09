@@ -1,6 +1,7 @@
 package com.zd112.framework;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -205,6 +206,7 @@ public abstract class BaseFragment extends Fragment implements CusOnClickListene
     }
 
     @Override
+    @CallSuper
     public void onSuccess(NetInfo info) {
         mBuilder = info.getBuild();
         cancelLoading();

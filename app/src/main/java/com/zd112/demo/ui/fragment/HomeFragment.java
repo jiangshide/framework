@@ -1,18 +1,28 @@
 package com.zd112.demo.ui.fragment;
 
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.support.annotation.MainThread;
+import android.support.annotation.WorkerThread;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
+import com.zd112.demo.HookActivity;
+import com.zd112.demo.HookUtils;
 import com.zd112.demo.R;
 import com.zd112.demo.data.HomeData;
 import com.zd112.demo.utils.Constant;
 import com.zd112.framework.BaseFragment;
 import com.zd112.framework.apdater.CommAdapter;
 import com.zd112.framework.net.helper.NetInfo;
+import com.zd112.framework.utils.LogUtils;
 import com.zd112.framework.utils.SystemUtils;
 import com.zd112.framework.utils.ViewUtils;
 import com.zd112.framework.view.BannerView;
@@ -36,11 +46,14 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
     private CusListView homeList;
 
     private CommAdapter<HomeData> circleListDataCommAdapter;
+    private Intent batteryStatus;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setView(R.layout.ui_home, this, true);
         request("more/ind", HomeData.class, true);
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        batteryStatus = getActivity().registerReceiver(null,intentFilter);
     }
 
     @Override
@@ -58,6 +71,66 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
                 VideoPlayer.onScrollAutoTiny(view, firstVisibleItem, visibleItemCount, totalItemCount);
             }
         });
+        mHomeBanner.setOnBannerItemClickListener(new BannerView.OnBannerItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                LogUtils.e("-----------status:",batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS,-1));
+                int cpuCount = Runtime.getRuntime().availableProcessors();
+                int CORE_POOL_SIZE = Math.max(2, Math.min(cpuCount - 1, 4));
+                LogUtils.e("-------------------cpuCount:",cpuCount," | CORE_POOL_SIZE:",CORE_POOL_SIZE);
+//                ClassLoader classLoader = getActivity().getClass().getClassLoader();
+//                while(classLoader != null){
+//                    LogUtils.e("-------------load:",classLoader.toString());
+//                    classLoader = classLoader.getParent();
+//                }
+                test();
+                if(position == 1){
+                    shouldRunOnWorkerThread();
+                }else{
+                    runOnMainThread();
+                }
+            }
+        });
+    }
+
+    public void test(){
+        String userAgent = getDefaultUserAgent();
+        LogUtils.e("--------------userAgent:",userAgent);
+        System.setProperty("http.agent",userAgent);
+    }
+
+    private String getDefaultUserAgent(){
+        StringBuilder stringBuilder = new StringBuilder(64);
+        stringBuilder.append("Dalvik/");
+        stringBuilder.append(System.getProperty("java.vm.version"));
+        stringBuilder.append(" (Linux; U; Android ");
+
+        String version = Build.VERSION.RELEASE;
+        stringBuilder.append(version.length()>0?version:"1.0");
+        if("REL".equals(Build.VERSION.CODENAME)){
+            String model = Build.MODEL;
+            if(model.length() > 0){
+                stringBuilder.append("; ");
+                stringBuilder.append(model);
+            }
+        }
+        String id = Build.ID;
+        if(id.length() >0){
+            stringBuilder.append(" Build/");
+            stringBuilder.append(id);
+        }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
+
+    @WorkerThread
+    private void shouldRunOnWorkerThread(){
+        LogUtils.e("-----------------shouldRunOnWorkerThread");
+    }
+
+    @MainThread
+    private void runOnMainThread(){
+        LogUtils.e("----------------runOnMainThread");
     }
 
     @Override

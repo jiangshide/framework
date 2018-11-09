@@ -23,6 +23,8 @@ public class MyApplication extends BaseApplication {
 //                LogUtils.e("aMapLocation:", aMapLocation.toString());
 //            }
 //        });
+//        HookUtils hookUtils = new HookUtils(HookActivity.class,this);
+//        hookUtils.hookAms();
     }
 
 }
