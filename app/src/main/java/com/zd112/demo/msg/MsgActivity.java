@@ -3,7 +3,6 @@ package com.zd112.demo.msg;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.zd112.demo.R;
 import com.zd112.framework.BaseActivity;
@@ -39,9 +38,13 @@ public class MsgActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.msgBtn:
-                if(flag == 0){
-                    msgImg.cornet();
-                }
+                int measureW = msgImg.getMeasuredWidth();
+                int measureH = msgImg.getMeasuredHeight();
+                int w = msgImg.getWidth();
+                int h = msgImg.getHeight();
+                LogUtils.e("--------------measureW:", measureW, " | measureH:", measureH, " | w:", w, " | h:", h);
+//                if(flag == 0){
+//                }
                 break;
         }
     }

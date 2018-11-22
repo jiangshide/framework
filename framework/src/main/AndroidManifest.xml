@@ -21,6 +21,7 @@
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Optional for location -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 用于开启 debug 版本的应用在6.0 系统上 层叠窗口权限 -->
@@ -35,10 +36,9 @@
 
     <application
         android:allowBackup="true"
-        android:supportsRtl="true"
         android:alwaysRetainTaskState="true"
         android:networkSecurityConfig="@xml/network_security_config"
-        >
+        android:supportsRtl="true">
 
         <activity
             android:name=".WXEntryActivity"
@@ -59,9 +59,19 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
+        <receiver android:name=".core.DeamonsReceiver" />
+
         <service android:name=".service.UpdateService" />
         <service android:name=".service.NetSpeedService" />
-        <service android:name=".core.CoreService"/>
+        <service android:name=".core.CoreService" />
+        <service
+            android:name=".service.JobScheduleService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

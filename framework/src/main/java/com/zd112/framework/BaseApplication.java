@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -117,6 +118,7 @@ public abstract class BaseApplication extends Application implements Application
     @Override
     public void onCreate() {
         super.onCreate();
+        Debug.startMethodTracing(getPackageName());
         initNetworkStateListener();
 
         String pkgName = BaseApplication.mApplication.getPackageName();

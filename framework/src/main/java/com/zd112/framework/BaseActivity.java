@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -377,6 +378,7 @@ public abstract class BaseActivity extends AppCompatActivity implements CusOnCli
     @Override
     protected void onDestroy() {
         cancelTime();
+        Debug.stopMethodTracing();
         super.onDestroy();
     }
 
